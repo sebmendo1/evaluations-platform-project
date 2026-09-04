@@ -1,1 +1,40 @@
-PLACEHOLDER_LOAD_FROM_FILE
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+  .mono {
+    font-family: var(--p-mono);
+    font-variant-ligatures: none;
+  }
+
+  /* 09 §10 · visible on focus, out of the way otherwise. */
+  .skip-link {
+    position: absolute;
+    left: 8px;
+    top: -48px;
+    z-index: 60;
+    background: var(--p-paper);
+    color: var(--p-accent);
+    border: 1px solid var(--p-accent);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: top 120ms ease-out;
+  }
+  .skip-link:focus-visible {
+    top: 8px;
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* ---------- top bar ---------- */
+
+  /* The theme button label swaps in CSS so the toggle needs no React state. */
+
+  /* ---------- shell ---------- */
+  .shell {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+  }
