@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-ink: var(--p-ink);
+  --color-ink-2: var(--p-ink-2);
+  --color-ink-3: var(--p-ink-3);
+  --color-paper: var(--p-paper);
+  --color-panel: var(--p-panel);
+  --color-panel-2: var(--p-panel-2);
+  --color-line: var(--p-line);
+  --color-line-2: var(--p-line-2);
+  --color-accent: var(--p-accent);
+  --color-accent-strong: var(--p-accent-strong);
+  --color-accent-bg: var(--p-accent-bg);
+  --color-keep: var(--p-keep);
+  --color-keep-bg: var(--p-keep-bg);
+  --color-discard: var(--p-discard);
+  --color-discard-bg: var(--p-discard-bg);
+  --color-hold: var(--p-hold);
+  --color-hold-bg: var(--p-hold-bg);
+  --font-sans: var(--p-sans);
+  --font-mono: var(--p-mono);
+}
+
+:root {
+  /* The reading measure for the centre column. 09 §4 centres content with
+     generous gutters; at 880px the 690px chart viewBox still renders at natural
+     size inside the body's padding. 08 §3 opened the previous 800 / 18 / 22
+     measure so the column has air rather than packing. */
+  --p-measure: 880px;
+  --p-space-section: 40px;
+  --p-space-body-y: 28px;
+  --p-space-body-x: 32px;
+
+  /* Ink is Chase's warm near-black (09 §2). The paper ground stays warm, which
+     08 §11 tracks as an open question against Chase's #FFFFFF. */
+  --p-ink: #211e1e;
+  --p-ink-2: #5a5c63;
+  --p-ink-3: #8a8c93;
+  --p-paper: #fbfbfa;
+  --p-panel: #f4f4f2;
+  --p-panel-2: #ededea;
+  --p-line: #e2e2de;
+  --p-line-2: #cfcfc9;
+  /* Chase blue does the identity work; navy carries weight. 09 §2. */
+  --p-accent: #117aca;
+  --p-accent-strong: #004b87;
+  --p-accent-bg: #e8f1fa;
+  --p-keep: #1f7a4d;
+  --p-keep-bg: #e8f3ed;
+  --p-discard: #b4342e;
+  --p-discard-bg: #fbebea;
+  --p-hold: #a8710f;
+  --p-hold-bg: #fcf2e0;
+  --p-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Open Sans is Chase's web face (09 §3) and wins over 08's Inter or system
+     stack, per the reconciliation in 08 §9. */
+  --p-sans: var(--font-open-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+[data-theme="dark"] {
+  --p-ink: #e8e8e6;
+  --p-ink-2: #9a9ca3;
+  --p-ink-3: #6c6e75;
+  --p-paper: #0e0f11;
+  --p-panel: #16181b;
+  --p-panel-2: #1d1f23;
+  --p-line: #26282c;
+  --p-line-2: #33363b;
+  /* Chase blue lightened for the dark ground; 09 §11 keeps light as the brand
+     expression and permits dark on product surfaces. */
+  --p-accent: #6fb3e8;
+  --p-accent-strong: #a8d1f2;
+  --p-accent-bg: #10233a;
+  --p-keep: #5bbf8c;
+  --p-keep-bg: #13271e;
+  --p-discard: #e8776f;
+  --p-discard-bg: #2b1615;
+  --p-hold: #d9a140;
+  --p-hold-bg: #2a1f0d;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--p-paper);
+    color: var(--p-ink);
+    font-family: var(--p-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  /* 08 §2 · "Never bold. 500 is the heaviest weight in the system." Enforced here
+     rather than per-selector, so a stray <b> or <strong> cannot reintroduce 700 —
+     the browser default and Tailwind's preflight both reach for bolder. */
+  b,
+  strong {
+    font-weight: 500;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-size: 13px;
+    font-weight: 500;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
