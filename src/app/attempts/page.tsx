@@ -1,8 +1,10 @@
 import Link from "next/link";
 
 import { BoardView, ListView, TimelineView } from "@/components/attempts/views";
+import { Crumbs } from "@/components/crumbs";
 import { SectionTabs } from "@/components/section-tabs";
 import { attempts, attemptVerdict } from "@/lib/data/attempts";
+import { experimentCrumbs } from "@/lib/crumbs";
 
 export const metadata = {
   title: "Attempts",
@@ -23,9 +25,7 @@ export default async function AttemptsPage({
 
   return (
     <>
-      <div className="crumb">
-        <Link href="/">Overview</Link> › attempts
-      </div>
+      <Crumbs segments={experimentCrumbs({ view: "board" })} />
       <h1>Attempts</h1>
       <p className="lede">
         Each one is a hypothesis about the eight-step review, the set it was tested
