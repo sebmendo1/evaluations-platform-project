@@ -37,7 +37,7 @@ describe("07 §The rail · Active loans, not attempts", () => {
     expect(model.loansHref).toBe(`/batches/${currentBatch.id}?filter=held`);
     for (const loan of model.loans) {
       expect(loan.href).toBe(`/batches/${currentBatch.id}/files/${loan.loanRef}`);
-      expect(loan.href).not.toMatch(/\/attempts\/);
+      expect(loan.href).not.toMatch(/\/attempts\//);
     }
   });
 });
