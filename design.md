@@ -158,7 +158,8 @@ If a screenshot still feels flat after the new scale, increase the section gap. 
 A held file is a paused agent turn. The page should scan like Cursor’s thread, not like a dense form:
 
 ```
-crumb
+crumb      Overview › Active loans › batch › held › borrower › pause
+           (each caret lists the pages under that segment)
 kicker     loanRef + step
 status     held · interrupt type · wait
 callout    the question (one per pause)

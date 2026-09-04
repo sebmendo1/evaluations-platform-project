@@ -71,6 +71,10 @@ rail stacks below 820px
 The previous 800 / 18 / 22 measure packed the column. Spacing, not elevation, is
 what opened it — see [`design.md`](../../../design.md) and `08 §3`.
 
+Breadcrumbs on Active loans and Experiments are disclosures (`08` crumb-menu): the
+label goes to that level, the caret lists every page under it. No shadow on the
+panel; selected is the 2px left accent.
+
 ## Voice
 
 Sentence case everywhere. Machine concepts in mono snake_case. No exclamation
