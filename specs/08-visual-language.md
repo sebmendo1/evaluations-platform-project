@@ -106,7 +106,7 @@ metrics at display size, not only to table cells.
 ## 4. Layout skeleton
 
 ```
-┌────────────┬─────────────────────────────────────┐
+┌────────────┬────────────────────────────────────────┐
 │ rail       │ main (fluid)                           │
 │ 238 default │  body 28/32, centred, max-width 880px │
 │ 190–360 ⇔  │                                        │
@@ -114,7 +114,7 @@ metrics at display size, not only to table cells.
 │ brand top  │                                        │
 │ Active loans│                                       │
 │ settings ⌄ │                                        │
-└────────────┴─────────────────────────────────────┘
+└────────────┴────────────────────────────────────────┘
 ```
 
 **The rail resizes and collapses.** 238px is the default, draggable between 190 and
