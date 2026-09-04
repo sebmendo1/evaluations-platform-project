@@ -1,173 +1,314 @@
-# 09 · Chase brand
+# 09 · Chase brand aesthetic
 
-> Owner: design lead. Status: **binding, Chase-specific**. Last reviewed: 2026-04-07.
->
-> Token values that instantiate [`08-visual-language.md`](08-visual-language.md)
-> for Chase. `08` is the grammar; this file is the vocabulary. A white-label
-> deploy swaps this file and the font files; it does not touch `08`.
+Context for agents and designers building UI that should read as Chase. Derived
+from a review of `chase.com` (homepage + Home Lending) in September 2026, plus
+JPMorganChase published brand references.
 
-The language in `08` is Chase-shaped on purpose. Warm paper, ink, a serif that
-could sit next to a printed credit memo. This file pins the values so a screen
-cannot drift toward a generic dashboard and still claim the language.
+Status: draft for review · Depends on: nothing · Governs: `08-visual-language.md`
 
----
+> **Source-of-truth warning.** Chase's real design tokens live in the internal
+> Chase design system, which is not reachable from the public web. Values below
+> marked `~approx` are inferred from public brand references and observed page
+> behavior, not read off a computed stylesheet. Replace them with internal token
+> names before this file governs production work. The octagon mark and "Chase"
+> wordmark are registered trademarks — never redraw them; use supplied assets only.
 
-## 1. Mark and name
-
-| Token | Value |
-| --- | --- |
-| Product name | `Astro` |
-| Mark | Chase octagon, single-colour, `--ink` |
-| Wordmark | none in the product; the editorial setting of "Astro" is the name |
-| Clear-space | `8px` around the mark in the header |
-
-The octagon sits in the header at `20px`, optically aligned to the cap-height of
-the product name. It does not appear in the footer, on empty states, or as a
-favicon variant. Favicon is the octagon at `-ink`, 32px, no padding, no rounded
-frame.
-
-On a production surface the mark stays `--ink`. It does not turn `--warn` to
-"match" the environment chip. The chip carries the environment; the mark does
-not.
+**Confidence key:** `[obs]` observed directly on chase.com · `[pub]` published
+brand reference · `~approx` structural placeholder, verify internally.
 
 ---
 
-## 2. Typefaces
+## 0. Applicability
 
-Both faces are the Adobe Fonts / Google Fonts cuts of Source Serif 4 and Source
-Code Pro. Self-host the `woff2` files; do not load them from a CDN at runtime.
+This spec has two scopes, and conflating them produces the wrong build.
 
-| Face | Files | Weights | Unicode range |
-| --- | --- | --- | --- |
-| Source Serif 4 | `SourceSerif4-Regular.woff2`, `SourceSerif4-Medium.woff2`, `SourceSerif4-Italic.woff2` | 400, 500, italic 400 | Latin + → \u2013 \u2014 \u2018 \u2019 \u201c \u201d |
-| Source Code Pro | `SourceCodePro-Regular.woff2`, `SourceCodePro-Medium.woff2` | 400, 500 | Latin + box-drawing for tables in `<pre>` |
+| Scope | What it covers | Sections that apply |
+|---|---|---|
+| **Brand** | Hue, typeface, logo, voice, accessibility | §2, §3, §9, §10 accessibility items, §11 |
+| **Public surface** | Customer-facing marketing and application pages | all sections |
 
-No other cut. No semi-bold, no black, no variable font. The variable files are
-larger and they make it too easy to pick `600`.
+Astro is an **internal console**. Brand-scope sections bind it; public-surface
+sections do not. Specifically, the density and rhythm rules in §4, the imagery
+rules in §7, and the regulated-disclosure marks in §10 (FDIC, Equal Housing,
+NMLS ID, investment-risk block, Spanish parity) govern customer-facing surfaces
+and are **out of scope for Astro** — noted explicitly here so their absence is a
+recorded decision rather than an oversight.
 
-Fallback stack:
+Where this spec and `08` disagree within brand scope, this spec wins. The
+reconciliation table lives in `08 §9`.
+
+---
+
+## 1. Posture
+
+Chase's aesthetic is **institutional calm**. It is not trying to feel like a
+startup, and it is not trying to feel like a private bank. Five things define it:
+
+1. **Blue does the identity work; everything else gets out of the way.** The
+   palette is effectively monochrome-plus-blue. Color is never used
+   decoratively — a colored element is either the brand, an action, or a status.
+2. **Reassurance over persuasion.** Copy leads with what the customer gets, in
+   plain declaratives. `[obs]` Home Lending's hero is "We're with you, all the way
+   home" followed by three concrete benefit lines, not a value proposition
+   paragraph.
+3. **Density is low, structure is high.** Generous whitespace, one idea per band,
+   full-width horizontal sections stacked vertically. Nothing is dashboard-dense
+   on marketing surfaces.
+4. **Disclosure is part of the visual system, not an afterthought.** `[obs]`
+   Regulatory blocks (FDIC, Equal Housing, NMLS ID, all-caps investment-risk
+   lists) are designed real estate. A Chase-looking page that omits them doesn't
+   look like Chase.
+5. **Accessibility is visible in the markup.** `[obs]` Skip links, descriptive
+   link text ("Read more about prequalification details" rather than "Read more"),
+   explicit "Opens overlay" suffixes on links that change context.
+
+Posture item 1 is the one that survives translation to an internal console: the
+monochrome-plus-blue discipline is the same rule `08 §1` states as "colour is
+state, never decoration."
+
+---
+
+## 2. Color
+
+### Brand
+| Token | Value | Notes |
+|---|---|---|
+| `--chase-blue` | `#117ACA` | `[pub]` Primary brand blue. The identity color. |
+| `--chase-navy` | `#004B87` | `[pub]` Deeper blue for weight, footers, dark bands. |
+| `--chase-ink` | `#211E1E` | `[pub]` Warm near-black used in the logo lockup. |
+| `--chase-white` | `#FFFFFF` | `[obs]` Dominant surface. Tile color is declared `#FFFFFF`. |
+
+### Structural scale `~approx`
+Build a single blue ramp and a single neutral ramp. Do not introduce a second hue
+family for UI — Chase resists accent colors.
 
 ```
-editorial: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", Times, serif
-numeric:   "Source Code Pro", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace
+blue-50   tint wash for callout/info surfaces
+blue-100  hover/selected background
+blue-500  --chase-blue          primary action, links
+blue-700  --chase-navy          hover on primary, dark bands
+blue-900  deepest navy          footer, dark hero overlays
+
+neutral-0    #FFFFFF            page surface
+neutral-50   off-white          alternating section bands
+neutral-200  hairline borders, dividers
+neutral-600  secondary text
+neutral-900  --chase-ink        primary text
 ```
 
-(The doubled Source Code Pro in the numeric stack is deliberate: ui-monospace
-resolves to it on some systems and to something else on others. Pinning it twice
-puts the designed face ahead of the system mono.)
+### Semantic
+Reserve non-blue hues **only** for status: success green, warning amber, error
+red, plus a neutral informational blue. These are functional, never brand
+expression. Financial figures are not colored red/green by default in Chase
+marketing surfaces — that's a trading-UI convention, not a retail-banking one.
+
+Astro's verdict triad in `08 §1` is a status palette in this sense, and is
+therefore permitted. It must not be extended into decoration.
+
+### Rules
+- Blue text on white and white text on `--chase-navy` are the two canonical
+  pairings.
+- Never place `--chase-blue` on `--chase-navy`; contrast fails and it muddies the
+  brand.
+- No gradients as decoration. If a gradient appears, it's a photographic overlay
+  for text legibility, not an aesthetic device.
+- Target WCAG AA at minimum for all text; regulated financial UI is audited.
 
 ---
 
-## 3. Colour tokens
+## 3. Typography
 
-Instantiations of the jobs in `08 §2`. Values are sRGB hex, not OKLCH, because
-the first surfaces are CSS and the first print target is a laser printer that
-speaks sRGB.
+**Family:** Open Sans. `[pub]` It's Chase's long-standing web face and one of the
+two UI families in Salt, JPMorganChase's published design system (alongside
+Amplitude, which is the J.P. Morgan institutional face — do **not** use Amplitude
+for Chase consumer surfaces). PT Mono for code, if code appears at all.
 
-| Token | Hex | sRGB 0–1 | Contrast vs `--paper` |
-| --- | --- | --- | --- |
-| `--paper` | `#f7f4ee` | 0.969, 0.957, 0.933 | — |
-| `--ink` | `#1c1917` | 0.110, 0.098, 0.090 | 14.1:1 |
-| `--ink-muted` | `#57534e` | 0.341, 0.325, 0.306 | 7.0:1 |
-| `--rule` | `#d6d3d1` | 0.839, 0.827, 0.820 | 1.3:1 (hairlines only) |
-| `--held` | `#b45309` | 0.706, 0.325, 0.035 | 4.6:1 |
-| `--clear` | `#0f766e` | 0.059, 0.463, 0.431 | 4.7:1 |
-| `--warn` | `#b91c1c` | 0.725, 0.110, 0.110 | 4.8:1 |
-| `--info` | `#1d4ed8` | 0.114, 0.306, 0.847 | 5.1:1 |
-
-`--held`, `--clear`, `--warn`, `--info` all clear WCAG AA against `--paper` at
-body size. `--ink-muted` clears AAA. `--rule` is a hairline and is not used as
-text.
-
-Do not derive hover or focus colours by lightening these. Hover on a text link
-is `--ink` underline, 1px, offset `2px`. Focus is a `2px` `--ink` ring, offset
-`2px`, radius `2px`.
-
-Print: `--paper` becomes white, `--ink` stays, `--rule` becomes `#111`. Charts
-that use the `0.18` band fill become a 10% black hatch in print CSS.
-
----
-
-## 4. The octagon
-
-The Chase octagon is a custom path, not a rounded-rect. Optical size at `20px`
-in the header:
-
-```
-viewBox="0 0 24 24"
-<path d="M7.5 2h9l5.5 5.5v9L16.5 22h-9L2 16.5v-9L7.5 2z"/>
+```css
+--font-sans: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 ```
 
-Fill `--ink`. No stroke. No inner mark (the original Chase octagon contains a
-wordmark at large sizes; at 20px that wordmark is noise). The path above is the
-outer octagon only.
+**Scale `~approx`** — a modest, non-dramatic ramp. Chase does not use oversized
+display type; the largest headline on a marketing hero stays in the 40–56px range
+on desktop.
 
-Clear-space is `--space-2` (`8px`) on every side. The mark does not sit on a
-coloured chip and does not reverse out of `--ink`.
+| Role | Size / line-height | Weight |
+|---|---|---|
+| Hero headline | 48 / 1.15 | 600–700 |
+| Section heading (h2) | 32 / 1.25 | 600 |
+| Card heading (h3) | 20 / 1.35 | 600 |
+| Body | 16 / 1.5 | 400 |
+| Small / disclosure | 13–14 / 1.5 | 400 |
+| Eyebrow | 13 / 1.4, uppercase, tracked | 600 |
 
----
+**Notes**
+- Sentence case for headings and buttons. Title Case reads as legacy Chase and is
+  being phased out of newer surfaces.
+- The uppercase eyebrow above a hero headline is genuinely part of this brand
+  `[obs]` ("HOME MORTGAGE LOANS" / "We're with you, all the way home"). Keep it
+  here even though it's a generic tell elsewhere — but don't spread it above every
+  section heading.
+- Body measure ≤ 70ch.
+- Weight, not color, carries emphasis inside body copy.
 
-## 5. Motion tokens
-
-From `08 §5`, pinned.
-
-| Token | Value |
-| --- | --- |
-| `--ease` | `cubic-bezier(0.2, 0, 0, 1)` |
-| `--duration-fast` | `120ms` |
-| `--duration` | `200ms` |
-
-No Chase-specific motion. The language is mechanical on purpose; a branded
-easing curve would be decoration.
-
----
-
-## 6. Voice in the product
-
-Chase's external voice is not the voice of this product. The product speaks like
-a credit memo: short sentences, active verbs, numbers with units, no metaphor.
-
-| Instead of | Write |
-| --- | --- |
-| "Let's get you set up" | "Choose a role to open the queue." |
-| "Oops, something went wrong" | "The run crashed. The attempt is on the ledger." |
-| "Great news" | the number, then what it means |
-| "N/A" | em-dash |
-| "click here" | the name of the surface |
-
-Role names in the UI are the names in [`02-domain-model.md`](02-domain-model.md)
-§3: reviewer, operator, overseer. Not "user", not "admin", not "credit officer"
-— those are job titles, and a person may hold more than one role.
-
-The environment chip uses the three values in `08 §9` in lowercase. Not "PROD",
-not a green dot.
+The type scale above is a **marketing** ramp. An internal console does not inherit
+it; `08 §2` holds for Astro. What Astro does inherit is the family (Open Sans) and
+sentence case. See `08 §9`.
 
 ---
 
-## 7. What this file does not govern
+## 4. Space & layout
 
-- Legal line, privacy, © Chase. Those live on the marketing site and in the
-  footer of produced PDFs, not on working surfaces.
-- Photography, illustration, 3-d renders of the octagon. None of those appear
-  in the product.
-- The Chase sans (currently a custom cut of a geometric). It is the marketing
-  face. It does not appear in Astro.
+*Public-surface scope. Astro uses `08 §3` and `§4`.*
+
+- **Grid:** 12 column, max content width ~1140–1200px, centered, generous gutters.
+- **Spacing scale `~approx`:** 4px base — `4, 8, 12, 16, 24, 32, 48, 64, 96`.
+- **Section rhythm:** vertical bands at 64–96px padding on desktop, 40–48px on
+  mobile. Alternate white and off-white to separate bands rather than adding
+  borders.
+- **Alignment:** left-aligned by default. Centered text is reserved for short
+  closing CTA bands `[obs]` ("Home is waiting for you").
+- **Hero:** text left, supporting photograph right. Not full-bleed image with
+  overlaid text — Chase keeps copy on a solid surface for legibility and contrast
+  compliance.
 
 ---
 
-## 8. Acceptance criteria
+## 5. Shape & elevation
 
-**AC-09.1** GIVEN the header WHEN it is rendered THEN the mark is the Chase
-octagon at `20px`, fill `--ink`, no inner wordmark.
+`~approx` — verify against internal tokens.
 
-**AC-09.2** GIVEN any working surface WHEN web fonts fail to load THEN the
-fallback stack in §2 is what renders, and it is still a serif + mono pairing.
+- **Radius:** small and consistent. ~4px on inputs and cards, pill (`999px`) on
+  primary buttons. Avoid mixing three radii on one screen.
+- **Elevation:** minimal. Cards are defined by a hairline border or a background
+  tint before they're defined by a shadow. If a shadow is used, one soft
+  low-opacity token only — no per-card hover lift.
+- **Borders:** 1px `neutral-200` hairlines. Horizontal rules appear beneath SEO
+  footer headings `[obs]`, which is a real Chase pattern.
 
-**AC-09.3** GIVEN `--held`, `--clear`, `--warn`, `--info` WHEN measured against
-`--paper` THEN each clears WCAG AA at body size.
+Astro applies the stricter no-shadow rule from `08 §3`, which is compatible.
 
-**AC-09.4** GIVEN a production surface WHEN the header is shown THEN the mark
-stays `--ink` and the environment chip is `--warn`.
+---
 
-**AC-09.5** GIVEN the typefaces WHEN they are loaded THEN they are self-hosted
-`woff2`, not a runtime CDN.
+## 6. Component vocabulary (observed)
+
+*Public-surface scope.*
+
+| Component | Behavior |
+|---|---|
+| **Global header** | Chase logo left, `Sign in` right, Español toggle, primary product nav. Sign-in opens an overlay rather than a route change. |
+| **Product sub-nav** | Sticky secondary rail under the header on product sections: Overview / Rates / Buy / Refinance / Home equity / Calculators / Manage accounts. Renders as a scrollable rail on mobile. |
+| **Hero** | Eyebrow → headline → 2–4 benefit bullets → primary + secondary CTA → image. |
+| **Dual CTA** | Filled primary + text/outline secondary, always paired. `Apply now` + `See current rates`. |
+| **Media block** | Image on one side, h2 + one supporting sentence + one text-link CTA on the other. Sides alternate down the page. |
+| **Card grid** | 3-up: image, h3, descriptive link. Used for education/resource content. |
+| **Tabs** | Segmented content (Purchase rates / Refinance rates) rather than duplicated pages. |
+| **Calculator** | A first-class component, not a utility. Calculators are a core Chase content type and get their own CTAs. |
+| **Award / trust badge** | Third-party recognition (J.D. Power) with mandatory attribution line. |
+| **Closing CTA band** | Short centered headline, one sentence, one button. |
+| **Disclosure stack** | All-caps risk list → product-specific legal paragraph → entity line → NMLS ID. |
+| **SEO footer** | h2 + hairline rule + link-dense paragraph, repeated per product area. Visually quiet, small type. |
+
+**Buttons** — brand scope, applies to Astro:
+- Primary: filled `--chase-blue`, white label, pill or 4px radius.
+- Secondary: transparent with blue label and border.
+- Tertiary: blue text link, underlined on hover.
+- Label = the action that happens. "Apply now," "Get rates," "Estimate your
+  payment." Never "Submit," "Learn more," or "Click here."
+
+---
+
+## 7. Imagery
+
+*Public-surface scope. Astro carries no photography.*
+
+- Warm, natural-light documentary photography of real people in real settings
+  `[obs]` (customer-story content like Chantel's Haiti-to-Brooklyn homeownership
+  piece).
+- Diverse, unposed, mid-action. Not stock-handshake, not conceptual abstraction.
+- Product illustration is spare, flat, and blue-dominant when used.
+- No photographic filters, no duotone brand washes.
+
+---
+
+## 8. Motion
+
+Restrained and functional. Motion answers an action — overlay open, tab switch,
+accordion expand, sticky nav pin. No scroll-triggered reveals, no parallax, no
+hover lift on cards. Durations 150–250ms, standard ease-out. Respect
+`prefers-reduced-motion`.
+
+---
+
+## 9. Voice
+
+- Second person, active voice, present tense. "We're with you." "Get started."
+- Short declaratives. Concrete numbers over adjectives: "Down payments as low as
+  3%," "Guaranteed on-time closing or get $5,000" `[obs]`.
+- Plain language, no jargon without a definition. Chase's Education Center voice
+  is the house voice: explain the thing, then link to the tool.
+- Never overpromise. Anything conditional gets a disclosure.
+- Errors state what happened and what to do. They don't apologize and they aren't
+  vague.
+- Empty states point at the next action.
+
+Chase's "never overpromise / anything conditional gets a disclosure" and Astro's
+"state the limitation next to the number" (`08 §7`) are the same instinct at two
+scales. They reinforce rather than conflict.
+
+---
+
+## 10. Non-negotiables for regulated surfaces
+
+Any **customer-facing** Chase build must carry these or it isn't shippable:
+
+- Member FDIC + Equal Housing Opportunity marks in the footer.
+- NMLS ID on lending surfaces.
+- All-caps investment-risk block on any surface touching investment or insurance
+  products.
+- Rate/term disclaimers adjacent to any displayed rate.
+- Spanish parity route (`/es/...` or `/espanol`) where the surface is public.
+
+The following apply to **every** build including internal ones:
+
+- `Skip to main content` link.
+- Visible keyboard focus on all interactive elements.
+- Descriptive link text; no bare "Read more".
+- Context-change announcements on links and controls that open an overlay.
+- WCAG AA contrast minimum, audited.
+
+---
+
+## 11. Anti-patterns
+
+- Purple, teal, or terracotta accents. Any second hue family.
+- Gradient meshes, glassmorphism, glows, neon.
+- Oversized display type or a serif headline face.
+- Dark mode as a marketing aesthetic (product surfaces may support it; the brand
+  expression is light).
+- Playful microcopy, exclamation marks, emoji.
+- Rounded-everything SaaS card kits with uniform shadows.
+- Decorative iconography that doesn't encode information.
+- A `→` glued to every link label.
+
+---
+
+## 12. Verify before production
+
+- [ ] Real hex values and token names from the internal Chase design system
+- [ ] Actual spacing scale and radius tokens
+- [ ] Licensed Open Sans build and permitted weights
+- [ ] Official logo assets (never redrawn)
+- [ ] Motion tokens
+- [ ] Semantic status palette and its contrast audit
+- [ ] Legal review of any disclosure text reproduced from live pages
+
+## 13. Open questions
+
+- Does the Astro verdict triad (`08 §1`) pass the semantic-palette contrast audit
+  in §12 against both the light and dark grounds?
+- Is JetBrains Mono acceptable in place of the PT Mono named in §3, given that
+  Astro's mono usage is structural rather than incidental code display?
+- Does an internal console owe a Spanish parity route? §10 scopes the requirement
+  to public surfaces; reviewer-facing tooling is unaddressed.
+- Which internal token names replace the `~approx` scale, and who owns that
+  mapping?
