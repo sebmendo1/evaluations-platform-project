@@ -115,6 +115,34 @@ AND each row shows the borrower name and the loan product
 AND a row opens that loan's file, not an attempt
 ```
 
+### Breadcrumbs
+
+The crumb trail is how a reviewer moves *within* a surface without going back to the
+rail. Each segment that has children is a disclosure: the label goes to that level,
+the caret lists every page underneath it. The trail is as deep as the object — a
+held file is Overview › Active loans › the batch › the filter › the borrower › the
+pause; an experiment is Overview › Experiments › the bundle › the section of the
+write-up.
+
+Active loans and Experiments are the two trees that earn this. Other surfaces keep
+a short trail; they do not grow a caret of pages they do not own.
+
+```
+GIVEN a reviewer is on a held file
+THEN the crumb trail is Overview › Active loans › the batch › held › the borrower › the pause
+AND the Active loans caret lists every held loan by borrower and product
+AND the batch caret lists every batch
+AND the filter caret lists every filter on that batch
+AND the borrower caret lists the other held files in that batch
+```
+
+```
+GIVEN a reviewer is on an experiment
+THEN the crumb trail is Overview › Experiments › the bundle › the write-up section
+AND the Experiments caret lists New experiment, the attempts board, and every attempt
+AND the bundle caret lists the other attempts
+```
+
 ### Attempts
 
 The loop in `01 §3` made legible in three views over the same six objects:
