@@ -1,9 +1,9 @@
-import Link from "next/link";
-
 import {
   ExperimentForm,
   type RunnerDefaults,
 } from "@/components/experiments/experiment-form";
+import { Crumbs } from "@/components/crumbs";
+import { experimentCrumbs } from "@/lib/crumbs";
 import { runnerOptions } from "@/lib/data/experiments";
 
 export const metadata = {
@@ -40,10 +40,7 @@ export default async function NewExperimentPage({
 
   return (
     <>
-      <div className="crumb">
-        <Link href="/">Overview</Link> ›{" "}
-        <Link href="/experiments">experiments</Link> › new attempt
-      </div>
+      <Crumbs segments={experimentCrumbs({ view: "new" })} />
       <h1>Run an experiment</h1>
       <p className="lede">
         A hypothesis, a bundle, a corpus, and enough runs to separate from baseline.
