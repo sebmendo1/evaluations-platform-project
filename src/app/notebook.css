@@ -1,0 +1,668 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Paper. Warm, not grey. The surface is a notebook page, not a dashboard. */
+  --background: oklch(0.97 0.012 85);
+  --foreground: oklch(0.22 0.02 55);
+  --card: oklch(0.985 0.008 85);
+  --card-foreground: oklch(0.22 0.02 55);
+  --popover: oklch(0.985 0.008 85);
+  --popover-foreground: oklch(0.22 0.02 55);
+  --primary: oklch(0.22 0.02 55);
+  --primary-foreground: oklch(0.97 0.012 85);
+  --secondary: oklch(0.935 0.018 80);
+  --secondary-foreground: oklch(0.28 0.02 55);
+  --muted: oklch(0.94 0.014 82);
+  --muted-foreground: oklch(0.48 0.02 55);
+  --accent: oklch(0.93 0.02 78);
+  --accent-foreground: oklch(0.22 0.02 55);
+  --destructive: oklch(0.52 0.16 25);
+  --border: oklch(0.88 0.018 80);
+  --input: oklch(0.88 0.018 80);
+  --ring: oklch(0.55 0.04 55);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.45rem;
+  --sidebar: oklch(0.955 0.014 82);
+  --sidebar-foreground: oklch(0.22 0.02 55);
+  --sidebar-primary: oklch(0.22 0.02 55);
+  --sidebar-primary-foreground: oklch(0.97 0.012 85);
+  --sidebar-accent: oklch(0.93 0.02 78);
+  --sidebar-accent-foreground: oklch(0.22 0.02 55);
+  --sidebar-border: oklch(0.88 0.018 80);
+  --sidebar-ring: oklch(0.55 0.04 55);
+
+  /* Chase brand. Spec 09. Used as a quiet identifier, not a theme. */
+  --chase-blue: #117aca;
+  --chase-navy: #0a2c4e;
+  --octagon: #117aca;
+
+  /* State. Colour means state, never decoration. Spec 08 · Colour. */
+  --ok: oklch(0.48 0.1 145);
+  --warn: oklch(0.55 0.12 70);
+  --bad: oklch(0.48 0.16 25);
+  --held: oklch(0.5 0.1 55);
+  --inconclusive: oklch(0.45 0.02 55);
+
+  --font-sans: var(--font-source-serif), 'Iowan Old Style', 'Palatino Linotype',
+    Palatino, Georgia, serif;
+  --font-serif: var(--font-source-serif), 'Iowan Old Style', Palatino, Georgia,
+    serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, 'SFMono-Regular', Menlo,
+    Consolas, monospace;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --color-held: var(--held);
+  --color-inconclusive: var(--inconclusive);
+  --color-chase-blue: var(--chase-blue);
+  --color-chase-navy: var(--chase-navy);
+  --color-octagon: var(--octagon);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    hanging-punctuation: first last;
+  }
+}
+
+/*
+ * Spec 08 · The page. A notebook, not a dashboard. The type is the page;
+ * colour is reserved for state. No shadows anywhere. Weight 500 is the ceiling.
+ */
+.page {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 2.25rem 1.75rem 4.5rem;
+}
+
+.lede {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 42rem;
+  color: var(--foreground);
+}
+
+.takeaway {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 40rem;
+  color: var(--foreground);
+}
+
+.caveat {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+  color: var(--muted-foreground);
+  max-width: 44rem;
+}
+
+.machine {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/*
+ * Spec 08 · Colour. State, never decoration. A held file is held-coloured.
+ * An inconclusive verdict is inconclusive-coloured. Nothing else is.
+ */
+.state-ok {
+  color: var(--ok);
+}
+.state-warn {
+  color: var(--warn);
+}
+.state-bad {
+  color: var(--bad);
+}
+.state-held {
+  color: var(--held);
+}
+.state-inconclusive {
+  color: var(--inconclusive);
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/*
+ * Spec 08 · Type. Machine-produced values stay mono at every size. A number
+ * that a person wrote can be serif; a number the agent wrote cannot.
+ */
+.metric-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.65rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-weight: 500;
+}
+
+.metric-unit {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted-foreground);
+  margin-left: 0.35rem;
+}
+
+/*
+ * Spec 08 · The rail. A 13-rem column of live state. Not a nav, not a menu.
+ * The page body never duplicates what the rail already shows.
+ */
+.rail {
+  width: 13rem;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--sidebar);
+  padding: 1.25rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rail-mark {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.rail-wordmark {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.octagon {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--octagon);
+  flex-shrink: 0;
+}
+
+.rail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rail-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.rail-stat {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+}
+
+.rail-stat-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail-link {
+  font-size: 0.82rem;
+  color: var(--foreground);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.rail-link:hover {
+  border-bottom-color: var(--foreground);
+}
+.rail-link[data-current='true'] {
+  border-bottom-color: var(--foreground);
+}
+
+/*
+ * Spec 08 · Tables. Hairline rules, not cards. A row is a record; it is not
+ * a container. Hover is a wash, never a lift — there are no shadows.
+ */
+.sheet {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.sheet th {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted-foreground);
+  padding: 0.45rem 0.75rem 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.sheet td {
+  padding: 0.55rem 0.75rem 0.55rem 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+  vertical-align: top;
+}
+.sheet tr:hover td {
+  background: color-mix(in oklch, var(--accent) 55%, transparent);
+}
+.sheet a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.sheet a:hover {
+  border-bottom-color: currentColor;
+}
+
+/*
+ * Spec 08 · Charts. An interval, not a trend, whenever n is small. Axes in
+ * mono. A takeaway in serif sits under the figure, never inside it.
+ */
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: 40rem;
+}
+.figure-frame {
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 0.85rem 0.85rem 0.5rem;
+}
+.figure-takeaway {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.figure-caveat {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+}
+
+/*
+ * Spec 08 · Motion. 120–180ms, ease-out, opacity and translation only.
+ * Reduced-motion: Instant.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  a,
+  button {
+    transition:
+      color 140ms ease-out,
+      border-color 140ms ease-out,
+      background-color 140ms ease-out,
+      opacity 140ms ease-out;
+  }
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  align-items: baseline;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 1.75rem 0;
+}
+
+/*
+ * Spec 08 · Empty, held, inconclusive, discarded. Four states, four treatments.
+ * Empty is quiet. Held is a named person and a typed reason. Inconclusive is
+ * overlap, not a maybe. Discarded is a tombstone that still occupies the row.
+ */
+.empty {
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+  max-width: 36rem;
+}
+.tombstone {
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.tombstone a {
+  text-decoration: line-through;
+}
+
+/*
+ * The interrupt resolver. A held file is a conversation with a named person,
+ * not a modal. The prompt is the question; the control is the answer.
+ */
+.resolver {
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 36rem;
+}
+.resolver-prompt {
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+.resolver-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted-foreground);
+}
+.resolver-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.resolver-note {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--background);
+  padding: 0.45rem 0.55rem;
+  color: var(--foreground);
+}
+.resolver-note:focus {
+  outline: 1px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+.btn:hover {
+  background: var(--accent);
+}
+.btn-primary {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+.btn-primary:hover {
+  background: var(--chase-navy);
+  border-color: var(--chase-navy);
+  color: oklch(0.97 0.012 85);
+}
+
+.ask-log {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: 40rem;
+}
+.ask-turn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.ask-who {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.ask-body {
+  white-space: pre-wrap;
+}
+
+/*
+ * Field review. Three columns: document, extraction, decision. The extraction
+ * column is mono. Provenance sits next to the value, not in a tooltip.
+ */
+.review {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(16rem, 0.9fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 72rem) {
+  .review {
+    grid-template-columns: 1fr;
+  }
+}
+.review-pane {
+  min-width: 0;
+}
+.review-doc {
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 1rem 1.1rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  max-height: 36rem;
+  overflow: auto;
+}
+.hl-extracted {
+  background: color-mix(in oklch, var(--ok) 18%, transparent);
+}
+.hl-computed {
+  background: color-mix(in oklch, var(--warn) 16%, transparent);
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr auto;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+  font-size: 0.82rem;
+}
+.field-name {
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+}
+.field-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.field-src {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted-foreground);
+}
+
+/*
+ * Experiment form. A proposed change is a diff against the live bundle, not a
+ * blank form. The hypothesis is a sentence; the sample is a number.
+ */
+.diff {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  border: 1px solid var(--border);
+  padding: 0.75rem 0.9rem;
+  background: var(--card);
+  overflow: auto;
+}
+.diff-add {
+  color: var(--ok);
+}
+.diff-del {
+  color: var(--bad);
+}
+.diff-ctx {
+  color: var(--muted-foreground);
+}
+
+/*
+ * Command palette. Cmd-K. Spec 07 · Console. Quiet; the page underneath stays.
+ */
+.palette {
+  position: fixed;
+  inset: 12vh 0 auto;
+  margin: 0 auto;
+  width: min(36rem, calc(100vw - 2rem));
+  background: var(--card);
+  border: 1px solid var(--border);
+  z-index: 50;
+}
+.palette-input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  padding: 0.7rem 0.85rem;
+  color: var(--foreground);
+}
+.palette-input:focus {
+  outline: none;
+}
+.palette-list {
+  max-height: 18rem;
+  overflow: auto;
+  padding: 0.35rem 0;
+}
+.palette-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.palette-item[data-active='true'],
+.palette-item:hover {
+  background: var(--accent);
+}
+.palette-hint {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted-foreground);
+}
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.headline {
+  font-size: 1.85rem;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  font-weight: 500;
+}
+
+/*
+ * Spec 09 · The octagon. Quiet identifier. Never larger than the wordmark,
+ * never a loading spinner, never a decorative background.
+ */
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.brand-octagon {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--octagon);
+}
+
+/* shadcn leftovers we still use as primitives. Flattened to the notebook. */
+.dark {
+  --background: oklch(0.22 0.02 55);
+  --foreground: oklch(0.97 0.012 85);
+  --card: oklch(0.26 0.02 55);
+  --card-foreground: oklch(0.97 0.012 85);
+  --popover: oklch(0.26 0.02 55);
+  --popover-foreground: oklch(0.97 0.012 85);
+  --primary: oklch(0.92 0.02 85);
+  --primary-foreground: oklch(0.22 0.02 55);
+  --secondary: oklch(0.3 0.02 55);
+  --secondary-foreground: oklch(0.97 0.012 85);
+  --muted: oklch(0.3 0.02 55);
+  --muted-foreground: oklch(0.7 0.02 80);
+  --accent: oklch(0.32 0.025 70);
+  --accent-foreground: oklch(0.97 0.012 85);
+  --destructive: oklch(0.7 0.18 22);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.7 0.04 80);
+  --sidebar: oklch(0.24 0.02 55);
+  --sidebar-foreground: oklch(0.97 0.012 85);
+  --sidebar-primary: oklch(0.68 0.16 55);
+  --sidebar-primary-foreground: oklch(0.97 0.012 85);
+  --sidebar-accent: oklch(0.3 0.02 55);
+  --sidebar-accent-foreground: oklch(0.97 0.012 85);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.7 0.04 80);
+}
