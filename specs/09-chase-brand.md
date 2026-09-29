@@ -177,15 +177,15 @@ sentence case. See `08 §9`.
 
 `~approx` — verify against internal tokens.
 
-- **Radius:** small and consistent. ~4px on inputs and cards, pill (`999px`) on
-  primary buttons. Avoid mixing three radii on one screen.
+- **Radius:** small and consistent on inputs and cards (~4–6px). **Pill
+  (`9999px`) on primary and secondary buttons** and badges. Avoid mixing three
+  radii on one screen for the same role.
 - **Elevation:** minimal. Cards are defined by a hairline border or a background
-  tint before they're defined by a shadow. If a shadow is used, one soft
-  low-opacity token only — no per-card hover lift.
+  tint before they're defined by a shadow. Astro applies the stricter no-shadow
+  rule from `08 §3`. If a marketing surface uses a shadow, one soft low-opacity
+  token only — no per-card hover lift.
 - **Borders:** 1px `neutral-200` hairlines. Horizontal rules appear beneath SEO
   footer headings `[obs]`, which is a real Chase pattern.
-
-Astro applies the stricter no-shadow rule from `08 §3`, which is compatible.
 
 ---
 
@@ -209,8 +209,10 @@ Astro applies the stricter no-shadow rule from `08 §3`, which is compatible.
 | **SEO footer** | h2 + hairline rule + link-dense paragraph, repeated per product area. Visually quiet, small type. |
 
 **Buttons** — brand scope, applies to Astro:
-- Primary: filled `--chase-blue`, white label, pill or 4px radius.
-- Secondary: transparent with blue label and border.
+- Primary: filled `--chase-blue`, white label, **pill** (`9999px`). The console
+  chooses pill over 4px so primary actions match Chase marketing CTAs and the
+  Cursor interactive identity remapped in `design.md` §4.
+- Secondary: paper fill or transparent with ink/blue label and border; same pill.
 - Tertiary: blue text link, underlined on hover.
 - Label = the action that happens. "Apply now," "Get rates," "Estimate your
   payment." Never "Submit," "Learn more," or "Click here."

@@ -1,8 +1,10 @@
 # Cursor reference screenshots
 
-Local copies of the Cursor web-app screens used while extracting the spatial
-language in [`../../design.md`](../../design.md). Binding numbers live in
-[`../../specs/08-visual-language.md`](../../specs/08-visual-language.md), not here.
+Local copies of the Cursor web-app screens used while extracting the design
+system remapped in [`../../design.md`](../../design.md) (Open Sans + Chase blue;
+Cursor charcoal/gold refused). Binding numbers live in
+[`../../specs/08-visual-language.md`](../../specs/08-visual-language.md) and brand
+tokens in [`../../specs/09-chase-brand.md`](../../specs/09-chase-brand.md), not here.
 
 | File | What it shows |
 |---|---|

@@ -809,10 +809,12 @@
     gap: 8px;
     flex-wrap: wrap;
   }
+  /* 08 §3 / 09 §6 / design.md §4 · pill on primary and secondary actions.
+     Chase CTA shape + Cursor interactive identity; inputs stay at 6px. */
   .btn {
     font-size: 13px;
     padding: 10px 14px;
-    border-radius: 6px;
+    border-radius: 9999px;
     border: 1px solid var(--p-line-2);
     background: var(--p-paper);
     color: var(--p-ink);
@@ -1654,7 +1656,7 @@
   .actbox .r button {
     font-size: 12.5px;
     padding: 5px 11px;
-    border-radius: 6px;
+    border-radius: 9999px;
     border: 1px solid var(--p-accent);
     background: none;
     color: var(--p-accent);
@@ -2382,7 +2384,7 @@
   .actbox .r button {
     font-size: 12.5px;
     padding: 5px 11px;
-    border-radius: 6px;
+    border-radius: 9999px;
     border: 1px solid var(--p-accent);
     background: none;
     color: var(--p-accent);
