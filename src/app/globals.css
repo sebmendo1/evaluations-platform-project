@@ -110,9 +110,10 @@
     font-family: inherit;
   }
 
-  /* 08 §2 · "Never bold. 500 is the heaviest weight in the system." Enforced here
-     rather than per-selector, so a stray <b> or <strong> cannot reintroduce 700 —
-     the browser default and Tailwind's preflight both reach for bolder. */
+  /* 08 §2 · weight ceiling 500, with carve-outs for the brand lockup and page
+     title (`h1` at 600). Enforced here rather than per-selector, so a stray
+     <b> or <strong> cannot reintroduce 700 — the browser default and Tailwind's
+     preflight both reach for bolder. */
   b,
   strong {
     font-weight: 500;
@@ -120,7 +121,7 @@
 
   h1 {
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
 

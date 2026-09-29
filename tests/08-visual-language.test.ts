@@ -184,6 +184,33 @@ describe("08 §3 · geometry", () => {
     expect(tokens).toContain("--p-space-body-x: 32px");
   });
 
+  it("sets page titles at weight 600", () => {
+    expect(tokens).toMatch(/h1\s*\{[\s\S]*?font-weight:\s*600/);
+  });
+
+  it("keeps KPI strips and takeaways on the full measure", () => {
+    const strip = notebook.slice(notebook.indexOf(".strip3 {"), notebook.indexOf(".strip3 {") + 200);
+    expect(strip).toMatch(/width:\s*100%/);
+    const takeaway = notebook.slice(notebook.indexOf(".takeaway {"), notebook.indexOf(".takeaway {") + 220);
+    expect(takeaway).toMatch(/max-width:\s*none/);
+  });
+
+  it("does not put an intro lede under surface page titles", () => {
+    // Error / not-found pages may still use .lede as the body of the empty state.
+    const surfaces = files.filter(
+      (f) =>
+        /app\/(page|reports\/page|experiments\/page|verify\/page|settings\/page|attempts\/page)\.tsx$/.test(
+          f.path,
+        ) ||
+        /app\/experiments\/new\/page\.tsx$/.test(f.path) ||
+        /app\/governance\/promote\/page\.tsx$/.test(f.path) ||
+        /app\/batches\/\[batchId\]\/page\.tsx$/.test(f.path),
+    );
+    for (const surface of surfaces) {
+      expect(surface.text, surface.path).not.toMatch(/<p className="lede"/);
+    }
+  });
+
   it("renders metric tiles as gapped cards, not a packed strip", () => {
     const block = notebook.slice(notebook.indexOf(".strip3 {"), notebook.indexOf(".big {"));
     expect(block).toMatch(/gap:\s*12px/);

@@ -33,9 +33,6 @@ export default function ExperimentsPage() {
           </Link>
         </span>
       </div>
-      <p className="lede" style={{ maxWidth: "76ch" }}>
-        Six bundles, 41 graded runs, one verdict that separated from baseline.
-      </p>
 
       <KpiGrid items={experimentKpis} />
 

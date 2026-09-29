@@ -73,7 +73,7 @@ must not be reused for anything else:
 
 | Size / weight | Use |
 |---|---|
-| 20 / 500, `-0.02em` | page title |
+| 20 / 600, `-0.02em` | page title (`h1`) |
 | 16 / 500, `-0.01em` | section heading |
 | 13.5 / 500 | card title |
 | 13.5 / 400, lh 1.6 | conversation message |
@@ -85,9 +85,13 @@ must not be reused for anything else:
 | 10.5 / 400 mono | log line, source citation |
 | 9.5 / 400 mono | axis tick |
 
-Never bold. 500 is the heaviest weight in the system (brand lockup carve-out in
-§9). Cursor’s 72px display ramp and 600–700 small headings do not apply to this
-console — see [`design.md`](../design.md) §3.
+Never bold in body chrome. **500 is the ceiling** except two carve-outs recorded
+in §9: the brand lockup (`.brandtype`) and the page title (`h1`), both at 600.
+Cursor’s 72px display ramp and 600–700 small headings do not apply elsewhere —
+see [`design.md`](../design.md) §3.
+
+Page titles stand alone. Do not put a supporting `.lede` under an `h1` / `.kicker`
+on a surface; detail pages may use `.page-meta` for identity facts only.
 
 **The mono rule is not stylistic.** A percentage, a sum of money, a version or an
 id set in the sans face is an anti-pattern (§8) because the face is how a reader
@@ -308,7 +312,7 @@ do not apply here; its brand tokens do. Resolved as follows:
 | Accent hue | was `#2456C9` | `#117ACA` blue, `#004B87` navy | **Chase wins.** §1 now lists the Chase ramp; Cursor charcoal/gold is refused. |
 | Sans face | was Inter or system | Open Sans (licensed brand face) | **Chase wins.** Open Sans. CursorGothic is refused. |
 | Mono face | JetBrains Mono | PT Mono "if code appears at all" | **This spec wins.** Mono is load-bearing here, not incidental; see §2. Flagged as an open question. |
-| Weight ceiling | 500, never bold | 600–700 on marketing heroes | **This spec wins for the console**, with one carve-out. Chase's heavy weights are a marketing-hero rule and the console has no hero — but the brand lockup in the rail is brand rather than chrome, so `.brandmark-name` sets at 600. It is the only 600 in the system, the guard test permits it there and nowhere else, and the weight is loaded rather than synthesised. |
+| Weight ceiling | 500, never bold | 600–700 on marketing heroes | **This spec wins for the console**, with two carve-outs. Chase's heavy weights are a marketing-hero rule — but the brand lockup (`.brandtype`) and the page title (`h1`) set at 600 so the surface hierarchy reads. Guard tests permit those two selectors only; the weight is loaded rather than synthesised. |
 | Page ground | `#FBFBFA` warm | `#FFFFFF` | Open question. The warmth is 1.5% off white and is the aesthetic's name. |
 | Primary text | `#16171A` | `#211E1E` warm near-black | **Chase wins.** Both are warm near-blacks; no structural cost. |
 | Dark mode | first-class peer skin | brand expression is light; "product surfaces may support it" | **Both.** Permitted by `09` for product surfaces. Light is the default. |
@@ -321,7 +325,7 @@ do not apply here; its brand tokens do. Resolved as follows:
 
 - [ ] Every colour token resolves through the `--p-` set; no literal hex in a component
 - [ ] No `box-shadow`, `filter: blur`, or elevation token exists in the codebase
-- [ ] No computed font-weight above 500 renders anywhere
+- [ ] No computed font-weight above 500 renders outside `h1` and `.brandtype`
 - [ ] Percentages, money, versions and ids render in the mono face at every size
 - [ ] Every chart has a sibling `takeaway` element; a chart without one fails the build
 - [ ] Every surface that reports a metric carries a "What this doesn't tell you"

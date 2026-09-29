@@ -61,13 +61,11 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
         <h1 className="mono">{record.decision.loanRef}</h1>
         <span className="eyebrow">audit chain</span>
       </div>
-      <p className="lede">
-        {record.decision.outcome} · {record.decision.lineSupportable}. Every field below
-        resolves down to a page in a document or to a named formula, and the bundle
-        resolves up to the experiment that authorised it.
+      <p className="page-meta">
+        {record.decision.outcome} · {record.decision.lineSupportable}
       </p>
 
-      <div className="strip2" style={{ maxWidth: "520px" }}>
+      <div className="strip2">
         <Metric
           id="citation_coverage"
           context="production"

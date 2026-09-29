@@ -154,7 +154,8 @@ primary/secondary `.btn` actions are pill (`9999px`); Open Sans + Chase `#117ACA
 `#004B87` are the shipped brand tokens (Cursor charcoal/gold refused — `design.md` §0);
 `--p-on-primary` labels filled CTAs; form fields use `--p-line-2`; composer send is
 pill; interactive focus outlines are restored (no longer accidentally merged into
-`.sectionnav`); legacy `.chat-composer` CSS was removed.
+`.sectionnav`); legacy `.chat-composer` CSS was removed; page titles are `h1` at 600
+with no intro `.lede`; KPI strips and takeaways span the full 880px measure.
 
 - Partial: a re-skin has not been exercised. The token layer is isolated, but nothing
   proves it until a second skin is built.

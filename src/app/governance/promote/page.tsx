@@ -57,10 +57,6 @@ export default async function PromotePage({
         <h1>Promotion gate</h1>
         <span className="eyebrow mono">{bundle.v}</span>
       </div>
-      <p className="lede">
-        Seven conditions, checked individually. A bundle moves from evaluated to live
-        only when all of them hold.
-      </p>
 
       <div className="vswitch">
         <Link

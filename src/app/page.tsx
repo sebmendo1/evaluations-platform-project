@@ -95,7 +95,7 @@ export default async function OverviewPage({
 
   const verifyPanel = (
       <>
-        <div className="strip2" style={{ maxWidth: "520px" }}>
+        <div className="strip2">
           <Metric
             id="sampled_accuracy"
             context="production"
@@ -207,10 +207,6 @@ export default async function OverviewPage({
   return (
     <>
       <h1>Overview</h1>
-      <p className="lede">
-        One batch running on bundle {currentBatch.bundle}. {held} files are waiting on a
-        person.
-      </p>
 
       {/* Every figure here resolves to an entry in 06 and carries its provenance
           from the dictionary rather than from a hand-written string. */}

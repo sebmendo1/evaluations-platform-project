@@ -55,11 +55,9 @@ export default async function FilePage({ params }: { params: Promise<Params> }) 
 
       <div className="kicker">
         <h1 className="mono">{interrupt.loanRef}</h1>
-        <span className="lede" style={{ marginTop: 0 }}>
-          {stepLabel(interrupt.step)}
-        </span>
+        <span className="eyebrow">{stepLabel(interrupt.step)}</span>
       </div>
-      <p className="lede">
+      <p className="page-meta">
         {interrupt.borrower} · {interrupt.product} · {interrupt.amount} ·{" "}
         <span className="mono">{interrupt.spend}</span> spent
       </p>

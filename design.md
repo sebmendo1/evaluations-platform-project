@@ -35,8 +35,8 @@ that palette. Every extracted token remaps before it touches code:
 | `#E6E5E0` / `#EDECEC` neutrals | Dividers | `--p-line` / `--p-panel-2` |
 | `#F2F1ED` card surface | Cards | `--p-panel` with a 1px hairline — no micro-shadow |
 | Micro-shadows | Card elevation | **Refused** — `08 §3`; depth is a sunken fill |
-| Weight 600–700 | Display / small headings | **500 ceiling** — brand lockup only may use 600 |
-| Display 72px / −2.16px tracking | Hero | Console has no marketing hero; page title stays 20 / 500 |
+| Weight 600–700 | Display / small headings | **500 ceiling** — brand lockup and page title (`h1`) may use 600 |
+| Display 72px / −2.16px tracking | Hero | Console has no marketing hero; page title stays 20 / 600 |
 | Pill `9999px` on buttons & badges | Interactive identity | **Adopted** for primary actions, pills, badges (`09 §6`) |
 | Sharp `0` inputs | Geometric voice | Inputs stay radius 6 — console geometry in `08 §3` |
 
@@ -120,7 +120,7 @@ Cursor’s 72px display and 600–700 small headings do not ship. The console ra
 
 | Role | Size / weight | Tracking | Face |
 |---|---|---|---|
-| Page title | 20 / 500 | −0.02em | Open Sans |
+| Page title | 20 / 600 | −0.02em | Open Sans |
 | Section heading | 16 / 500 | −0.01em | Open Sans |
 | Card title | 13.5 / 500 | 0 | Open Sans |
 | Body / form | 13–13.5 / 400, lh 1.5–1.6 | 0 | Open Sans |
