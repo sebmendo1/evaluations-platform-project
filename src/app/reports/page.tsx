@@ -29,10 +29,6 @@ export default function ReportsPage() {
         <h1>Reports</h1>
         <span className="eyebrow">Aug 25 – Sep 3 · 10 batches · 1,004 files</span>
       </div>
-      <p className="lede" style={{ maxWidth: "76ch" }}>
-        Agent performance across the last ten batches. Everything here is measured in
-        production, not in the lab.
-      </p>
 
       <KpiGrid items={reportKpis} />
 

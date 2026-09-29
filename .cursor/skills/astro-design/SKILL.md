@@ -42,7 +42,8 @@ These are the ones worth loading into working memory. Everything else is in `08`
    percentages, paths, axis ticks, enum labels like `conflicting_extraction`. At
    every size, including hero metrics. The face is how a reader tells a
    machine-produced value from a human-authored one.
-3. **Never bold.** 500 is the heaviest weight in the system.
+3. **Weight ceiling 500** for chrome — page titles (`h1`) and the brand lockup
+   may use 600; nothing else.
 4. **No shadows, no blur, no elevation, anywhere.** 1px hairlines only. Depth is a
    sunken fill.
 5. **Colour is state, never decoration.** Chrome is monochrome. The accent budget

@@ -22,10 +22,6 @@ export default function SettingsPage() {
         <Link href="/">Overview</Link> › settings
       </div>
       <h1>Settings</h1>
-      <p className="lede">
-        Appearance and the role you are acting as. Everything else on this page is
-        owned by another function and shown so you can see who to ask.
-      </p>
 
       <div className="sec">
         <div className="sechead">

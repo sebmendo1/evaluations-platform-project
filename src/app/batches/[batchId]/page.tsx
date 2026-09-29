@@ -62,7 +62,6 @@ export default async function BatchPage({
         segments={activeLoanCrumbs({ batchId: batch.id, filter: active })}
       />
       <h1>{batch.id}</h1>
-      <p className="lede">{batch.lede}</p>
 
       <div className="bars">
         {segments.map((segment) => (

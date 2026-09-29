@@ -171,9 +171,8 @@
     flex: none;
     display: block;
   }
-  /* The only 600 in the system. 08 §2 caps the console at 500, but a brand lockup is
-     brand rather than console chrome, and 09 §3 sets Chase's brand type at 600. One
-     rule, two call sites; the guard test allows this selector and no other. */
+  /* Brand lockup at 600. 08 §2 caps console chrome at 500; page titles (`h1`)
+     and this lockup are the two carve-outs in 08 §9. */
   .brandtype {
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -311,7 +310,8 @@
     flex-direction: column;
   }
   /* Centred on a fixed measure so the column stays readable on wide screens
-     instead of stretching with the viewport. */
+     instead of stretching with the viewport. Nested sections inherit this
+     width — do not add per-block max-width overrides for KPI strips or charts. */
   .body {
     flex: 1;
     width: 100%;
@@ -369,6 +369,26 @@
     align-items: baseline;
     gap: 12px;
     flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  /* Page titles stand alone — no supporting lede under them. Detail pages may
+     use .page-meta for identity facts only (borrower, outcome), not prose. */
+  .body > h1:first-child {
+    margin-bottom: 20px;
+  }
+  .kicker + .page-meta {
+    margin: -8px 0 20px;
+  }
+  .page-meta {
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+  }
+  .lede {
+    font-size: 13px;
+    color: var(--p-ink-2);
+    margin-top: 10px;
+    /* Error / empty states only — page intros no longer use .lede */
+    max-width: none;
   }
   .crumb {
     font-size: 12px;
@@ -486,21 +506,17 @@
   #thread {
     scroll-margin-top: 16px;
   }
-  .lede {
-    font-size: 13px;
-    color: var(--p-ink-2);
-    margin-top: 10px;
-    max-width: 74ch;
-  }
 
   /* ---------- stat strips ---------- */
   /* 08 §3 · independent tiles with a gap, not one packed strip. Cursor's
-     automations KPIs are the spatial reference. */
+     automations KPIs are the spatial reference. Full measure width — no
+     nested max-width so strips align with charts and tables in the column. */
   .strip3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin-top: 16px;
+    width: 100%;
   }
   .big {
     padding: 20px 22px;
@@ -541,6 +557,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     margin-top: 12px;
+    width: 100%;
   }
   .small {
     border: 1px solid var(--p-line);
@@ -1692,8 +1709,9 @@
      below the placeholder, and the disclosure attached beneath. Still hairlines and
      no elevation (08 §3) — the calm comes from spacing rather than from a shadow. */
   .ask-hero {
-    max-width: 720px;
-    margin: 0 auto;
+    max-width: none;
+    width: 100%;
+    margin: 0;
     padding: max(8vh, 48px) 0 40px;
   }
   .ask-hero-head {
@@ -1874,9 +1892,8 @@
   }
   .chat-log {
     flex: 1;
-    max-width: 68ch;
     width: 100%;
-    margin: 0 auto;
+    max-width: none;
   }
   .chat-turn {
     margin-top: 36px;
@@ -1895,9 +1912,9 @@
     /* design.md §4 / §7 · space separates the dock from the thread, not a hairline */
     background: var(--p-paper);
     padding: 28px 0 8px;
-    max-width: 68ch;
     width: 100%;
-    margin: 36px auto 0;
+    max-width: none;
+    margin: 36px 0 0;
   }
   .chat-dock-head {
     display: flex;
@@ -2168,14 +2185,15 @@
     color: var(--p-ink-2);
     line-height: 1.6;
     margin-top: 14px;
-    max-width: 76ch;
+    max-width: none;
     border-left: 2px solid var(--p-line-2);
     padding-left: 14px;
   }
 
   /* ---------- governance ---------- */
   .gwrap {
-    max-width: 78ch;
+    max-width: none;
+    width: 100%;
   }
   .vswitch {
     display: flex;

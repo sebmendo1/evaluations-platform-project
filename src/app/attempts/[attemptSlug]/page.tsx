@@ -61,11 +61,10 @@ export default async function AttemptPage({ params }: { params: Promise<Params> 
           {attempt.from} → {attempt.bundle}
         </span>
       </div>
-      <p className="lede">{attempt.summary}</p>
 
       {/* What the reviewer needs before the transcript: where it sits, what it
           touched, what it cost, and what it did to the queue. */}
-      <div className="wrap" style={{ marginTop: "16px" }}>
+      <div className="wrap">
         <table className="tbl">
           <caption className="sr-only">Attempt at a glance</caption>
           <tbody>
