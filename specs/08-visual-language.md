@@ -36,6 +36,7 @@ The translation from the Cursor-extracted charcoal/gold system is documented in
 | `accent` | `#117ACA` | `#6FB3E8` | Chase blue — links, selection, in-progress, primary CTA |
 | `accent-strong` | `#004B87` | `#A8D1F2` | Chase navy — hover on primary, weight |
 | `accent-bg` | `#E8F1FA` | `#10233A` | callouts, action boxes |
+| `on-primary` | `#FFFFFF` | `#0E0F11` | label on filled CTAs (design.md §2) |
 | `keep` | `#1F7A4D` | `#5BBF8C` | verdict: keep · cleared · agreed |
 | `discard` | `#B4342E` | `#E8776F` | verdict: discard · failed · corrected |
 | `hold` | `#A8710F` | `#D9A140` | verdict: inconclusive · waiting · held |

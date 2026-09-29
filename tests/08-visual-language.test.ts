@@ -19,7 +19,16 @@ const charts = files.filter((f) => f.path.includes("components/charts"));
 
 describe("08 §1 · the palette resolves through the --p- token set", () => {
   it("declares the canonical tokens with the prefix", () => {
-    for (const token of ["ink", "ink-2", "ink-3", "paper", "panel", "line", "accent"]) {
+    for (const token of [
+      "ink",
+      "ink-2",
+      "ink-3",
+      "paper",
+      "panel",
+      "line",
+      "accent",
+      "on-primary",
+    ]) {
       expect(tokens, `--p-${token} missing`).toContain(`--p-${token}:`);
     }
   });
@@ -37,7 +46,17 @@ describe("08 §1 · the palette resolves through the --p- token set", () => {
     const darkAt = tokens.indexOf('[data-theme="dark"] {');
     const light = tokens.slice(tokens.indexOf(":root {"), darkAt);
     const dark = tokens.slice(darkAt);
-    for (const token of ["ink", "paper", "panel", "line", "accent", "keep", "discard", "hold"]) {
+    for (const token of [
+      "ink",
+      "paper",
+      "panel",
+      "line",
+      "accent",
+      "on-primary",
+      "keep",
+      "discard",
+      "hold",
+    ]) {
       expect(light, `light --p-${token}`).toContain(`--p-${token}:`);
       expect(dark, `dark --p-${token}`).toContain(`--p-${token}:`);
     }
@@ -45,16 +64,15 @@ describe("08 §1 · the palette resolves through the --p- token set", () => {
 
   it("uses no literal hex outside the token declarations", () => {
     // A component reaching for a hex bypasses the re-skin guarantee in 08 §1.
+    // Filled CTA labels use --p-on-primary rather than a raw #fff.
     const offenders: string[] = [];
     for (const file of files) {
       if (file.path.endsWith("globals.css")) continue;
-      for (const match of file.text.matchAll(/#[0-9a-fA-F]{6}\b/g)) {
+      for (const match of file.text.matchAll(/#[0-9a-fA-F]{3,8}\b/g)) {
         offenders.push(`${file.path} ${match[0]}`);
       }
     }
-    // #fff on a filled Chase-blue button is the one permitted literal: 09 §6
-    // specifies a white label, and there is no paper-on-accent token.
-    expect(offenders.filter((o) => !o.includes("#fff"))).toEqual([]);
+    expect(offenders).toEqual([]);
   });
 });
 
@@ -73,6 +91,14 @@ describe("09 §2 · Chase governs the brand tokens", () => {
     const layout = files.find((f) => f.path.endsWith("app/layout.tsx"))?.text ?? "";
     expect(layout).toContain("Open_Sans");
     expect(tokens).toContain("--font-open-sans");
+  });
+
+  it("refuses the Cursor extract charcoal / gold / orange palette", () => {
+    // design.md §0 · those hues must not land as token values.
+    const values = tokens.replace(/\/\*[\s\S]*?\*\//g, "").toLowerCase();
+    expect(values).not.toContain("#26251e");
+    expect(values).not.toContain("#c08532");
+    expect(values).not.toContain("#f54e00");
   });
 });
 
@@ -98,6 +124,35 @@ describe("08 §3 · geometry", () => {
   it("gives primary and secondary buttons a pill radius", () => {
     const block = notebook.slice(notebook.indexOf("  .btn {"), notebook.indexOf("  .btn {") + 220);
     expect(block).toMatch(/border-radius:\s*9999px/);
+  });
+
+  it("gives the composer send control a pill radius and on-primary label", () => {
+    const at = notebook.indexOf(".composer-send {");
+    const block = notebook.slice(at, at + 320);
+    expect(block).toMatch(/border-radius:\s*9999px/);
+    expect(block).toMatch(/color:\s*var\(--p-on-primary\)/);
+  });
+
+  it("restores a real focus outline on buttons (not merged into sectionnav)", () => {
+    const at = notebook.indexOf(".btn:focus-visible");
+    const block = notebook.slice(at, at + 280);
+    expect(block).toMatch(/\.rolerow:focus-visible\s*\{/);
+    expect(block).toMatch(/outline:\s*2px solid var\(--p-accent\)/);
+    expect(block).not.toMatch(/\.sectionnav/);
+  });
+
+  it("uses control-edge borders on form fields", () => {
+    const at = notebook.indexOf(".field select,");
+    const block = notebook.slice(at, at + 280);
+    expect(block).toMatch(/border:\s*1px solid var\(--p-line-2\)/);
+  });
+
+  it("does not ship the legacy chat-composer class names", () => {
+    // design.md §4 · Ask uses .composer-* / .ask-*; a duplicated legacy block
+    // previously reintroduced .chat-composer with the wrong radius and height.
+    expect(notebook).not.toMatch(/\.chat-composer\b/);
+    expect(notebook).not.toMatch(/\.chat-send\b/);
+    expect(notebook).toContain(".composer-card {");
   });
 
   it("gives code chips a 4px radius", () => {

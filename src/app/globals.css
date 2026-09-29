@@ -14,6 +14,7 @@
   --color-accent: var(--p-accent);
   --color-accent-strong: var(--p-accent-strong);
   --color-accent-bg: var(--p-accent-bg);
+  --color-on-primary: var(--p-on-primary);
   --color-keep: var(--p-keep);
   --color-keep-bg: var(--p-keep-bg);
   --color-discard: var(--p-discard);
@@ -35,8 +36,8 @@
   --p-space-body-x: 32px;
 
   /* Brand tokens: Chase wins (09 §2, 08 §9). Cursor extraction remaps
-     (#26251E / #C08532 / #F54E00 → ink + Chase blue/navy) live in design.md §0.
-     Paper stays warm; 08 §11 tracks Chase #FFFFFF as an open question. */
+     (charcoal / gold / orange → ink + Chase blue/navy) live in design.md §0.
+     Paper stays warm; 08 §11 tracks Chase white as an open question. */
   --p-ink: #211e1e;
   --p-ink-2: #5a5c63;
   --p-ink-3: #8a8c93;
@@ -45,10 +46,12 @@
   --p-panel-2: #ededea;
   --p-line: #e2e2de;
   --p-line-2: #cfcfc9;
-  /* Chase blue does the identity work; navy carries weight. 09 §2. */
+  /* Chase blue does the identity work; navy carries weight. 09 §2.
+     On-primary is the white label on filled CTAs (design.md §2 / 09 §6). */
   --p-accent: #117aca;
   --p-accent-strong: #004b87;
   --p-accent-bg: #e8f1fa;
+  --p-on-primary: #ffffff;
   --p-keep: #1f7a4d;
   --p-keep-bg: #e8f3ed;
   --p-discard: #b4342e;
@@ -76,6 +79,7 @@
   --p-accent: #6fb3e8;
   --p-accent-strong: #a8d1f2;
   --p-accent-bg: #10233a;
+  --p-on-primary: #0e0f11;
   --p-keep: #5bbf8c;
   --p-keep-bg: #13271e;
   --p-discard: #e8776f;
