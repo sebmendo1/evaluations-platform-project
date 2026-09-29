@@ -72,6 +72,11 @@ Canonical tokens are `--p-*` in [`src/app/globals.css`](src/app/globals.css).
 | `--p-ink` | `#211E1E` | Primary text (Chase warm near-black) |
 | On-primary | `#FFFFFF` | Label on filled Chase-blue controls |
 
+Add `--p-on-primary` in [`src/app/globals.css`](src/app/globals.css) so filled CTAs
+never reach for a raw `#fff` or `--p-paper` (paper is dark in the dark theme).
+In dark mode the token flips to a near-black so labels stay readable on the
+lightened Chase accent.
+
 ### Neutrals (Astro paper system)
 
 | Token | Light | Role |

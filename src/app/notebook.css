@@ -241,6 +241,8 @@
     color: inherit;
     font-size: 13px;
     text-decoration: none;
+    /* design.md §8 / 09 §8 · functional motion only, 150–250ms */
+    transition: background-color 160ms ease-out, border-color 160ms ease-out;
   }
   .nav:hover {
     background: var(--p-panel);
@@ -271,6 +273,7 @@
     cursor: pointer;
     color: inherit;
     text-decoration: none;
+    transition: background-color 160ms ease-out, border-color 160ms ease-out;
   }
   .row:hover {
     background: var(--p-panel);
@@ -503,6 +506,11 @@
     padding: 20px 22px;
     border: 1px solid var(--p-line);
     border-radius: 9px;
+    /* design.md §4 · hover is a fill shift, never a lift */
+    transition: background-color 160ms ease-out, border-color 160ms ease-out;
+  }
+  .big:hover {
+    background: var(--p-panel);
   }
   .big .lab {
     font-size: 12px;
@@ -782,9 +790,15 @@
     font-size: 13px;
     background: var(--p-paper);
     color: var(--p-ink);
-    border: 1px solid var(--p-line);
+    border: 1px solid var(--p-line-2);
     border-radius: 6px;
     padding: 7px 9px;
+  }
+  .field select:focus-visible,
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
   }
   .field textarea {
     min-height: 54px;
@@ -830,7 +844,7 @@
      chrome rather than a violation of it. */
   .btn.pri {
     background: var(--p-accent);
-    color: #fff;
+    color: var(--p-on-primary);
     border-color: var(--p-accent);
   }
   .btn.pri:hover {
@@ -846,7 +860,8 @@
     padding: 5px 10px;
   }
   .btn:disabled {
-    opacity: 0.55;
+    /* design.md §6 · muted/disabled opacity band 0.55–0.70 */
+    opacity: 0.6;
     cursor: default;
   }
 
@@ -857,7 +872,10 @@
   .chip:focus-visible,
   .vpill:focus-visible,
   .seg:focus-visible,
-  .rolerow:focus-visible,
+  .rolerow:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
 
   /* ---------- section nav ----------
      A title row of counted pill tabs with the surface's actions right-aligned.
@@ -1666,7 +1684,7 @@
   .actbox .r a.y,
   .actbox .r button.y {
     background: var(--p-accent);
-    color: var(--p-paper);
+    color: var(--p-on-primary);
   }
 
   /* ---------- ask · the standalone thread ----------
@@ -1773,10 +1791,10 @@
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: 20px;
+    border-radius: 9999px;
     border: 1px solid var(--p-accent);
     background: var(--p-accent);
-    color: #fff;
+    color: var(--p-on-primary);
     cursor: pointer;
   }
   .composer-send > svg {
@@ -1874,698 +1892,16 @@
   .chat-dock {
     position: sticky;
     bottom: 0;
+    /* design.md §4 / §7 · space separates the dock from the thread, not a hairline */
     background: var(--p-paper);
-    padding: 24px 0 8px;
+    padding: 28px 0 8px;
     max-width: 68ch;
     width: 100%;
-    margin: 24px auto 0;
+    margin: 36px auto 0;
   }
   .chat-dock-head {
     display: flex;
     padding-bottom: 12px;
-  }
-  .chat-action-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 8px;
-    font-size: 11.5px;
-    color: var(--p-accent);
-  }
-
-  /* ---------- attempt card ----------
-     One restrained treatment used on the board, in the list and in the rail, so an
-     attempt reads as the same object wherever it appears. */
-  .acard {
-    display: block;
-    border: 1px solid var(--p-line);
-    border-radius: 9px;
-    padding: 14px 16px;
-    background: var(--p-paper);
-    color: inherit;
-    text-decoration: none;
-  }
-  .acard:hover {
-    border-color: var(--p-line-2);
-  }
-  .acard:focus-visible {
-    outline: 2px solid var(--p-accent);
-    outline-offset: 1px;
-  }
-  .acard-head {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    font-size: 12.5px;
-  }
-  .acard-title {
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.4;
-  }
-  .acard-head > span:last-child {
-    margin-left: auto;
-    white-space: nowrap;
-    font-size: 11.5px;
-  }
-  .acard-summary {
-    margin-top: 6px;
-    font-size: 12px;
-    color: var(--p-ink-2);
-    line-height: 1.55;
-  }
-  .acard-meta,
-  .acard-foot {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-top: 8px;
-    font-size: 11.5px;
-    color: var(--p-ink-3);
-  }
-  .acard-meta > span:last-child,
-  .acard-cost {
-    margin-left: auto;
-  }
-  .acard-foot {
-    padding-top: 8px;
-    border-top: 1px solid var(--p-line);
-    color: var(--p-ink-2);
-  }
-
-  /* Two-up attempt cards on Overview. */
-  .ograid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 12px;
-  }
-
-  /* ---------- kanban ---------- */
-  .board {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(190px, 1fr));
-    gap: 10px;
-    margin-top: 4px;
-    overflow-x: auto;
-    padding-bottom: 6px;
-  }
-  .bcol {
-    min-width: 190px;
-  }
-  .bcol-head {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--p-line);
-    font-size: 12px;
-  }
-  .bcol-count {
-    margin-left: auto;
-    font-size: 11.5px;
-    color: var(--p-ink-3);
-  }
-  .bcol-blurb {
-    margin-top: 7px;
-    font-size: 11px;
-    color: var(--p-ink-3);
-    line-height: 1.5;
-  }
-  .bcol-body {
-    display: grid;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  .bcol-none {
-    font-size: 11.5px;
-    color: var(--p-ink-3);
-    padding: 10px 0;
-  }
-
-  /* ---------- gantt ---------- */
-  .gantt {
-    margin-top: 6px;
-    border: 1px solid var(--p-line);
-    border-radius: 10px;
-    padding: 12px 14px 14px;
-  }
-  .gantt-axis {
-    position: relative;
-    height: 16px;
-    margin-left: 34%;
-    margin-right: 44px;
-  }
-  .gantt-tick {
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    font-size: 9.5px;
-    color: var(--p-ink-3);
-    white-space: nowrap;
-  }
-  .gantt-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 5px 0;
-  }
-  .gantt-name {
-    width: 34%;
-    flex: none;
-    font-size: 12px;
-    color: inherit;
-    text-decoration: none;
-    line-height: 1.4;
-    padding-right: 10px;
-  }
-  .gantt-name:hover {
-    text-decoration: underline;
-  }
-  .gantt-track {
-    position: relative;
-    flex: 1;
-    height: 16px;
-  }
-  .gantt-grid {
-    position: absolute;
-    top: -4px;
-    bottom: -4px;
-    width: 1px;
-    background: var(--p-line);
-  }
-  .gantt-bar {
-    position: absolute;
-    top: 3px;
-    height: 10px;
-    border-radius: 4px;
-    background: var(--p-line-2);
-  }
-  .gantt-bar.kept {
-    background: var(--p-keep);
-  }
-  .gantt-bar.discarded {
-    background: var(--p-discard);
-  }
-  .gantt-bar.inconclusive {
-    background: var(--p-hold);
-  }
-  .gantt-bar.grading {
-    background: var(--p-accent);
-  }
-  .gantt-bar.drafted {
-    background: none;
-    border: 1px dashed var(--p-line-2);
-  }
-  /* An open bar has no right edge, because it has not ended. */
-  .gantt-bar.open {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .gantt-meta {
-    width: 44px;
-    flex: none;
-    text-align: right;
-    font-size: 11px;
-    color: var(--p-ink-3);
-  }
-  .gantt-swatch.kept {
-    background: var(--p-keep);
-  }
-  .gantt-swatch.discarded {
-    background: var(--p-discard);
-  }
-  .gantt-swatch.inconclusive {
-    background: var(--p-hold);
-  }
-  .gantt-swatch.grading {
-    background: var(--p-accent);
-  }
-  .gantt-swatch.drafted {
-    background: none;
-    border: 1px dashed var(--p-line-2);
-  }
-
-  /* ---------- before and after ---------- */
-  .beforeafter {
-    margin-top: 10px;
-    border: 1px solid var(--p-line);
-    border-radius: 8px;
-    overflow: hidden;
-    font-size: 12.5px;
-  }
-  .ba-row {
-    display: flex;
-    gap: 12px;
-    padding: 9px 11px;
-    border-bottom: 1px solid var(--p-line);
-    color: var(--p-ink-2);
-    line-height: 1.55;
-  }
-  .ba-row:last-child {
-    border-bottom: 0;
-  }
-  .ba-k {
-    flex: none;
-    width: 40px;
-    font-family: var(--p-mono);
-    font-size: 11px;
-    color: var(--p-ink-3);
-    padding-top: 1px;
-  }
-  .ba-now {
-    background: var(--p-keep-bg);
-    color: var(--p-ink);
-  }
-  .ba-now .ba-k {
-    color: var(--p-keep);
-  }
-
-  @media (max-width: 900px) {
-    .board {
-      grid-template-columns: repeat(2, minmax(180px, 1fr));
-    }
-    .gantt-axis {
-      margin-left: 0;
-    }
-    .gantt-row {
-      flex-wrap: wrap;
-    }
-    .gantt-name {
-      width: 100%;
-    }
-  }
-
-  /* ---------- settings controls ----------
-     The theme's active state is driven off [data-theme] so nothing flashes before
-     hydration; aria-pressed is wired separately in the component. */
-  .segmented {
-    display: inline-flex;
-    border: 1px solid var(--p-line);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .seg {
-    font-size: 13px;
-    padding: 7px 16px;
-    background: none;
-    border: 0;
-    border-right: 1px solid var(--p-line);
-    color: var(--p-ink-2);
-    cursor: pointer;
-  }
-  .seg:last-child {
-    border-right: 0;
-  }
-  .seg:hover {
-    background: var(--p-panel);
-    color: var(--p-ink);
-  }
-  [data-theme="light"] .seg-light,
-  [data-theme="dark"] .seg-dark {
-    background: var(--p-ink);
-    color: var(--p-paper);
-  }
-
-  .rolelist {
-    border: 1px solid var(--p-line);
-    border-radius: 9px;
-    overflow: hidden;
-    max-width: 62ch;
-  }
-  .rolerow {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    width: 100%;
-    text-align: left;
-    padding: 10px 12px;
-    background: none;
-    border: 0;
-    border-bottom: 1px solid var(--p-line);
-    border-left: 2px solid transparent;
-    color: inherit;
-    cursor: pointer;
-  }
-  .rolerow:last-child {
-    border-bottom: 0;
-  }
-  .rolerow:hover {
-    background: var(--p-panel);
-  }
-  /* 08 §3 · the 2px left accent means selected, and only that. */
-  .rolerow[aria-checked="true"] {
-    background: var(--p-panel);
-    border-left-color: var(--p-accent);
-  }
-  .rolerow-mark {
-    flex: none;
-    width: 12px;
-    height: 12px;
-    margin-top: 3px;
-    border: 1px solid var(--p-line-2);
-    border-radius: 50%;
-  }
-  .rolerow[aria-checked="true"] .rolerow-mark {
-    border-color: var(--p-accent);
-    border-width: 3.5px;
-  }
-  .rolerow-text {
-    display: grid;
-    gap: 2px;
-    min-width: 0;
-  }
-  .rolerow-name {
-    font-size: 13px;
-  }
-  .rolerow-owns {
-    font-size: 11.5px;
-    color: var(--p-ink-3);
-    line-height: 1.5;
-  }
-
-  /* ---------- records and transcripts ---------- */
-  .quote {
-    margin-top: 12px;
-    border-left: 2px solid var(--p-line-2);
-    padding: 2px 0 2px 12px;
-    font-size: 13px;
-    color: var(--p-ink-2);
-    line-height: 1.6;
-    max-width: 70ch;
-  }
-  .recdiff {
-    margin-top: 14px;
-    border: 1px solid var(--p-line);
-    border-radius: 8px;
-    overflow: hidden;
-    font-family: var(--p-mono);
-    font-size: 12.5px;
-  }
-  .recdiff div {
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--p-line);
-    display: flex;
-    gap: 12px;
-  }
-  .recdiff div:last-child {
-    border-bottom: 0;
-  }
-  .recdiff .k {
-    color: var(--p-ink-3);
-    min-width: 128px;
-  }
-
-  .prompt {
-    background: var(--p-panel);
-    border-radius: 10px;
-    padding: 11px 14px;
-    font-size: 13.5px;
-    line-height: 1.55;
-    max-width: 74ch;
-  }
-  .tstep {
-    margin-top: 13px;
-    font-size: 12.5px;
-    color: var(--p-ink-2);
-  }
-  .tcmd {
-    font-family: var(--p-mono);
-    font-size: 12px;
-    color: var(--p-ink-2);
-    margin-top: 12px;
-  }
-  .tfile {
-    margin-top: 7px;
-    border: 1px solid var(--p-line);
-    border-radius: 6px;
-    padding: 8px 11px;
-    display: flex;
-    align-items: center;
-    font-family: var(--p-mono);
-    font-size: 12.5px;
-    max-width: 74ch;
-  }
-  .tfile .d {
-    margin-left: auto;
-    display: flex;
-    gap: 8px;
-  }
-  .tres {
-    margin-top: 14px;
-    font-size: 13.5px;
-    line-height: 1.6;
-    max-width: 74ch;
-  }
-  .verdictline {
-    margin-top: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--p-mono);
-    font-size: 12.5px;
-    padding: 5px 11px;
-    border-radius: 6px;
-  }
-  .turn {
-    margin-top: 36px;
-    padding-top: 0;
-    border-top: 0;
-  }
-  .who {
-    font-family: var(--p-mono);
-    font-size: 11px;
-    color: var(--p-ink-3);
-    margin-bottom: 8px;
-  }
-  .msg {
-    font-size: 13.5px;
-    line-height: 1.6;
-    max-width: 74ch;
-  }
-  .msg.u {
-    background: var(--p-panel);
-    border-radius: 12px;
-    padding: 14px 18px;
-  }
-  .msg p + p {
-    margin-top: 1em;
-  }
-
-  /* ---------- composer ---------- */
-  /* Align the composer's contents to the same measure as the body above it. */
-  .kbd {
-    font-family: var(--p-mono);
-    font-size: 11px;
-    color: var(--p-ink-3);
-    border: 1px solid var(--p-line);
-    border-radius: 4px;
-    padding: 2px 6px;
-  }
-  .actbox {
-    border: 1px solid var(--p-accent);
-    border-radius: 9px;
-    padding: 16px 18px;
-    background: var(--p-accent-bg);
-    margin-top: 16px;
-    max-width: 74ch;
-  }
-  .actbox .t {
-    font-size: 13px;
-    color: var(--p-accent);
-    line-height: 1.5;
-  }
-  .actbox .r {
-    display: flex;
-    gap: 7px;
-    margin-top: 9px;
-    flex-wrap: wrap;
-  }
-  .actbox .r a,
-  .actbox .r button {
-    font-size: 12.5px;
-    padding: 5px 11px;
-    border-radius: 9999px;
-    border: 1px solid var(--p-accent);
-    background: none;
-    color: var(--p-accent);
-    cursor: pointer;
-    text-decoration: none;
-  }
-  .actbox .r a.y,
-  .actbox .r button.y {
-    background: var(--p-accent);
-    color: var(--p-paper);
-  }
-
-  /* ---------- ask · the standalone thread ----------
-     The input is the hero on the empty state and docks once the thread starts.
-     Still 1px hairlines and no elevation (08 §3); the calm comes from spacing. */
-  .chat-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 62ch;
-    margin: 0 auto;
-    padding: max(6vh, 26px) 0 26px;
-  }
-  .chat-mark {
-    display: block;
-    margin-bottom: 18px;
-  }
-  .chat-heading {
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
-  .chat-sub {
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--p-ink-2);
-    line-height: 1.6;
-    max-width: 52ch;
-  }
-  .chat-empty .chat-composer {
-    margin-top: 22px;
-  }
-  .chat-note {
-    margin-top: 26px;
-    padding-top: 14px;
-    border-top: 1px solid var(--p-line);
-    font-size: 11.5px;
-    color: var(--p-ink-3);
-    line-height: 1.65;
-    max-width: 56ch;
-  }
-
-  .chat-composer {
-    width: 100%;
-    border: 1px solid var(--p-line-2);
-    border-radius: 10px;
-    background: var(--p-paper);
-    padding: 10px 12px 8px;
-    text-align: left;
-  }
-  .chat-composer:focus-within {
-    border-color: var(--p-accent);
-  }
-  .chat-input {
-    width: 100%;
-    font: inherit;
-    font-size: 13.5px;
-    line-height: 1.6;
-    color: var(--p-ink);
-    background: none;
-    border: 0;
-    resize: none;
-    min-height: 46px;
-    max-height: 180px;
-    field-sizing: content;
-  }
-  .chat-input:focus {
-    outline: 0;
-  }
-  .chat-input::placeholder {
-    color: var(--p-ink-3);
-  }
-  .chat-composer-foot {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-top: 6px;
-  }
-  .chat-scope {
-    font-family: var(--p-mono);
-    font-size: 11px;
-    color: var(--p-ink-3);
-  }
-  .chat-send {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 12.5px;
-    padding: 5px 11px;
-    border-radius: 6px;
-    border: 1px solid var(--p-accent);
-    background: var(--p-accent);
-    color: var(--p-paper);
-    cursor: pointer;
-  }
-  .chat-send:disabled {
-    background: none;
-    color: var(--p-ink-3);
-    border-color: var(--p-line);
-    cursor: default;
-  }
-  .chat-send .kbd {
-    border-color: color-mix(in oklch, var(--p-paper) 45%, transparent);
-    color: inherit;
-  }
-  .chat-send:disabled .kbd {
-    border-color: var(--p-line);
-    color: var(--p-ink-3);
-  }
-  .chat-send:focus-visible {
-    outline: 2px solid var(--p-accent);
-    outline-offset: 1px;
-  }
-
-  .chat-suggestions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 14px;
-  }
-  .chat-suggestions button {
-    font-size: 12px;
-    border: 1px solid var(--p-line);
-    background: var(--p-paper);
-    color: var(--p-ink-2);
-    border-radius: 20px;
-    padding: 5px 12px;
-    cursor: pointer;
-  }
-  .chat-suggestions button:hover {
-    border-color: var(--p-line-2);
-    color: var(--p-ink);
-  }
-  .chat-suggestions button:focus-visible {
-    outline: 2px solid var(--p-accent);
-    outline-offset: 1px;
-  }
-
-  .chat-thread {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 64px);
-  }
-  .chat-log {
-    flex: 1;
-    max-width: 68ch;
-    width: 100%;
-    margin: 0 auto;
-  }
-  .chat-turn {
-    margin-top: 36px;
-  }
-  .chat-turn:first-child {
-    margin-top: 8px;
-  }
-  .chat-turn-you .msg {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-  }
-  .chat-dock {
-    position: sticky;
-    bottom: 0;
-    background: var(--p-paper);
-    padding: 24px 0 8px;
-    max-width: 68ch;
-    width: 100%;
-    margin: 24px auto 0;
   }
   .chat-action-meta {
     display: flex;

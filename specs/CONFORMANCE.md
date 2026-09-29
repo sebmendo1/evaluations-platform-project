@@ -151,7 +151,10 @@ this doesn't tell you"; loading states render an artefact rather than a spinner;
 880px; metric tiles are gapped cards; table cells are at least 14px vertical padding;
 the composer input is at least 88px tall; primary nav rows are 6px vertical padding;
 primary/secondary `.btn` actions are pill (`9999px`); Open Sans + Chase `#117ACA` /
-`#004B87` are the shipped brand tokens (Cursor charcoal/gold refused — `design.md` §0).
+`#004B87` are the shipped brand tokens (Cursor charcoal/gold refused — `design.md` §0);
+`--p-on-primary` labels filled CTAs; form fields use `--p-line-2`; composer send is
+pill; interactive focus outlines are restored (no longer accidentally merged into
+`.sectionnav`); legacy `.chat-composer` CSS was removed.
 
 - Partial: a re-skin has not been exercised. The token layer is isolated, but nothing
   proves it until a second skin is built.
@@ -159,8 +162,8 @@ primary/secondary `.btn` actions are pill (`9999px`); Open Sans + Chase `#117ACA
 ## 09 · Chase brand
 
 Brand-scope items met: Chase blue and navy, the warm near-black ink, Open Sans, pill
-primary actions, and the accessibility floor — skip link, `<main>` landmark, visible
-focus, descriptive link text.
+primary actions, on-primary CTA labels, and the accessibility floor — skip link,
+`<main>` landmark, visible focus, descriptive link text.
 
 - Deferred, production: licensed Open Sans build, confirmation that
   `public/brand/chase-octagon.png` is the internal asset, motion tokens, and the
