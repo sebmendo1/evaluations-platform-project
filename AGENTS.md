@@ -73,10 +73,11 @@ skill at `.cursor/skills/astro-design/SKILL.md`. Brand tokens are governed by
 [`specs/09-chase-brand.md`](specs/09-chase-brand.md).
 
 The rules most easily lost: an interval plot rather than a trend line whenever n is
-small; monospace for anything a machine produced, at every size; never bold, 500 is
-the ceiling; no shadows anywhere; colour is state, never decoration; every chart
-carries a takeaway and every surface reporting a metric says what it does not tell
-you.
+small; Open Sans for chrome and JetBrains Mono for anything a machine produced, at
+every size; never bold, 500 is the ceiling; no shadows anywhere; colour is state,
+never decoration (Chase blue for identity/action only — no charcoal/gold/orange from
+the Cursor extract); every chart carries a takeaway and every surface reporting a
+metric says what it does not tell you.
 
 ## Before you finish
 

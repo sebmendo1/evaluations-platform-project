@@ -74,6 +74,14 @@ describe("09 §2 · Chase governs the brand tokens", () => {
     expect(layout).toContain("Open_Sans");
     expect(tokens).toContain("--font-open-sans");
   });
+
+  it("refuses the Cursor extract charcoal / gold / orange palette", () => {
+    // design.md §0 · those hues are documentation only; they must not land in tokens.
+    const lower = tokens.toLowerCase();
+    expect(lower).not.toContain("#26251e");
+    expect(lower).not.toContain("#c08532");
+    expect(lower).not.toContain("#f54e00");
+  });
 });
 
 describe("08 §2 · type scale", () => {

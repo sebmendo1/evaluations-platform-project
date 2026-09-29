@@ -34,6 +34,10 @@
   --p-space-body-y: 28px;
   --p-space-body-x: 32px;
 
+  /* Base tokens — Chase brand (09 §2 / §3), console structure (08 §1 / §2).
+     Cursor extract charcoal (#26251E), gold (#C08532) and orange (#F54E00)
+     are deliberately absent; see design.md §0. */
+
   /* Ink is Chase's warm near-black (09 §2). The paper ground stays warm, which
      08 §11 tracks as an open question against Chase's #FFFFFF. */
   --p-ink: #211e1e;
@@ -44,7 +48,8 @@
   --p-panel-2: #ededea;
   --p-line: #e2e2de;
   --p-line-2: #cfcfc9;
-  /* Chase blue does the identity work; navy carries weight. 09 §2. */
+  /* Chase blue does the identity work; navy carries weight. 09 §2.
+     Primary CTAs and links use accent — never charcoal. */
   --p-accent: #117aca;
   --p-accent-strong: #004b87;
   --p-accent-bg: #e8f1fa;
@@ -55,8 +60,7 @@
   --p-hold: #a8710f;
   --p-hold-bg: #fcf2e0;
   --p-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  /* Open Sans is Chase's web face (09 §3) and wins over 08's Inter or system
-     stack, per the reconciliation in 08 §9. */
+  /* Open Sans is Chase's web face (09 §3). CursorGothic / Inter are not loaded. */
   --p-sans: var(--font-open-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
 }

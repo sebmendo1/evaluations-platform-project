@@ -19,11 +19,13 @@ here rather than restating it.
 
 ## 1. Palette
 
-Canonical set — **paper**. Prefix `--p-`.
+Canonical set — **paper**, remapped to Chase brand hues per §9. Prefix `--p-`.
+The Cursor extract’s charcoal / gold / orange values are refused; see
+[`design.md`](../design.md) §0 for the extracted→Chase map.
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
-| `ink` | `#16171A` | `#E8E8E6` | primary text |
+| `ink` | `#211E1E` | `#E8E8E6` | primary text — Chase warm near-black |
 | `ink-2` | `#5A5C63` | `#9A9CA3` | secondary text |
 | `ink-3` | `#8A8C93` | `#6C6E75` | tertiary, captions, axis |
 | `paper` | `#FBFBFA` | `#0E0F11` | page ground |
@@ -31,8 +33,9 @@ Canonical set — **paper**. Prefix `--p-`.
 | `panel-2` | `#EDEDEA` | `#1D1F23` | hover |
 | `line` | `#E2E2DE` | `#26282C` | hairline — the only separator |
 | `line-2` | `#CFCFC9` | `#33363B` | control edge, blockquote rule |
-| `accent` | `#2456C9` | `#6E9BF5` | links, selection, in-progress |
-| `accent-bg` | `#EAEFFB` | `#16223B` | callouts, action boxes |
+| `accent` | `#117ACA` | `#6FB3E8` | Chase blue — links, selection, in-progress, primary CTA |
+| `accent-strong` | `#004B87` | `#A8D1F2` | Chase navy — hover on primary, weight |
+| `accent-bg` | `#E8F1FA` | `#10233A` | callouts, action boxes |
 | `keep` | `#1F7A4D` | `#5BBF8C` | verdict: keep · cleared · agreed |
 | `discard` | `#B4342E` | `#E8776F` | verdict: discard · failed · corrected |
 | `hold` | `#A8710F` | `#D9A140` | verdict: inconclusive · waiting · held |
@@ -59,7 +62,9 @@ must not be reused for anything else:
 
 ## 2. Type
 
-- **Inter** (or system sans) for interface and prose.
+- **Open Sans** for interface and prose — Chase’s web face (`09 §3`). The earlier
+  Inter / system stack is retired; CursorGothic from the design extract is never
+  loaded.
 - **JetBrains Mono** for anything a machine produced: versions, IDs, counts,
   money, percentages, file paths, log lines, axis ticks, tool names, enum labels
   like `conflicting_extraction`.
@@ -290,14 +295,15 @@ Astro is an **internal console**, not a customer-facing surface. Chase's density
 disclosure and imagery rules in `09 §4`, `§7` and `§10` govern public surfaces and
 do not apply here; its brand tokens do. Resolved as follows:
 
-| Dimension | This spec | `09` Chase | Resolution |
+| Dimension | Earlier draft | `09` Chase | Resolution |
 |---|---|---|---|
-| Accent hue | `#2456C9` | `#117ACA` blue, `#004B87` navy | **Chase wins.** Remap `accent` to the Chase ramp. Per §1 a re-skin is a token remap. |
-| Sans face | Inter or system | Open Sans (licensed brand face) | **Chase wins.** Open Sans. |
+| Accent hue | `#2456C9` indigo | `#117ACA` blue, `#004B87` navy | **Chase wins.** §1 `accent` / `accent-strong` are the Chase ramp. Cursor extract charcoal `#26251E` is not used for CTAs. |
+| Sans face | Inter or system | Open Sans (licensed brand face) | **Chase wins.** Open Sans. CursorGothic is not loaded. |
 | Mono face | JetBrains Mono | PT Mono "if code appears at all" | **This spec wins.** Mono is load-bearing here, not incidental; see §2. Flagged as an open question. |
 | Weight ceiling | 500, never bold | 600–700 on marketing heroes | **This spec wins for the console**, with one carve-out. Chase's heavy weights are a marketing-hero rule and the console has no hero — but the brand lockup in the rail is brand rather than chrome, so `.brandmark-name` sets at 600. It is the only 600 in the system, the guard test permits it there and nowhere else, and the weight is loaded rather than synthesised. |
-| Page ground | `#FBFBFA` warm | `#FFFFFF` | Open question. The warmth is 1.5% off white and is the aesthetic's name. |
+| Page ground | `#FBFBFA` warm | `#FFFFFF` | Open question. The warmth is 1.5% off white and is the aesthetic's name. Cursor extract `#F7F7F4` is not adopted. |
 | Primary text | `#16171A` | `#211E1E` warm near-black | **Chase wins.** Both are warm near-blacks; no structural cost. |
+| Decorative gold / orange | — (Cursor extract `#C08532`, `#F54E00`) | monochrome-plus-blue only | **Chase / this spec win.** Dropped; colour is state. |
 | Dark mode | first-class peer skin | brand expression is light; "product surfaces may support it" | **Both.** Permitted by `09` for product surfaces. Light is the default. |
 | Shadows | none anywhere | minimal, one soft token if used | **This spec wins**, being the stricter rule. |
 | Eyebrow | mono 11, lowercase | uppercase, tracked, 600 | **This spec wins for the console.** Chase's tracked eyebrow is a marketing-hero device. |

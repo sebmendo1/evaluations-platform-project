@@ -158,7 +158,9 @@ the composer input is at least 88px tall; primary nav rows are 6px vertical padd
 
 Brand-scope items met: Chase blue and navy, the warm near-black ink, Open Sans, and
 the accessibility floor — skip link, `<main>` landmark, visible focus, descriptive
-link text.
+link text. The Cursor design-system extract in [`design.md`](../design.md) is
+remapped onto these tokens (charcoal / gold / orange refused; CursorGothic →
+Open Sans); `08 §1` and `08 §9` document the resolved palette.
 
 - Deferred, production: licensed Open Sans build, confirmation that
   `public/brand/chase-octagon.png` is the internal asset, motion tokens, and the

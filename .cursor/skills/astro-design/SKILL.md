@@ -13,8 +13,9 @@ description: >
 # Astro design
 
 A console for judging machine work. It should read like an instrument, not a
-dashboard: warm paper, hairline rules, monospace wherever a machine produced the
-value, and prose that tells you what the number does *not* prove.
+dashboard: warm paper, hairline rules, Open Sans for chrome, JetBrains Mono
+wherever a machine produced the value, Chase blue for identity and action, and
+prose that tells you what the number does *not* prove.
 
 **The full spec is [`specs/08-visual-language.md`](../../../specs/08-visual-language.md).**
 Read it before building a screen. Brand tokens are governed by
@@ -36,7 +37,8 @@ These are the ones worth loading into working memory. Everything else is in `08`
 2. **Monospace for anything a machine produced** — versions, ids, counts, money,
    percentages, paths, axis ticks, enum labels like `conflicting_extraction`. At
    every size, including hero metrics. The face is how a reader tells a
-   machine-produced value from a human-authored one.
+   machine-produced value from a human-authored one. Prose and chrome use
+   **Open Sans** (Chase); never CursorGothic, Inter, or a second sans.
 3. **Never bold.** 500 is the heaviest weight in the system.
 4. **No shadows, no blur, no elevation, anywhere.** 1px hairlines only. Depth is a
    sunken fill.
