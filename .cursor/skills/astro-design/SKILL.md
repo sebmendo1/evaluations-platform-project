@@ -19,10 +19,15 @@ value, and prose that tells you what the number does *not* prove.
 **The full spec is [`specs/08-visual-language.md`](../../../specs/08-visual-language.md).**
 Read it before building a screen. Brand tokens are governed by
 [`specs/09-chase-brand.md`](../../../specs/09-chase-brand.md), which wins on hue,
-typeface and accessibility — see `08 §9` for the resolved table.
+typeface and accessibility — see `08 §9` for the resolved table. The Cursor →
+Chase/Open Sans token remap and component recipes live in
+[`design.md`](../../../design.md) (inspiration; binding numbers stay in `08`).
 
 Implementation lives in [`src/app/globals.css`](../../../src/app/globals.css)
 (tokens) and [`src/app/notebook.css`](../../../src/app/notebook.css) (structure).
+
+Sans is **Open Sans**. Accent is **Chase blue** `#117ACA` / navy `#004B87`. Never
+CursorGothic, charcoal `#26251E`, gold, or orange accents from a Cursor extraction.
 
 ## The rules that change what gets built
 

@@ -19,11 +19,13 @@ here rather than restating it.
 
 ## 1. Palette
 
-Canonical set — **paper**. Prefix `--p-`.
+Canonical set — **paper**, remapped to Chase brand hues (`09 §2`). Prefix `--p-`.
+The translation from the Cursor-extracted charcoal/gold system is documented in
+[`design.md`](../design.md) §0; only the Chase/Astro values below may ship.
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
-| `ink` | `#16171A` | `#E8E8E6` | primary text |
+| `ink` | `#211E1E` | `#E8E8E6` | primary text — Chase warm near-black |
 | `ink-2` | `#5A5C63` | `#9A9CA3` | secondary text |
 | `ink-3` | `#8A8C93` | `#6C6E75` | tertiary, captions, axis |
 | `paper` | `#FBFBFA` | `#0E0F11` | page ground |
@@ -31,8 +33,9 @@ Canonical set — **paper**. Prefix `--p-`.
 | `panel-2` | `#EDEDEA` | `#1D1F23` | hover |
 | `line` | `#E2E2DE` | `#26282C` | hairline — the only separator |
 | `line-2` | `#CFCFC9` | `#33363B` | control edge, blockquote rule |
-| `accent` | `#2456C9` | `#6E9BF5` | links, selection, in-progress |
-| `accent-bg` | `#EAEFFB` | `#16223B` | callouts, action boxes |
+| `accent` | `#117ACA` | `#6FB3E8` | Chase blue — links, selection, in-progress, primary CTA |
+| `accent-strong` | `#004B87` | `#A8D1F2` | Chase navy — hover on primary, weight |
+| `accent-bg` | `#E8F1FA` | `#10233A` | callouts, action boxes |
 | `keep` | `#1F7A4D` | `#5BBF8C` | verdict: keep · cleared · agreed |
 | `discard` | `#B4342E` | `#E8776F` | verdict: discard · failed · corrected |
 | `hold` | `#A8710F` | `#D9A140` | verdict: inconclusive · waiting · held |
@@ -42,7 +45,9 @@ Two earlier skins exist in the same skeleton and may be requested by name:
 **warm** (`--` prefix, `#FCFCFB` ground, emerald accent) and **cool** (`--d-`
 prefix, `#FBFBFC` ground, blue-primary). Structure, type scale and geometry are
 identical across all three — a re-skin is a token remap and nothing else. If a
-re-skin needs layout surgery, the component is wrong.
+re-skin needs layout surgery, the component is wrong. CursorGothic charcoal
+(`#26251E`), gold (`#C08532`), and orange (`#F54E00`) are not skins; they are
+refused.
 
 **Colour is state, never decoration.** Chrome is monochrome. The accent budget
 goes to verdicts, diffs, and the one selected metric. Nothing else earns colour.
@@ -59,7 +64,8 @@ must not be reused for anything else:
 
 ## 2. Type
 
-- **Inter** (or system sans) for interface and prose.
+- **Open Sans** for interface and prose — Chase’s web face (`09 §3`). Not Inter,
+  not CursorGothic, not a dual system-ui stack.
 - **JetBrains Mono** for anything a machine produced: versions, IDs, counts,
   money, percentages, file paths, log lines, axis ticks, tool names, enum labels
   like `conflicting_extraction`.
@@ -78,7 +84,9 @@ must not be reused for anything else:
 | 10.5 / 400 mono | log line, source citation |
 | 9.5 / 400 mono | axis tick |
 
-Never bold. 500 is the heaviest weight in the system.
+Never bold. 500 is the heaviest weight in the system (brand lockup carve-out in
+§9). Cursor’s 72px display ramp and 600–700 small headings do not apply to this
+console — see [`design.md`](../design.md) §3.
 
 **The mono rule is not stylistic.** A percentage, a sum of money, a version or an
 id set in the sans face is an anti-pattern (§8) because the face is how a reader
@@ -87,12 +95,16 @@ metrics at display size, not only to table cells.
 
 ## 3. Geometry
 
-- Radius: `4` code chips · `6` buttons, inputs · `8` opt lists, callouts ·
+- Radius: `4` code chips · `6` inputs, crumb menus · `8` opt lists, callouts ·
   `9` small cards, metric tiles · `10` table wrappers · `12` composer, message
-  bubbles · `20`+ pills.
+  bubbles · **`9999px` (pill) on `.btn` primary and secondary actions**, badges,
+  and suggestion pills · `20`+ on other pill chrome. Pill primary actions follow
+  Chase `09 §6` and the Cursor interactive identity remapped in
+  [`design.md`](../design.md) §4.
 - **1px hairlines only. No shadows, no blur, no elevation — anywhere.** Depth is
-  a sunken fill, never a drop shadow. Cursor’s lift is the spatial reference, not
-  a licence to add a shadow — see [`design.md`](../design.md).
+  a sunken fill, never a drop shadow. Cursor’s micro-shadow is the spatial
+  reference for separation, not a licence to add a shadow — see
+  [`design.md`](../design.md) §6.
 - A **2px left border in an accent** is the only heavier weight, and it means
   exactly one thing: *this one is selected*. Used on nav rows, KPI tiles, diff
   blocks.
@@ -292,8 +304,8 @@ do not apply here; its brand tokens do. Resolved as follows:
 
 | Dimension | This spec | `09` Chase | Resolution |
 |---|---|---|---|
-| Accent hue | `#2456C9` | `#117ACA` blue, `#004B87` navy | **Chase wins.** Remap `accent` to the Chase ramp. Per §1 a re-skin is a token remap. |
-| Sans face | Inter or system | Open Sans (licensed brand face) | **Chase wins.** Open Sans. |
+| Accent hue | was `#2456C9` | `#117ACA` blue, `#004B87` navy | **Chase wins.** §1 now lists the Chase ramp; Cursor charcoal/gold is refused. |
+| Sans face | was Inter or system | Open Sans (licensed brand face) | **Chase wins.** Open Sans. CursorGothic is refused. |
 | Mono face | JetBrains Mono | PT Mono "if code appears at all" | **This spec wins.** Mono is load-bearing here, not incidental; see §2. Flagged as an open question. |
 | Weight ceiling | 500, never bold | 600–700 on marketing heroes | **This spec wins for the console**, with one carve-out. Chase's heavy weights are a marketing-hero rule and the console has no hero — but the brand lockup in the rail is brand rather than chrome, so `.brandmark-name` sets at 600. It is the only 600 in the system, the guard test permits it there and nowhere else, and the weight is loaded rather than synthesised. |
 | Page ground | `#FBFBFA` warm | `#FFFFFF` | Open question. The warmth is 1.5% off white and is the aesthetic's name. |
@@ -319,6 +331,8 @@ do not apply here; its brand tokens do. Resolved as follows:
 - [ ] Metric tiles are gapped cards, not a packed strip
 - [ ] Table cells are at least 14px vertical padding
 - [ ] The composer input is at least 88px tall; composer and user bubbles are radius 12
+- [ ] Primary and secondary `.btn` actions use pill radius (`9999px`); inputs stay at 6px
+- [ ] Sans face is Open Sans; accent tokens are Chase `#117ACA` / `#004B87`
 
 ## 11. Open questions
 

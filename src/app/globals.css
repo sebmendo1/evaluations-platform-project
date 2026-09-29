@@ -34,8 +34,9 @@
   --p-space-body-y: 28px;
   --p-space-body-x: 32px;
 
-  /* Ink is Chase's warm near-black (09 §2). The paper ground stays warm, which
-     08 §11 tracks as an open question against Chase's #FFFFFF. */
+  /* Brand tokens: Chase wins (09 §2, 08 §9). Cursor extraction remaps
+     (#26251E / #C08532 / #F54E00 → ink + Chase blue/navy) live in design.md §0.
+     Paper stays warm; 08 §11 tracks Chase #FFFFFF as an open question. */
   --p-ink: #211e1e;
   --p-ink-2: #5a5c63;
   --p-ink-3: #8a8c93;
@@ -55,8 +56,8 @@
   --p-hold: #a8710f;
   --p-hold-bg: #fcf2e0;
   --p-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  /* Open Sans is Chase's web face (09 §3) and wins over 08's Inter or system
-     stack, per the reconciliation in 08 §9. */
+  /* Open Sans is Chase's web face (09 §3). CursorGothic / system-ui dual stack
+     from the Cursor extraction do not ship — design.md §0 / 08 §2. */
   --p-sans: var(--font-open-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
 }

@@ -95,6 +95,11 @@ describe("08 §2 · type scale", () => {
 });
 
 describe("08 §3 · geometry", () => {
+  it("gives primary and secondary buttons a pill radius", () => {
+    const block = notebook.slice(notebook.indexOf("  .btn {"), notebook.indexOf("  .btn {") + 220);
+    expect(block).toMatch(/border-radius:\s*9999px/);
+  });
+
   it("gives code chips a 4px radius", () => {
     const block = notebook.slice(notebook.indexOf(".tchip {"));
     expect(block.slice(0, 200)).toMatch(/border-radius:\s*4px/);

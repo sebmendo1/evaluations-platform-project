@@ -149,16 +149,18 @@ every chart has a sibling takeaway; every metric-reporting surface carries a "wh
 this doesn't tell you"; loading states render an artefact rather than a spinner; the
 2px left accent means only "selected"; section gap is 40, body padding 28/32, measure
 880px; metric tiles are gapped cards; table cells are at least 14px vertical padding;
-the composer input is at least 88px tall; primary nav rows are 6px vertical padding.
+the composer input is at least 88px tall; primary nav rows are 6px vertical padding;
+primary/secondary `.btn` actions are pill (`9999px`); Open Sans + Chase `#117ACA` /
+`#004B87` are the shipped brand tokens (Cursor charcoal/gold refused — `design.md` §0).
 
 - Partial: a re-skin has not been exercised. The token layer is isolated, but nothing
   proves it until a second skin is built.
 
 ## 09 · Chase brand
 
-Brand-scope items met: Chase blue and navy, the warm near-black ink, Open Sans, and
-the accessibility floor — skip link, `<main>` landmark, visible focus, descriptive
-link text.
+Brand-scope items met: Chase blue and navy, the warm near-black ink, Open Sans, pill
+primary actions, and the accessibility floor — skip link, `<main>` landmark, visible
+focus, descriptive link text.
 
 - Deferred, production: licensed Open Sans build, confirmation that
   `public/brand/chase-octagon.png` is the internal asset, motion tokens, and the
