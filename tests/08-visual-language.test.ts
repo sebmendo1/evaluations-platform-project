@@ -76,11 +76,12 @@ describe("09 §2 · Chase governs the brand tokens", () => {
   });
 
   it("refuses the Cursor extract charcoal / gold / orange palette", () => {
-    // design.md §0 · those hues are documentation only; they must not land in tokens.
-    const lower = tokens.toLowerCase();
-    expect(lower).not.toContain("#26251e");
-    expect(lower).not.toContain("#c08532");
-    expect(lower).not.toContain("#f54e00");
+    // design.md §0 · those hues are documentation only; they must not land as
+    // token values. Strip comments so prose in globals.css cannot false-positive.
+    const values = tokens.replace(/\/\*[\s\S]*?\*\//g, "").toLowerCase();
+    expect(values).not.toContain("#26251e");
+    expect(values).not.toContain("#c08532");
+    expect(values).not.toContain("#f54e00");
   });
 });
 

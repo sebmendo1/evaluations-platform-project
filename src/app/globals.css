@@ -35,8 +35,8 @@
   --p-space-body-x: 32px;
 
   /* Base tokens — Chase brand (09 §2 / §3), console structure (08 §1 / §2).
-     Cursor extract charcoal (#26251E), gold (#C08532) and orange (#F54E00)
-     are deliberately absent; see design.md §0. */
+     Cursor extract charcoal, gold and orange are deliberately absent;
+     see design.md §0. */
 
   /* Ink is Chase's warm near-black (09 §2). The paper ground stays warm, which
      08 §11 tracks as an open question against Chase's #FFFFFF. */
