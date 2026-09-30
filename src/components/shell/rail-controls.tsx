@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 
 import {
   clampRail,
@@ -39,19 +39,80 @@ export function useRailCollapsed(initial: boolean): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, () => initial);
 }
 
-function currentWidth(): number {
+function readWidth(): number {
   const raw = getComputedStyle(document.documentElement).getPropertyValue("--p-rail");
   const parsed = Number.parseInt(raw, 10);
   return Number.isNaN(parsed) ? RAIL_DEFAULT : parsed;
 }
 
-function setWidth(width: number, save: boolean) {
+/**
+ * The rail's left edge is the viewport's, so its width is wherever its right edge
+ * sits. Carrying the offset from the grab point keeps that edge under the cursor
+ * for the whole gesture; without it the edge snaps to the cursor on the first move,
+ * jumping by however far into the handle you happened to press.
+ */
+export function widthFromDrag(clientX: number, grabOffset: number): number {
+  return clampRail(clientX + grabOffset);
+}
+
+/** During a drag this only touches CSS; the cookie is written once on release. */
+function paintWidth(width: number): number {
   const next = clampRail(width);
   document.documentElement.style.setProperty("--p-rail", `${next}px`);
-  if (save) persist(RAIL_COOKIE, String(next));
+  return next;
+}
+
+/**
+ * 08 §4a · below 1024px the rail is a sheet (phone) or an overlay on the 56px icon
+ * column (tablet). Open is a document attribute for the same reason collapsed is:
+ * CSS reads it with no React state to hydrate. It is not persisted — a sheet left
+ * open across a reload would cover the page the reader asked for.
+ */
+export const COMPACT_QUERY = "(max-width: 1023px)";
+
+function subscribeSheet(onStoreChange: () => void) {
+  const observer = new MutationObserver(onStoreChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-sheet"],
+  });
+  return () => observer.disconnect();
+}
+
+export function useSheetOpen(): boolean {
+  return useSyncExternalStore(
+    subscribeSheet,
+    () => document.documentElement.dataset.sheet === "open",
+    () => false,
+  );
+}
+
+export function setSheet(open: boolean) {
+  const root = document.documentElement;
+  if (open) root.dataset.sheet = "open";
+  else delete root.dataset.sheet;
+}
+
+function subscribeCompact(onStoreChange: () => void) {
+  const media = window.matchMedia(COMPACT_QUERY);
+  media.addEventListener("change", onStoreChange);
+  return () => media.removeEventListener("change", onStoreChange);
+}
+
+/** True below the desktop tier. The server renders desktop and the client corrects. */
+export function useCompact(): boolean {
+  return useSyncExternalStore(
+    subscribeCompact,
+    () => window.matchMedia(COMPACT_QUERY).matches,
+    () => false,
+  );
 }
 
 export function toggleRail() {
+  if (window.matchMedia(COMPACT_QUERY).matches) {
+    setSheet(document.documentElement.dataset.sheet !== "open");
+    return;
+  }
   const root = document.documentElement;
   const collapsing = root.dataset.rail !== "collapsed";
   if (collapsing) {
@@ -59,19 +120,45 @@ export function toggleRail() {
     persist(RAIL_COOKIE, "collapsed");
   } else {
     delete root.dataset.rail;
-    persist(RAIL_COOKIE, String(currentWidth()));
+    persist(RAIL_COOKIE, String(readWidth()));
   }
 }
 
 /**
- * The drag edge. `role="separator"` with arrow-key support, because a resize that
- * only works with a pointer is a resize half the people using this cannot reach.
+ * The drag edge. A `separator` with its range exposed and arrow-key, Home and End
+ * support, because a resize that only works with a pointer is a resize half the
+ * people using this cannot reach.
  */
-export function RailHandle({ collapsed: initial }: { collapsed: boolean }) {
-  const collapsed = useRailCollapsed(initial);
+export function RailHandle({
+  collapsed: initialCollapsed,
+  width: initialWidth,
+}: {
+  collapsed: boolean;
+  width: number;
+}) {
+  const collapsed = useRailCollapsed(initialCollapsed);
+  const [width, setWidth] = useState(initialWidth);
   const dragging = useRef(false);
+  const grabOffset = useRef(0);
 
   if (collapsed) return null;
+
+  /** Paint, remember for the accessible value, and persist. */
+  function commit(next: number) {
+    const applied = paintWidth(next);
+    setWidth(applied);
+    persist(RAIL_COOKIE, String(applied));
+  }
+
+  function endDrag() {
+    if (!dragging.current) return;
+    dragging.current = false;
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+    // Committing here rather than in pointerup: this fires for a cancelled
+    // gesture too, and a drag that ended in a cancel used to lose the width.
+    commit(readWidth());
+  }
 
   return (
     <div
@@ -79,44 +166,47 @@ export function RailHandle({ collapsed: initial }: { collapsed: boolean }) {
       role="separator"
       aria-orientation="vertical"
       aria-label="Resize the sidebar"
-      aria-valuenow={undefined}
+      aria-valuenow={width}
+      aria-valuemin={RAIL_MIN}
+      aria-valuemax={RAIL_MAX}
       tabIndex={0}
       onPointerDown={(event) => {
         dragging.current = true;
+        grabOffset.current = readWidth() - event.clientX;
         event.currentTarget.setPointerCapture(event.pointerId);
+        // Without this the drag selects the page text, which steals the gesture.
         document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+        // A div only takes focus from a click implicitly; ask for it, so the arrow
+        // keys work straight after a click rather than only after tabbing.
+        event.currentTarget.focus();
       }}
       onPointerMove={(event) => {
         if (!dragging.current) return;
-        // The rail starts at the viewport edge, so the pointer's x is the width.
-        setWidth(event.clientX, false);
+        paintWidth(widthFromDrag(event.clientX, grabOffset.current));
       }}
-      onPointerUp={(event) => {
-        if (!dragging.current) return;
-        dragging.current = false;
-        event.currentTarget.releasePointerCapture(event.pointerId);
-        document.body.style.cursor = "";
-        setWidth(currentWidth(), true);
-      }}
+      onPointerUp={endDrag}
+      onLostPointerCapture={endDrag}
       onKeyDown={(event) => {
+        const step = event.shiftKey ? 48 : 16;
         if (event.key === "ArrowLeft") {
           event.preventDefault();
-          setWidth(currentWidth() - 16, true);
+          commit(readWidth() - step);
         }
         if (event.key === "ArrowRight") {
           event.preventDefault();
-          setWidth(currentWidth() + 16, true);
+          commit(readWidth() + step);
         }
         if (event.key === "Home") {
           event.preventDefault();
-          setWidth(RAIL_MIN, true);
+          commit(RAIL_MIN);
         }
         if (event.key === "End") {
           event.preventDefault();
-          setWidth(RAIL_MAX, true);
+          commit(RAIL_MAX);
         }
       }}
-      onDoubleClick={() => setWidth(RAIL_DEFAULT, true)}
+      onDoubleClick={() => commit(RAIL_DEFAULT)}
       title="Drag to resize · double-click to reset"
     />
   );
