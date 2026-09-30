@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { EmptyState } from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
 import {
   attempts,
   attemptsInColumn,
@@ -163,9 +164,9 @@ export function ListView() {
         }
         heading="No attempts yet"
         action={
-          <Link className="btn pri" href="/experiments/new">
-            New experiment
-          </Link>
+          <Button asChild>
+            <Link href="/experiments/new">New experiment</Link>
+          </Button>
         }
       >
         An attempt is a hypothesis about the procedure and enough runs to test it.
