@@ -1,0 +1,29 @@
+@layer components {
+  /* A tap leaves :hover set until the next tap elsewhere, so on a device that
+     cannot hover the hover fills are withdrawn and only selection shows. */
+  @media (hover: none) {
+    .nav:not([aria-current]):hover,
+    .row:not([aria-current]):hover,
+    .pilltab:not(.on):hover,
+    .pilltab:not([data-state="active"]):hover,
+    .crumb-item:not([aria-current]):hover,
+    .brandmark:hover,
+    .seg:hover,
+    .tbl tr.clickable:hover td {
+      background: none;
+    }
+    .tbl tr.clickable:hover td:first-child {
+      background: var(--p-paper);
+    }
+    .btn:hover,
+    [data-slot="button"][data-variant="outline"]:hover {
+      border-color: var(--p-line-2);
+    }
+    .btn.pri:hover,
+    [data-slot="button"][data-variant="default"]:hover {
+      background: var(--p-accent);
+      border-color: var(--p-accent);
+    }
+  }
+
+}
