@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Rollback } from "@/components/governance/rollback";
 import { SectionAnchors } from "@/components/governance/section-anchors";
 import { Rich } from "@/components/rich-text";
+import { Button } from "@/components/ui/button";
 import { sampleDecisionRefs } from "@/lib/data/decisions";
 import {
   addedSkillSlug,
@@ -53,6 +54,7 @@ export default async function GovernancePage({
 
   return (
     <div className="gwrap">
+      <div className="gwrap-head">
       <div className="crumb">
         <Link href="/">Overview</Link> › governance
       </div>
@@ -86,8 +88,6 @@ export default async function GovernancePage({
           Promotion gate
         </Link>
       </div>
-
-      <SectionAnchors sections={governanceSections} compare={compare} />
 
       {compare ? (
         <>
@@ -123,6 +123,8 @@ export default async function GovernancePage({
         </>
       ) : null}
 
+      </div>
+      <div className="gwrap-doc">
       <div className="gsec" id="g-meta">
         <h2>Bundle</h2>
         <div className="wrap" style={{ marginTop: "10px" }}>
@@ -439,9 +441,9 @@ export default async function GovernancePage({
         {/* 05 §6 · it must resolve from any decision, not from one example. */}
         <div className="actions">
           {sampleDecisionRefs.map((ref) => (
-            <Link className="btn sm" href={`/decisions/${ref}`} key={ref}>
-              Open {ref}
-            </Link>
+            <Button asChild variant="outline" size="sm" key={ref}>
+              <Link href={`/decisions/${ref}`}>Open {ref}</Link>
+            </Button>
           ))}
         </div>
         <p className="impact">
@@ -449,6 +451,8 @@ export default async function GovernancePage({
           every cleared row in a batch links to its own.
         </p>
       </div>
+      </div>
+      <SectionAnchors sections={governanceSections} compare={compare} />
     </div>
   );
 }
