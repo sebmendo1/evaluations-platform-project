@@ -20,16 +20,6 @@ import "./globals.css";
 // Loaded after the token layer so its @layer components rules slot into the
 // cascade order Tailwind declares.
 import "./notebook.css";
-import "./notebook-00.css";
-import "./notebook-01.css";
-import "./notebook-02.css";
-import "./notebook-03.css";
-import "./notebook-04.css";
-import "./notebook-05.css";
-import "./notebook-06.css";
-import "./notebook-07.css";
-import "./notebook-08.css";
-import "./notebook-09.css";
 
 /** 09 §3 · Chase's web face. 08 §2 caps the console at 500; 600 is loaded only for
  *  the brand lockup, which follows Chase's brand type rather than console chrome.
