@@ -96,10 +96,9 @@ rather than silently fixed — see the repository README.
 `.cursor/skills/astro-design/SKILL.md`, which points at the spec rather than
 restating it.
 
-[`design.md`](../design.md) is a Cursor → Astro design translation: the extracted
-Cursor token system remapped to Open Sans and Chase blue, plus spatial recipes
-(spacing, grouping, composer and chart chrome). It is inspiration, not a spec.
-Binding geometry lives only in `08`; binding brand tokens live in `09`.
+[`design.md`](../design.md) is a Cursor → Astro spatial translation (spacing,
+grouping, composer and chart chrome). It is inspiration, not a spec. Binding
+geometry lives only in `08`.
 
 ## Precedence
 
