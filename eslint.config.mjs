@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Flat config does not read .gitignore, so build output a deploy leaves
+    // behind here would otherwise be linted as source.
+    ".vercel/**",
   ]),
 ]);
 

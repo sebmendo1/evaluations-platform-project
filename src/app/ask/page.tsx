@@ -1,13 +1,12 @@
 import { AskChat } from "@/components/ask/chat";
 
 export const metadata = {
-  title: "Ask Astro",
+  title: "Agent",
 };
 
 /**
- * 07 §Conversation is not a destination — Ask is "a standalone thread bound to
- * nothing". It owns its own composer, so the shell's scoped one steps aside here
- * rather than putting two inputs on the same screen.
+ * 07 §Conversation — Agent (`/ask`) is a standalone thread bound to nothing.
+ * It owns its own composer; Loan Originator is the hero brand signal.
  */
 export default async function AskPage({
   searchParams,
