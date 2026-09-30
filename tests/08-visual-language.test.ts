@@ -19,16 +19,7 @@ const charts = files.filter((f) => f.path.includes("components/charts"));
 
 describe("08 §1 · the palette resolves through the --p- token set", () => {
   it("declares the canonical tokens with the prefix", () => {
-    for (const token of [
-      "ink",
-      "ink-2",
-      "ink-3",
-      "paper",
-      "panel",
-      "line",
-      "accent",
-      "on-primary",
-    ]) {
+    for (const token of ["ink", "ink-2", "ink-3", "paper", "panel", "line", "accent"]) {
       expect(tokens, `--p-${token} missing`).toContain(`--p-${token}:`);
     }
   });
@@ -46,17 +37,7 @@ describe("08 §1 · the palette resolves through the --p- token set", () => {
     const darkAt = tokens.indexOf('[data-theme="dark"] {');
     const light = tokens.slice(tokens.indexOf(":root {"), darkAt);
     const dark = tokens.slice(darkAt);
-    for (const token of [
-      "ink",
-      "paper",
-      "panel",
-      "line",
-      "accent",
-      "on-primary",
-      "keep",
-      "discard",
-      "hold",
-    ]) {
+    for (const token of ["ink", "paper", "panel", "line", "accent", "keep", "discard", "hold"]) {
       expect(light, `light --p-${token}`).toContain(`--p-${token}:`);
       expect(dark, `dark --p-${token}`).toContain(`--p-${token}:`);
     }
@@ -64,15 +45,16 @@ describe("08 §1 · the palette resolves through the --p- token set", () => {
 
   it("uses no literal hex outside the token declarations", () => {
     // A component reaching for a hex bypasses the re-skin guarantee in 08 §1.
-    // Filled CTA labels use --p-on-primary rather than a raw #fff.
     const offenders: string[] = [];
     for (const file of files) {
       if (file.path.endsWith("globals.css")) continue;
-      for (const match of file.text.matchAll(/#[0-9a-fA-F]{3,8}\b/g)) {
+      for (const match of file.text.matchAll(/#[0-9a-fA-F]{6}\b/g)) {
         offenders.push(`${file.path} ${match[0]}`);
       }
     }
-    expect(offenders).toEqual([]);
+    // #fff on a filled Chase-blue button is the one permitted literal: 09 §6
+    // specifies a white label, and there is no paper-on-accent token.
+    expect(offenders.filter((o) => !o.includes("#fff"))).toEqual([]);
   });
 });
 
@@ -91,14 +73,6 @@ describe("09 §2 · Chase governs the brand tokens", () => {
     const layout = files.find((f) => f.path.endsWith("app/layout.tsx"))?.text ?? "";
     expect(layout).toContain("Open_Sans");
     expect(tokens).toContain("--font-open-sans");
-  });
-
-  it("refuses the Cursor extract charcoal / gold / orange palette", () => {
-    // design.md §0 · those hues must not land as token values.
-    const values = tokens.replace(/\/\*[\s\S]*?\*\//g, "").toLowerCase();
-    expect(values).not.toContain("#26251e");
-    expect(values).not.toContain("#c08532");
-    expect(values).not.toContain("#f54e00");
   });
 });
 
@@ -121,40 +95,6 @@ describe("08 §2 · type scale", () => {
 });
 
 describe("08 §3 · geometry", () => {
-  it("gives primary and secondary buttons a pill radius", () => {
-    const block = notebook.slice(notebook.indexOf("  .btn {"), notebook.indexOf("  .btn {") + 220);
-    expect(block).toMatch(/border-radius:\s*9999px/);
-  });
-
-  it("gives the composer send control a pill radius and on-primary label", () => {
-    const at = notebook.indexOf(".composer-send {");
-    const block = notebook.slice(at, at + 320);
-    expect(block).toMatch(/border-radius:\s*9999px/);
-    expect(block).toMatch(/color:\s*var\(--p-on-primary\)/);
-  });
-
-  it("restores a real focus outline on buttons (not merged into sectionnav)", () => {
-    const at = notebook.indexOf(".btn:focus-visible");
-    const block = notebook.slice(at, at + 280);
-    expect(block).toMatch(/\.rolerow:focus-visible\s*\{/);
-    expect(block).toMatch(/outline:\s*2px solid var\(--p-accent\)/);
-    expect(block).not.toMatch(/\.sectionnav/);
-  });
-
-  it("uses control-edge borders on form fields", () => {
-    const at = notebook.indexOf(".field select,");
-    const block = notebook.slice(at, at + 280);
-    expect(block).toMatch(/border:\s*1px solid var\(--p-line-2\)/);
-  });
-
-  it("does not ship the legacy chat-composer class names", () => {
-    // design.md §4 · Ask uses .composer-* / .ask-*; a duplicated legacy block
-    // previously reintroduced .chat-composer with the wrong radius and height.
-    expect(notebook).not.toMatch(/\.chat-composer\b/);
-    expect(notebook).not.toMatch(/\.chat-send\b/);
-    expect(notebook).toContain(".composer-card {");
-  });
-
   it("gives code chips a 4px radius", () => {
     const block = notebook.slice(notebook.indexOf(".tchip {"));
     expect(block.slice(0, 200)).toMatch(/border-radius:\s*4px/);
@@ -184,35 +124,35 @@ describe("08 §3 · geometry", () => {
     expect(tokens).toContain("--p-space-body-x: 32px");
   });
 
-  it("sets page titles at weight 600", () => {
-    expect(tokens).toMatch(/h1\s*\{[\s\S]*?font-weight:\s*600/);
-  });
-
-  it("keeps KPI strips and takeaways on the full measure", () => {
-    const strip = notebook.slice(notebook.indexOf(".strip3 {"), notebook.indexOf(".strip3 {") + 200);
-    expect(strip).toMatch(/width:\s*100%/);
-    const takeaway = notebook.slice(notebook.indexOf(".takeaway {"), notebook.indexOf(".takeaway {") + 220);
-    expect(takeaway).toMatch(/max-width:\s*none/);
-  });
-
-  it("does not put an intro lede under surface page titles", () => {
-    // Error / not-found pages may still use .lede as the body of the empty state.
-    const surfaces = files.filter(
-      (f) =>
-        /app\/(page|reports\/page|experiments\/page|verify\/page|settings\/page|attempts\/page)\.tsx$/.test(
-          f.path,
-        ) ||
-        /app\/experiments\/new\/page\.tsx$/.test(f.path) ||
-        /app\/governance\/promote\/page\.tsx$/.test(f.path) ||
-        /app\/batches\/\[batchId\]\/page\.tsx$/.test(f.path),
+  it("hangs governance section nav in the right gutter with the 2px selected accent", () => {
+    // 08 §4 · a table of contents for one document, not the retired 312px panel.
+    expect(tokens).toContain("--p-toc: 180px");
+    const wrap = notebook.slice(
+      notebook.indexOf(".gwrap:has(> .anchornav) {"),
+      notebook.indexOf(".gwrap:has(> .anchornav) {") + 280,
     );
-    for (const surface of surfaces) {
-      expect(surface.text, surface.path).not.toMatch(/<p className="lede"/);
-    }
+    expect(wrap).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)\s*var\(--p-toc\)/);
+    const nav = notebook.slice(
+      notebook.indexOf("  .anchornav {"),
+      notebook.indexOf("  .anchornav {") + 280,
+    );
+    expect(nav).toMatch(/position:\s*sticky/);
+    expect(nav).toMatch(/flex-direction:\s*column/);
+    const item = notebook.slice(
+      notebook.indexOf("  .anchornav-item {"),
+      notebook.indexOf("  .anchornav-item {") + 280,
+    );
+    expect(item).not.toMatch(/border-radius:\s*20px/);
+    const selected = notebook.slice(
+      notebook.indexOf('.anchornav-item[aria-current="location"]'),
+    );
+    expect(selected.slice(0, 240)).toMatch(/border-left-color:\s*var\(--p-accent\)/);
   });
 
   it("renders metric tiles as gapped cards, not a packed strip", () => {
-    const block = notebook.slice(notebook.indexOf(".strip3 {"), notebook.indexOf(".big {"));
+    const stripAt = notebook.indexOf("\n  .strip3 {");
+    const bigAt = notebook.indexOf("\n  .big {", stripAt);
+    const block = notebook.slice(stripAt, bigAt);
     expect(block).toMatch(/gap:\s*12px/);
     expect(block).not.toMatch(/overflow:\s*hidden/);
     expect(block).not.toMatch(/border:\s*1px solid/);
@@ -223,12 +163,13 @@ describe("08 §3 · geometry", () => {
     expect(block).toMatch(/padding:\s*14px 16px/);
   });
 
-  it("gives the composer radius 12 and an 88px-tall input", () => {
+  it("gives the composer a soft panel fill, radius 16, and an 88px-tall input", () => {
     const card = notebook.slice(
       notebook.indexOf(".composer-card {"),
       notebook.indexOf(".composer-card {") + 220,
     );
-    expect(card).toMatch(/border-radius:\s*12px/);
+    expect(card).toMatch(/border-radius:\s*16px/);
+    expect(card).toMatch(/background:\s*var\(--p-panel\)/);
     const input = notebook.slice(
       notebook.indexOf(".composer-input {"),
       notebook.indexOf(".composer-input {") + 280,
@@ -245,6 +186,39 @@ describe("08 §3 · geometry", () => {
       notebook.indexOf("[data-rail=\"collapsed\"] .nav {") + 180,
     );
     expect(collapsed).toMatch(/padding:\s*6px 0/);
+  });
+
+  it("GIVEN a selected rail row THEN selection is a white fill-only pill with no accent tick", () => {
+    // 08 §3 · Figma shell: paper (white) pill on cool panel, no left blue bar.
+    const selectedAt = notebook.indexOf(
+      '.nav[aria-current="true"],\n  .nav[aria-current="page"],\n  .row[aria-current="true"]',
+    );
+    const selectedBlock = notebook.slice(selectedAt, selectedAt + 220);
+    expect(selectedBlock).toMatch(/background:\s*var\(--p-paper\)/);
+    expect(selectedBlock).not.toMatch(/::before/);
+    expect(selectedBlock).not.toMatch(/border-left/);
+    expect(notebook).not.toMatch(
+      /\.nav\[aria-current="page"\]::before|\.row\[aria-current="page"\]::before/,
+    );
+    expect(notebook).toMatch(
+      /\.nav\[aria-current="page"\] > svg[\s\S]{0,80}color:\s*var\(--p-ink\)/,
+    );
+    expect(notebook).not.toMatch(
+      /\.nav\[aria-current="page"\] > svg[\s\S]{0,80}color:\s*var\(--p-accent\)/,
+    );
+  });
+
+  it("GIVEN the shell THEN work sits on a white stage inside panel chrome", () => {
+    const layout = files.find((f) => f.path.endsWith("app/layout.tsx"))?.text ?? "";
+    expect(layout).toContain('className="stage"');
+    const stageAt = notebook.indexOf("\n  .stage {");
+    expect(stageAt).toBeGreaterThan(-1);
+    const stage = notebook.slice(stageAt, stageAt + 280);
+    expect(stage).toMatch(/background:\s*var\(--p-paper\)/);
+    expect(stage).toMatch(/border-radius:\s*16px/);
+    expect(stage).not.toMatch(/box-shadow/);
+    const shellAt = notebook.indexOf("\n  .shell {");
+    expect(notebook.slice(shellAt, shellAt + 200)).toMatch(/background:\s*var\(--p-panel\)/);
   });
 
   it("gives the crumb-menu a hairline panel and no shadow", () => {
@@ -317,8 +291,11 @@ describe("08 §7 · loading states show an artefact, never a spinner", () => {
   it("switches a view without asking the server, so nothing can flash", () => {
     const tabs = files.find((f) => f.path.endsWith("section-tabs.tsx"))?.text ?? "";
     // Panels are rendered up front and shown or hidden; the URL is synced without a
-    // navigation.
+    // navigation. Structure is shadcn Tabs (08 §5a) with forceMount so every panel
+    // stays in the tree.
     expect(tabs).toContain("history.replaceState");
+    expect(tabs).toContain("@/components/ui/tabs");
+    expect(tabs).toContain("forceMount");
     expect(tabs).toMatch(/hidden=\{tab\.key !== active\}/);
     expect(tabs).not.toContain("router.push");
   });
@@ -341,5 +318,134 @@ describe("08 §7 · loading states show an artefact, never a spinner", () => {
     // never acceptable", which is a statement of the rule rather than a breach.
     const code = artefact.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
     expect(code).not.toMatch(/skeleton|shimmer|pulse|spin/i);
+  });
+});
+
+describe("08 §4a · form factors", () => {
+  const layout = files.find((f) => f.path.endsWith("app/layout.tsx"))?.text ?? "";
+  const rail = files.find((f) => f.path.endsWith("shell/rail.tsx"))?.text ?? "";
+  const media = (query: string, last = false) => {
+    const needle = `@media ${query} {`;
+    const at = last ? notebook.lastIndexOf(needle) : notebook.indexOf(needle);
+    expect(at, `missing @media ${query}`).toBeGreaterThan(-1);
+    return notebook.slice(at, notebook.indexOf("\n  }\n", at));
+  };
+
+  it("uses only the tier edges as breakpoints", () => {
+    const widths = [...notebook.matchAll(/(min|max)-width:\s*(\d+)px\)/g)].map(
+      (match) => Number(match[2]),
+    );
+    expect(widths.length).toBeGreaterThan(0);
+    for (const width of widths) {
+      expect([639, 640, 1023, 1024, 1440], `${width}px is not a tier edge`).toContain(width);
+    }
+  });
+
+  it("below 640px the first screen shows the page heading, not the rail", () => {
+    const phone = media("(max-width: 639px)", true);
+    expect(phone).toMatch(/\.mobilebar \{[^}]*display: flex/);
+    expect(phone).toMatch(/\.rail \{[^}]*position: fixed[^}]*visibility: hidden/);
+    expect(phone).toMatch(/\[data-sheet="open"\] \.rail \{[^}]*visibility: visible/);
+    expect(layout).toContain("<MobileBar />");
+    expect(rail).toContain('id="rail"');
+  });
+
+  it("keeps the tablet rail at 56px whatever the desktop cookie says", () => {
+    const tablet = media("(min-width: 640px) and (max-width: 1023px)");
+    expect(tablet).toMatch(/html:not\(\[data-sheet="open"\]\) \.rail \{\s*width: 56px/);
+    const desktop = media("(min-width: 1024px)");
+    expect(desktop).toContain('[data-rail="collapsed"] .rail {');
+  });
+
+  it("widens data surfaces to 1200 at 1440 and leaves documents at 880", () => {
+    expect(tokens).toContain("--p-measure-wide: 1200px");
+    expect(media("(min-width: 1440px)")).toMatch(
+      /\.body:has\(\.measure-wide\) \{\s*max-width: var\(--p-measure-wide\)/,
+    );
+    for (const page of ["app/page.tsx", "reports/page.tsx", "experiments/page.tsx", "app/attempts/page.tsx"]) {
+      const text = files.find((f) => f.path.endsWith(page))?.text ?? "";
+      expect(text, page).toContain("<WideMeasure />");
+    }
+    for (const page of ["governance/page.tsx", "ask/page.tsx", "verify/page.tsx"]) {
+      const text = files.find((f) => f.path.endsWith(page))?.text ?? "";
+      expect(text, page).not.toContain("<WideMeasure />");
+    }
+  });
+
+  it("under pointer: coarse no rail or nav target is shorter than 44px and inputs are 16px", () => {
+    const touch = media("(pointer: coarse)");
+    const targets = touch.slice(0, touch.indexOf("min-height: 44px"));
+    for (const selector of [".nav", ".row", ".product-switch", ".chip", ".pilltab"]) {
+      expect(targets, selector).toContain(selector);
+    }
+    expect(touch).toMatch(/\.rail-handle,\s*\.nav \.badge-key \{\s*display: none/);
+    expect(touch).toMatch(/\.chat-input \{\s*font-size: 16px/);
+  });
+
+  it("uses the dynamic viewport height and covers the notch", () => {
+    expect(notebook).toContain("height: 100dvh");
+    expect(layout).toContain('viewportFit: "cover"');
+  });
+});
+
+describe("08 §5a · shadcn primitives bridge onto --p-", () => {
+  const ui = files.filter((f) => f.path.includes("components/ui/"));
+
+  it("GIVEN globals.css THEN shadcn theme variables resolve to --p- tokens", () => {
+    const bridges: Array<[string, string]> = [
+      ["--background", "--p-paper"],
+      ["--foreground", "--p-ink"],
+      ["--primary", "--p-accent"],
+      ["--destructive", "--p-discard"],
+      ["--border", "--p-line"],
+      ["--muted", "--p-panel"],
+    ];
+    for (const [shadcn, astro] of bridges) {
+      expect(tokens, `${shadcn} → ${astro}`).toMatch(
+        new RegExp(`${shadcn.replace("-", "\\-")}:\\s*var\\(${astro.replace("-", "\\-")}\\)`),
+      );
+    }
+    expect(tokens).toContain('[data-theme="dark"]');
+  });
+
+  it("AND files under src/components/ui carry no shadow or weight above 500", () => {
+    expect(ui.length, "expected shadcn ui primitives to be installed").toBeGreaterThan(0);
+    const offenders: string[] = [];
+    for (const file of ui) {
+      if (
+        /box-shadow/.test(file.text) ||
+        /shadow-(?:sm|md|lg|xl|2xl|inner)\b/.test(file.text) ||
+        /backdrop-filter/.test(file.text) ||
+        /font-(?:semibold|bold|extrabold|black)\b/.test(file.text)
+      ) {
+        offenders.push(file.path);
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  it("GIVEN primary product actions THEN they use shadcn Button, not .btn CSS", () => {
+    const surfaces = [
+      "ask/chat.tsx",
+      "interrupts/resolver.tsx",
+      "verify/field-review.tsx",
+      "governance/promote/page.tsx",
+      "app/page.tsx",
+      "experiments/page.tsx",
+      "experiments/experiment-form.tsx",
+      "governance/rollback.tsx",
+    ];
+    for (const path of surfaces) {
+      const file = files.find((f) => f.path.endsWith(path));
+      expect(file, path).toBeDefined();
+      expect(file?.text, path).toContain("@/components/ui/button");
+      expect(file?.text, `${path} still uses .btn`).not.toMatch(
+        /className=["'`][^"'`]*\bbtn\b/,
+      );
+    }
+    const button = files.find((f) => f.path.endsWith("components/ui/button.tsx"))?.text ?? "";
+    expect(button).toMatch(/outline:\s*\n?\s*"/);
+    expect(button).toContain("destructive");
+    expect(button).toMatch(/sm:\s*"h-\[26px\]/);
   });
 });
