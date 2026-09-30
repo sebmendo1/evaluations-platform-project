@@ -20,9 +20,24 @@ export type BatchFile = {
   step: string;
   cost: string;
   age: string;
+  /** Figma Loans · borrower + product when known (Active loans table). */
+  borrower?: string;
+  product?: string;
 };
 
-export type BatchFilter = "held" | "running" | "cleared" | "sampled" | "all";
+/** Legacy state filters still valid in URLs (crumbs, rail running jump). */
+export type BatchFilter =
+  | "held"
+  | "running"
+  | "cleared"
+  | "sampled"
+  | "all"
+  | "pipeline"
+  | "open"
+  | "reviewed";
+
+/** Figma Loans pills — Pipeline / Open / Reviewed. */
+export type LoanTab = "pipeline" | "open" | "reviewed";
 
 export type Batch = {
   id: string;
@@ -36,16 +51,19 @@ export type Batch = {
   files: BatchFile[];
 };
 
-const runningIds = [
-  "HL-40102",
-  "HL-40118",
-  "HL-40133",
-  "HL-40147",
-  "HL-40160",
-  "HL-40173",
-  "HL-40188",
-  "HL-40201",
-];
+/** Files an agent is working right now. 07 §The rail lists them under Active loans. */
+export const runningLoans = [
+  { loanRef: "HL-40102", borrower: "Okafor, C.", product: "HELOC 1st lien" },
+  { loanRef: "HL-40118", borrower: "Brennan, A.", product: "HELOC 2nd lien" },
+  { loanRef: "HL-40133", borrower: "Tran, H.", product: "HELOC 2nd lien" },
+  { loanRef: "HL-40147", borrower: "Moreau, J.", product: "HELOC 1st lien" },
+  { loanRef: "HL-40160", borrower: "Castillo, R.", product: "HELOC 2nd lien" },
+  { loanRef: "HL-40173", borrower: "Whitfield, E.", product: "HELOC 2nd lien" },
+  { loanRef: "HL-40188", borrower: "Nakamura, S.", product: "HELOC 1st lien" },
+  { loanRef: "HL-40201", borrower: "Adeyemi, T.", product: "HELOC 2nd lien" },
+] as const;
+
+const runningIds = runningLoans.map((loan) => loan.loanRef);
 
 /** Deterministic id walk. Reserved ids are skipped so the walk cannot collide
  *  with the held, running or sampled files it runs past. */
@@ -93,6 +111,17 @@ for (const [index, id] of Object.entries(sampledOverrides)) {
  */
 const MORNING_INTERRUPTED_EVERY = 7;
 
+const clearedBorrowers = [
+  "Patel, K.",
+  "Nguyen, L.",
+  "Silva, R.",
+  "Hoffman, D.",
+  "Ibrahim, A.",
+  "Choi, Y.",
+  "Garcia, M.",
+  "Andersen, P.",
+];
+
 const morningFiles: BatchFile[] = [
   ...heldInterrupts.map((interrupt) => ({
     id: interrupt.loanRef,
@@ -102,14 +131,18 @@ const morningFiles: BatchFile[] = [
     step: `${interrupt.step} / 8`,
     cost: interrupt.spend,
     age: waitLabel(interrupt.waitedSeconds),
+    borrower: interrupt.borrower,
+    product: interrupt.product,
   })),
-  ...runningIds.map((id, i) => ({
-    id,
+  ...runningLoans.map((loan, i) => ({
+    id: loan.loanRef,
     state: "running" as const,
     interruptCount: 0,
     step: `${(i % 7) + 2} / 8`,
     cost: `$${(1.1 + i * 0.13).toFixed(2)}`,
     age: `${i + 2}m`,
+    borrower: loan.borrower,
+    product: loan.product,
   })),
   ...clearedIds.map((id, i) => ({
     id,
@@ -119,6 +152,8 @@ const morningFiles: BatchFile[] = [
     step: "8 / 8",
     cost: `$${(1.94 + ((i * 7) % 40) / 100).toFixed(2)}`,
     age: `${12 + i}m`,
+    borrower: clearedBorrowers[i % clearedBorrowers.length],
+    product: i % 2 === 0 ? "HELOC 2nd lien" : "HELOC 1st lien",
   })),
 ];
 
@@ -143,7 +178,7 @@ export const batches: Batch[] = [
     spend: "$237",
     perRun: "$2.19",
     note: "first batch on 0.12.0",
-    lede: "108 HELOC files submitted at 09:12, running on bundle 0.12.0. Each file is a turn in this thread.",
+    lede: "108 HELOC · bundle 0.12.0 · started 09:12",
     files: morningFiles,
   },
   {
@@ -154,7 +189,7 @@ export const batches: Batch[] = [
     spend: "$222",
     perRun: "$2.31",
     note: "last batch on 0.11.0",
-    lede: "96 HELOC files submitted at 13:40 on bundle 0.11.0. Closed at 18:05 with every file decided.",
+    lede: "96 HELOC · bundle 0.11.0 · closed 18:05",
     files: afternoonFiles,
   },
 ];
@@ -188,32 +223,48 @@ export function countClearedWithInterrupt(batch: Batch) {
     .length;
 }
 
-export function filterFiles(batch: Batch, filter: BatchFilter) {
-  if (filter === "all") return batch.files;
-  if (filter === "sampled") return batch.files.filter((file) => file.sampled);
-  return batch.files.filter((file) => file.state === filter);
+export function loanTabForFilter(filter: BatchFilter): LoanTab {
+  if (filter === "pipeline" || filter === "all") return "pipeline";
+  if (filter === "reviewed" || filter === "cleared" || filter === "sampled") {
+    return "reviewed";
+  }
+  return "open";
 }
 
-export function batchFilters(batch: Batch) {
-  const filters: { key: BatchFilter; label: string; count: number }[] = [];
-  const order: RunState[] = ["held", "running", "cleared", "crashed"];
-  const names: Record<string, string> = {
-    held: "Held",
-    running: "Running",
-    cleared: "Cleared",
-    crashed: "Crashed",
-  };
-
-  for (const state of order) {
-    const count = countFiles(batch, state);
-    if (count > 0) filters.push({ key: state as BatchFilter, label: names[state], count });
+export function filterFiles(batch: Batch, filter: BatchFilter) {
+  const tab = loanTabForFilter(filter);
+  if (filter === "sampled") return batch.files.filter((file) => file.sampled);
+  if (filter === "held" || filter === "running" || filter === "cleared") {
+    return batch.files.filter((file) => file.state === filter);
   }
+  if (tab === "pipeline") return batch.files;
+  if (tab === "open") {
+    return batch.files.filter(
+      (file) => file.state === "held" || file.state === "running",
+    );
+  }
+  return batch.files.filter((file) => file.state === "cleared");
+}
 
-  const sampled = countSampled(batch);
-  if (sampled > 0) filters.push({ key: "sampled", label: "Sampled", count: sampled });
+/** Figma Loans · three pills with counts. */
+export function loanTabs(batch: Batch) {
+  const open =
+    countFiles(batch, "held") + countFiles(batch, "running");
+  const reviewed = countFiles(batch, "cleared");
+  return [
+    { key: "pipeline" as const, label: "Pipeline", count: batch.files.length },
+    { key: "open" as const, label: "Open", count: open },
+    { key: "reviewed" as const, label: "Reviewed", count: reviewed },
+  ];
+}
 
-  filters.push({ key: "all", label: "All", count: batch.files.length });
-  return filters;
+/** @deprecated Prefer loanTabs — kept for callers that still list state chips. */
+export function batchFilters(batch: Batch) {
+  return loanTabs(batch).map((tab) => ({
+    key: tab.key as BatchFilter,
+    label: tab.label,
+    count: tab.count,
+  }));
 }
 
 export function isBatchFilter(value: string | undefined): value is BatchFilter {
@@ -222,8 +273,15 @@ export function isBatchFilter(value: string | undefined): value is BatchFilter {
     value === "running" ||
     value === "cleared" ||
     value === "sampled" ||
-    value === "all"
+    value === "all" ||
+    value === "pipeline" ||
+    value === "open" ||
+    value === "reviewed"
   );
+}
+
+export function isLoanTab(value: string | undefined): value is LoanTab {
+  return value === "pipeline" || value === "open" || value === "reviewed";
 }
 
 export const currentBatch = batches[0];
