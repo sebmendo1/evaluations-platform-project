@@ -1,9 +1,3 @@
-/* Structural styles ported from the Astro notebook concept. Class names are kept
-   verbatim so the port can be checked rule by rule against the source. */
-
+/* notebook styles split across notebook-NN.css for deploy sync */
 @layer components {
-  .mono {
-    font-family: var(--p-mono);
-    font-variant-ligatures: none;
-  }
 }
