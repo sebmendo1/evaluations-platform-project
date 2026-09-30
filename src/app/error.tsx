@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 
+import { Button } from "@/components/ui/button";
+
 export default function ErrorPage({
   error,
   reset,
@@ -21,9 +23,9 @@ export default function ErrorPage({
         behind this page is unavailable.
       </p>
       <div className="actions">
-        <button className="btn pri" type="button" onClick={reset}>
+        <Button type="button" onClick={reset}>
           Try again
-        </button>
+        </Button>
       </div>
     </>
   );

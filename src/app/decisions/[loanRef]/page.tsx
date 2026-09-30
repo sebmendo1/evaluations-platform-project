@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Metric } from "@/components/metric";
 import { Crumbs } from "@/components/crumbs";
+import { Button } from "@/components/ui/button";
 import { activeLoanCrumbs, batchContaining } from "@/lib/crumbs";
 import {
   chainFor,
@@ -61,11 +62,13 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
         <h1 className="mono">{record.decision.loanRef}</h1>
         <span className="eyebrow">audit chain</span>
       </div>
-      <p className="page-meta">
-        {record.decision.outcome} · {record.decision.lineSupportable}
+      <p className="lede">
+        {record.decision.outcome} · {record.decision.lineSupportable}. Every field below
+        resolves down to a page in a document or to a named formula, and the bundle
+        resolves up to the experiment that authorised it.
       </p>
 
-      <div className="strip2">
+      <div className="strip2" style={{ maxWidth: "520px" }}>
         <Metric
           id="citation_coverage"
           context="production"
@@ -186,12 +189,12 @@ export default async function DecisionPage({ params }: { params: Promise<Params>
         </div>
         {chain.attempt ? (
           <div className="actions">
-            <Link className="btn" href={`/attempts/${chain.attempt.slug}`}>
-              Open the attempt
-            </Link>
-            <Link className="btn" href="/governance?compare=1">
-              See what that bundle changed
-            </Link>
+            <Button asChild variant="outline">
+              <Link href={`/attempts/${chain.attempt.slug}`}>Open the attempt</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/governance?compare=1">See what that bundle changed</Link>
+            </Button>
           </div>
         ) : null}
         <p className="takeaway">

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
+
 export const metadata = {
   title: "No decision on record",
 };
@@ -17,12 +19,12 @@ export default function NotFound() {
         chain. This reference is held, running, or belongs to another workspace.
       </p>
       <div className="actions">
-        <Link className="btn pri" href="/batches/batch-0903-am?filter=cleared">
-          Browse cleared files
-        </Link>
-        <Link className="btn" href="/governance#g-audit">
-          Back to the audit chain
-        </Link>
+        <Button asChild>
+          <Link href="/batches/batch-0903-am?filter=cleared">Browse cleared files</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/governance#g-audit">Back to the audit chain</Link>
+        </Button>
       </div>
       <p className="impact">
         A held file is waiting on a person and has produced no decision to trace. Open it

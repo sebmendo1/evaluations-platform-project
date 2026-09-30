@@ -42,6 +42,9 @@ export default async function NewExperimentPage({
     <>
       <Crumbs segments={experimentCrumbs({ view: "new" })} />
       <h1>Run an experiment</h1>
+      <p className="lede">
+        A hypothesis, a bundle, a corpus, and enough runs to separate from baseline.
+      </p>
 
       <ExperimentForm defaults={defaults} />
     </>
