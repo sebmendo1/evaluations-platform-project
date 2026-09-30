@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { ClickableRow } from "@/components/clickable-row";
 import { EmptyState } from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
 import { heldInterrupts, interruptLabels, waitLabel } from "@/lib/data/interrupts";
 import { queueOrder } from "@/lib/domain/interrupt";
 import { useResolved } from "@/lib/store/resolved";
@@ -30,13 +31,12 @@ export function HeldQueue({ batchHref }: { batchHref: string }) {
         }
         heading="Nothing waiting"
         action={
-          <Link className="btn" href={batchHref}>
-            Open the batch
-          </Link>
+          <Button asChild variant="outline">
+            <Link href={batchHref}>Open the batch</Link>
+          </Button>
         }
       >
-        All {heldInterrupts.length} files that needed a person have been answered, and
-        each one wrote a case to the corpus on its way out.
+        All {heldInterrupts.length} held files answered — each wrote a corpus case.
       </EmptyState>
     );
   }
@@ -68,13 +68,8 @@ export function HeldQueue({ batchHref }: { batchHref: string }) {
         </table>
       </div>
       <p className="impact">
-        Sorted by wait time within its routing class, not by a priority score — a score
-        would need tuning and would be gamed. The third column is computed from the
-        policy cards: most conflicts do not move the decision, and saying so is what
-        keeps the queue moving.
-        {answered > 0
-          ? ` ${answered} answered this session, each one now a labelled case.`
-          : null}
+        Wait time within routing class. Outcome column from policy cards.
+        {answered > 0 ? ` ${answered} answered this session.` : null}
       </p>
     </>
   );

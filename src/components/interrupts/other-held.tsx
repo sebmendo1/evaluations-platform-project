@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { ClickableRow } from "@/components/clickable-row";
 import { EmptyState } from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
 import { heldInterrupts, interruptLabels, waitLabel } from "@/lib/data/interrupts";
 import { queueOrder } from "@/lib/domain/interrupt";
 import { useResolved } from "@/lib/store/resolved";
@@ -42,9 +43,9 @@ export function OtherHeldFiles({
           }
           heading="Nothing else waiting"
           action={
-            <Link className="btn" href={`/batches/${batchId}`}>
-              Back to the batch
-            </Link>
+            <Button asChild variant="outline">
+              <Link href={`/batches/${batchId}`}>Back to the batch</Link>
+            </Button>
           }
         >
           Every other file that needed a person has been answered.

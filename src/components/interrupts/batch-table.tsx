@@ -4,43 +4,33 @@ import Link from "next/link";
 
 import { ClickableRow } from "@/components/clickable-row";
 import { EmptyState } from "@/components/empty-state";
-import type { Batch, BatchFile, BatchFilter } from "@/lib/data/batches";
+import { Button } from "@/components/ui/button";
+import {
+  loanTabForFilter,
+  type Batch,
+  type BatchFile,
+  type BatchFilter,
+} from "@/lib/data/batches";
 import { useResolved } from "@/lib/store/resolved";
 
-/**
- * The batch console's table. Client-side so files answered this session drop out
- * of the held filter and the queue can reach its completion state — 00 §Design
- * rules calls a screen with no zero state the wrong screen.
- */
-function StateCell({ file }: { file: BatchFile }) {
-  if (file.state === "held") {
-    return <td className="v-hold">held · {file.interruptLabel}</td>;
-  }
-  if (file.state === "running") {
-    return <td className="v-none">running</td>;
-  }
-  if (file.state === "crashed") {
-    return <td className="v-dis">crashed</td>;
-  }
-  if (file.interruptCount > 0) {
-    return (
-      <td>
-        cleared · {file.interruptCount} interrupt{file.interruptCount === 1 ? "" : "s"}
-      </td>
-    );
-  }
-  return (
-    <td className={file.sampled ? undefined : "v-keep"}>
-      cleared
-      {file.sampled ? (
-        <span className="tag" style={{ marginLeft: "6px" }}>
-          sampled
-        </span>
-      ) : null}
-    </td>
-  );
+function milestoneFor(file: BatchFile): string {
+  if (file.state === "held") return file.interruptLabel ?? "Held";
+  if (file.state === "running") return "In review";
+  if (file.state === "crashed") return "Crashed";
+  return "Submitted";
 }
 
+function stageClass(file: BatchFile): string {
+  if (file.state === "held") return "v-hold";
+  if (file.state === "running") return "v-none";
+  if (file.state === "crashed") return "v-dis";
+  return file.interruptCount > 0 ? "" : "v-keep";
+}
+
+/**
+ * Figma Loans table · Loan / Milestone / Stage / Scope / Updated.
+ * Client-side so files answered this session drop out of Open.
+ */
 export function BatchTable({
   batch,
   rows,
@@ -54,14 +44,18 @@ export function BatchTable({
   const answeredRefs = new Set(
     Object.values(resolved).map((entry) => entry.case.input.loanRef),
   );
+  const tab = loanTabForFilter(filter);
 
-  // A held file answered this session is no longer held. Only the held and all
-  // views change shape; a cleared file was never in question.
+  // Held files answered this session leave Open (and Pipeline still lists them
+  // as cleared only after a reload of mock data — session drop is Open-only).
   const visible =
-    filter === "held" ? rows.filter((file) => !answeredRefs.has(file.id)) : rows;
-  const answered = rows.length - visible.length;
+    tab === "open"
+      ? rows.filter((file) => file.state !== "held" || !answeredRefs.has(file.id))
+      : rows;
+  const answered =
+    tab === "open" ? rows.filter((file) => file.state === "held").length - visible.filter((file) => file.state === "held").length : 0;
 
-  if (visible.length === 0 && filter === "held") {
+  if (visible.length === 0 && tab === "open") {
     return (
       <EmptyState
         tone="keep"
@@ -70,54 +64,61 @@ export function BatchTable({
             <path d="M3 8.5 6.5 12 13 4.5" />
           </svg>
         }
-        heading="Nothing waiting"
+        heading="Nothing open"
         action={
-          <Link className="btn" href={`/batches/${batch.id}?filter=all`}>
-            See the whole batch
-          </Link>
+          <Button asChild variant="outline">
+            <Link href={`/batches/${batch.id}?filter=pipeline`}>See pipeline</Link>
+          </Button>
         }
       >
-        All {rows.length} files that needed a person have been answered, and each one
-        wrote a labelled case on its way out. This queue is an inbox, not a monitor.
+        All open files have been answered — each wrote a labelled corpus case.
       </EmptyState>
     );
   }
 
   return (
     <>
-      <div className="wrap scrollY">
-        <table className="tbl">
+      <div className="loans-table wrap scrollY">
+        <table className="tbl loans-tbl">
           <caption className="sr-only">
-            Files in {batch.id}, filtered to {filter}
+            Active loans in {batch.id}, {tab}
           </caption>
           <thead>
             <tr>
-              <th>file</th>
-              <th>state</th>
-              <th>step</th>
-              <th>cost</th>
-              <th>age</th>
+              <th>Loan</th>
+              <th>Milestone</th>
+              <th>Stage</th>
+              <th>Scope</th>
+              <th>Updated</th>
             </tr>
           </thead>
           <tbody>
             {visible.map((file) => {
-              // 05 §6 · the audit chain resolves from any decision, so a cleared
-              // file links to its own chain rather than to nothing.
               const href =
                 file.state === "held"
                   ? `/batches/${batch.id}/files/${file.id}`
                   : file.state === "cleared"
                     ? `/decisions/${file.id}`
                     : undefined;
+              const loanLabel = file.borrower ?? file.id;
 
               const cells = (
                 <>
-                  <td className="m">
-                    {href ? <Link href={href}>{file.id}</Link> : file.id}
+                  <td>
+                    <div className="loans-loan">
+                      {href ? (
+                        <Link href={href} className="loans-loan-name">
+                          {loanLabel}
+                        </Link>
+                      ) : (
+                        <span className="loans-loan-name">{loanLabel}</span>
+                      )}
+                      <span className="loans-loan-id mono">{file.id}</span>
+                    </div>
                   </td>
-                  <StateCell file={file} />
-                  <td className="m">{file.step}</td>
-                  <td className="m">{file.cost}</td>
+                  <td>{milestoneFor(file)}</td>
+                  <td className={stageClass(file)}>{file.state}</td>
+                  <td className="nc">{file.product ?? "—"}</td>
                   <td className="m">{file.age}</td>
                 </>
               );
@@ -135,8 +136,7 @@ export function BatchTable({
       </div>
       {answered > 0 ? (
         <p className="impact">
-          {answered} answered this session and dropped off the queue, each one now a
-          labelled case in the corpus.
+          {answered} answered this session — each a labelled corpus case.
         </p>
       ) : null}
     </>
