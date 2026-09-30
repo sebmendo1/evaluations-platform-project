@@ -1,22 +1,30 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { AttemptCard } from "@/components/attempts/attempt-card";
+import { ChartBlock } from "@/components/blocks";
+import { AreaSeriesChart } from "@/components/charts/area-series-chart";
 import { ClickableRow } from "@/components/clickable-row";
 import { HeldQueue } from "@/components/interrupts/queue";
+import { WideMeasure } from "@/components/measure";
 import { Metric } from "@/components/metric";
+import { OverviewRangePills } from "@/components/overview/range-pills";
 import { SectionTabs } from "@/components/section-tabs";
+import { Button } from "@/components/ui/button";
 import { autonomyLabel, batches, countFiles, currentBatch } from "@/lib/data/batches";
 import { attempts, attemptVerdict } from "@/lib/data/attempts";
 import { ledger, verdictTone } from "@/lib/data/experiments";
-import { heldInterrupts, waitLabel } from "@/lib/data/interrupts";
+import {
+  isOverviewRange,
+  overviewPeriod,
+  type OverviewRange,
+} from "@/lib/data/overview";
 import { recentReviews, verifyStats } from "@/lib/data/verify";
-import { queueOrder } from "@/lib/domain/interrupt";
 import { toneClass } from "@/lib/rich-text";
 
 /**
- * Overview owns "the current state" (07 §Surface map), which is why batches and
- * blind review live here as sections rather than as their own rail groups. Both are
- * state you check, not places you navigate to and stay in.
+ * Overview · Figma period instrument first (range, three KPIs, two area charts),
+ * then workspace sections. Spec: 07 §Overview.
  */
 type Section = "queue" | "batches" | "verify" | "ledger" | "attempts";
 
@@ -29,233 +37,240 @@ function isSection(value: string | undefined): value is Section {
 export default async function OverviewPage({
   searchParams,
 }: {
-  searchParams: Promise<{ section?: string }>;
+  searchParams: Promise<{ section?: string; range?: string }>;
 }) {
-  const { section } = await searchParams;
+  const { section, range: rangeParam } = await searchParams;
   const active: Section = isSection(section) ? section : "queue";
+  const range: OverviewRange = isOverviewRange(rangeParam) ? rangeParam : "7d";
+  const period = overviewPeriod(range);
 
   const held = countFiles(currentBatch, "held");
   const batchHref = `/batches/${currentBatch.id}`;
-  // 03 §Routing · wait time within a routing class, not a priority score.
-  const queue = queueOrder(heldInterrupts);
   const openAttempts = attempts.filter((a) => attemptVerdict(a) === "pending");
 
   const batchesPanel = (
-      <>
-        <div className="wrap scroll">
-          <table className="tbl">
-            <caption className="sr-only">Batches in this workspace</caption>
-            <thead>
-              <tr>
-                <th>batch</th>
-                <th>bundle</th>
-                <th>state</th>
-                <th>files</th>
-                <th>autonomy</th>
-                <th>held</th>
-                <th>spent</th>
-              </tr>
-            </thead>
-            <tbody>
-              {batches.map((batch) => {
-                const heldHere = countFiles(batch, "held");
-                return (
-                  <ClickableRow
-                    key={batch.id}
-                    href={`/batches/${batch.id}`}
-                    selected={batch.state === "running"}
-                  >
-                    <td className="m">
-                      <Link href={`/batches/${batch.id}`}>{batch.id}</Link>
-                    </td>
-                    <td className="m">{batch.bundle}</td>
-                    <td className={batch.state === "running" ? "v-none" : "v-keep"}>
-                      {batch.state}
-                    </td>
-                    <td className="m">{batch.files.length}</td>
-                    <td className="m">{autonomyLabel(batch)}</td>
-                    <td className={heldHere > 0 ? "m v-hold" : "m"}>
-                      {heldHere > 0 ? heldHere : "—"}
-                    </td>
-                    <td className="m">{batch.spend}</td>
-                  </ClickableRow>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <p className="impact">
-          A batch is a thread and its files are turns inside it. Opening one lands on
-          the held filter, because that is the only view with anything waiting on a
-          person — the other {countFiles(currentBatch, "cleared")} files in the current
-          batch cleared on their own.
-        </p>
-      </>
+    <>
+      <div className="wrap scroll">
+        <table className="tbl">
+          <caption className="sr-only">Batches in this workspace</caption>
+          <thead>
+            <tr>
+              <th>batch</th>
+              <th>bundle</th>
+              <th>state</th>
+              <th>files</th>
+              <th>autonomy</th>
+              <th>held</th>
+              <th>spent</th>
+            </tr>
+          </thead>
+          <tbody>
+            {batches.map((batch) => {
+              const heldHere = countFiles(batch, "held");
+              return (
+                <ClickableRow
+                  key={batch.id}
+                  href={`/batches/${batch.id}`}
+                  selected={batch.state === "running"}
+                >
+                  <td className="m">
+                    <Link href={`/batches/${batch.id}`}>{batch.id}</Link>
+                  </td>
+                  <td className="m">{batch.bundle}</td>
+                  <td className={batch.state === "running" ? "v-none" : "v-keep"}>
+                    {batch.state}
+                  </td>
+                  <td className="m">{batch.files.length}</td>
+                  <td className="m">{autonomyLabel(batch)}</td>
+                  <td className={heldHere > 0 ? "m v-hold" : "m"}>
+                    {heldHere > 0 ? heldHere : "—"}
+                  </td>
+                  <td className="m">{batch.spend}</td>
+                </ClickableRow>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="impact">
+        Opens on held — {countFiles(currentBatch, "cleared")} cleared alone in the
+        current batch.
+      </p>
+    </>
   );
 
   const verifyPanel = (
-      <>
-        <div className="strip2">
-          <Metric
-            id="sampled_accuracy"
-            context="production"
-            size="small"
-            value={verifyStats.sampledAccuracy}
-            n="70 fields"
-            detail={verifyStats.sampledDetail}
-          />
-          <div className="small warn">
-            <div className="lab">Open reviews</div>
-            <div className="val mono">{verifyStats.openReviews}</div>
-            <div className="sub">{verifyStats.openDetail}</div>
-          </div>
+    <>
+      <div className="strip2" style={{ maxWidth: "520px" }}>
+        <Metric
+          id="sampled_accuracy"
+          context="production"
+          size="small"
+          value={verifyStats.sampledAccuracy}
+          n="70 fields"
+          detail={verifyStats.sampledDetail}
+        />
+        <div className="small warn">
+          <div className="lab">Open reviews</div>
+          <div className="val mono">{verifyStats.openReviews}</div>
+          <div className="sub">{verifyStats.openDetail}</div>
         </div>
-        <div className="wrap" style={{ marginTop: "12px" }}>
-          <table className="tbl">
-            <caption className="sr-only">Recently drawn blind reviews</caption>
-            <tbody>
-              {recentReviews.map((review) => (
-                <tr key={review.id}>
-                  <td className="m">{review.id}</td>
-                  <td>{review.detail}</td>
-                  <td className={toneClass[review.tone]}>{review.result}</td>
-                  <td>{review.by}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="impact">
-          The reviewer is not told which files are sampled. That blindness is the point:
-          the queue only ever shows you files where the run knew it was unsure, so it is
-          structurally unable to catch a file the run got wrong confidently. This is the
-          only control that sees those.
-        </p>
-      </>
+      </div>
+      <div className="wrap" style={{ marginTop: "12px" }}>
+        <table className="tbl">
+          <caption className="sr-only">Recently drawn blind reviews</caption>
+          <tbody>
+            {recentReviews.map((review) => (
+              <tr key={review.id}>
+                <td className="m">{review.id}</td>
+                <td>{review.detail}</td>
+                <td className={toneClass[review.tone]}>{review.result}</td>
+                <td>{review.by}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="impact">
+        Blind to which files are sampled — the only control that catches confident
+        errors the queue never sees.
+      </p>
+    </>
   );
 
   const ledgerPanel = (
-      <>
-        <div className="wrap scroll">
-          <table className="tbl">
-            <caption className="sr-only">
-              Every batch and eval in one append-only log
-            </caption>
-            <thead>
-              <tr>
-                <th>entry</th>
-                <th>kind</th>
-                <th>metric</th>
-                <th>runs</th>
-                <th>cost</th>
-                <th>verdict</th>
-                <th className="nc">note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ledger.map((row) => {
-                const cells = (
-                  <>
-                    <td className="m">
-                      {row.href ? <Link href={row.href}>{row.entry}</Link> : row.entry}
-                    </td>
-                    <td>{row.kind}</td>
-                    <td className="m">{row.metric}</td>
-                    <td>{row.runs}</td>
-                    <td className="m">{row.cost}</td>
-                    <td className={toneClass[verdictTone[row.verdict]]}>
-                      {row.verdict}
-                    </td>
-                    <td className="nc">{row.note}</td>
-                  </>
-                );
+    <>
+      <div className="wrap scroll">
+        <table className="tbl">
+          <caption className="sr-only">
+            Every batch and eval in one append-only log
+          </caption>
+          <thead>
+            <tr>
+              <th>entry</th>
+              <th>kind</th>
+              <th>metric</th>
+              <th>runs</th>
+              <th>cost</th>
+              <th>verdict</th>
+              <th className="nc">note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ledger.map((row) => {
+              const cells = (
+                <>
+                  <td className="m">
+                    {row.href ? <Link href={row.href}>{row.entry}</Link> : row.entry}
+                  </td>
+                  <td>{row.kind}</td>
+                  <td className="m">{row.metric}</td>
+                  <td>{row.runs}</td>
+                  <td className="m">{row.cost}</td>
+                  <td className={toneClass[verdictTone[row.verdict]]}>{row.verdict}</td>
+                  <td className="nc">{row.note}</td>
+                </>
+              );
 
-                return row.href ? (
-                  <ClickableRow key={row.entry} href={row.href} selected={row.current}>
-                    {cells}
-                  </ClickableRow>
-                ) : (
-                  <tr key={row.entry}>{cells}</tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <p className="impact">
-          Evals have ground truth so they report accuracy. Batches don’t, so they report
-          autonomy and lean on blind review for accuracy. Nothing is edited after it
-          lands, including the crash and the discard.
-        </p>
-      </>
+              return row.href ? (
+                <ClickableRow key={row.entry} href={row.href} selected={row.current}>
+                  {cells}
+                </ClickableRow>
+              ) : (
+                <tr key={row.entry}>{cells}</tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="impact">
+        Evals report accuracy; batches report autonomy. Append-only — crash and
+        discard stay.
+      </p>
+    </>
   );
 
   const attemptsPanel = (
-      <>
-        <div className="ograid">
-          {openAttempts.map((attempt) => (
-            <AttemptCard attempt={attempt} key={attempt.slug} />
-          ))}
-        </div>
-        <p className="impact">
-          Two attempts are open: one grading, one drafted and unspent. The drafted one
-          would remove three of every four conflicting-extraction stops, which is also
-          exactly the change the autonomy guardrail exists to police.
-        </p>
-      </>
+    <>
+      <div className="ograid">
+        {openAttempts.map((attempt) => (
+          <AttemptCard attempt={attempt} key={attempt.slug} />
+        ))}
+      </div>
+      <p className="impact">
+        Two open — one grading, one drafted. Draft cuts three of four conflicting
+        extractions; INV-4 still applies.
+      </p>
+    </>
   );
 
   return (
     <>
+      <WideMeasure />
       <h1>Overview</h1>
 
-      {/* Every figure here resolves to an entry in 06 and carries its provenance
-          from the dictionary rather than from a hand-written string. */}
-      <div className="strip3">
-        <Metric
-          id="cost_per_run"
-          context="production"
-          value="$2.19"
-          detail="$237 today · up $0.07 on 0.12.0"
-        />
-        <Metric
-          id="sampled_accuracy"
-          context="production"
-          value="95.1%"
-          n="70 fields"
-          detail="the only production accuracy figure"
-        />
-        <Metric
-          id="files_in_batch"
-          context="production"
-          value={String(currentBatch.files.length)}
-          detail="graded runs are counted separately"
-        />
+      <Suspense
+        fallback={
+          <div className="ov-range">
+            <span className="ov-range-label">{period.rangeLabel}</span>
+          </div>
+        }
+      >
+        <OverviewRangePills rangeLabel={period.rangeLabel} initial={range} />
+      </Suspense>
+
+      {/* Figma · three soft tiles. Dictionary ids only (06). */}
+      <div className="ov-kpis">
+        <Metric id="autonomy_rate" context="production" value={period.autonomy} />
+        <Metric id="cost_per_run" context="production" value={period.cost} />
+        <Metric id="turns_per_run" context="production" value={period.turns} />
       </div>
 
-      <div className="strip2">
-        <Metric
-          id="autonomy_rate"
-          context="production"
-          size="small"
-          tone="keep"
-          value={autonomyLabel(currentBatch)}
-          detail="cleared with no human · was 79%"
-        />
-        <Metric
-          id="held_count"
-          context="production"
-          size="small"
-          tone="hold"
-          value={String(held)}
-          detail={`oldest has waited ${waitLabel(queue[0].waitedSeconds)}`}
-        />
+      <div className="ov-charts">
+        <ChartBlock
+          title="Autonomy"
+          caption="Share of files cleared with no human"
+          takeaway="Rising through the window — still no substitute for sampled accuracy on the blind-review tab."
+        >
+          <AreaSeriesChart
+            points={period.points.map((point) => ({
+              label: point.label,
+              value: point.autonomy,
+            }))}
+            min={0}
+            max={100}
+            formatTick={(value) => (value === 0 ? "0" : `${value}%`)}
+            ariaLabel={`Autonomy over ${period.rangeLabel}`}
+            stroke="var(--p-keep)"
+            fill="color-mix(in srgb, var(--p-keep) 28%, transparent)"
+          />
+        </ChartBlock>
+
+        <ChartBlock
+          title="Cost per run"
+          caption="Inference cost per completed run"
+          takeaway="Cost drifts with the period average; the tile above is the latest day, not the chart peak."
+        >
+          <AreaSeriesChart
+            points={period.points.map((point) => ({
+              label: point.label,
+              value: point.cost,
+            }))}
+            min={0}
+            max={3}
+            formatTick={(value) => `$${value.toFixed(0)}`}
+            ariaLabel={`Cost per run over ${period.rangeLabel}`}
+            stroke="var(--p-discard)"
+            fill="color-mix(in srgb, var(--p-discard) 22%, transparent)"
+          />
+        </ChartBlock>
       </div>
 
+      {/* INV-4 / INV-10 · autonomy above sits next to a sampled accuracy limit. */}
       <p className="takeaway" style={{ borderLeftColor: "var(--p-hold)" }}>
-        What this doesn’t tell you: 95.1% rests on 70 fields from five blind reviews.
-        That is enough to catch a systematic error and nowhere near enough to carry an
-        interval. The graded figure from the corpus reads 96.4% ±1.2, and it is not a
-        production measurement — live files are messier than the set.
+        What this doesn’t tell you: sampled accuracy is 95.1% on 70 fields — enough
+        to catch a systematic miss, not an interval. Graded corpus is 96.4% ±1.2
+        (lab).
       </p>
 
       <SectionTabs
@@ -265,13 +280,13 @@ export default async function OverviewPage({
         tabs={[
           {
             key: "queue",
-            label: "Waiting on you",
+            label: "Held",
             count: held,
             panel: <HeldQueue batchHref={batchHref} />,
             action: (
-              <Link className="btn sm" href={batchHref}>
-                Open the batch
-              </Link>
+              <Button asChild variant="outline" size="sm">
+                <Link href={batchHref}>Open the batch</Link>
+              </Button>
             ),
           },
           {
@@ -286,9 +301,9 @@ export default async function OverviewPage({
             count: verifyStats.openReviews,
             panel: verifyPanel,
             action: (
-              <Link className="btn sm" href="/verify">
-                Open blind review
-              </Link>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/verify">Open blind review</Link>
+              </Button>
             ),
           },
           {
@@ -303,18 +318,13 @@ export default async function OverviewPage({
             count: openAttempts.length,
             panel: attemptsPanel,
             action: (
-              <Link className="btn sm" href="/attempts">
-                All attempts
-              </Link>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/attempts">All attempts</Link>
+              </Button>
             ),
           },
         ]}
       />
-
-
-
-
-
     </>
   );
 }
