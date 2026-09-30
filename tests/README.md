@@ -8,7 +8,7 @@ test name quotes the criterion it covers and cites its section.
 npm test
 ```
 
-Coverage is deliberately uneven. The specs contain 60 acceptance checkboxes and 19
+Coverage is deliberately uneven. The specs contain 60 acceptance checkboxes and 27
 `GIVEN/WHEN/THEN` blocks, and a meaningful share of them are organizational
 sign-offs or need real reviewers rather than assertions. The conformance matrix in
 [`../specs/CONFORMANCE.md`](../specs/CONFORMANCE.md) records which are covered

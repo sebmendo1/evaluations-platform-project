@@ -1,11 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import type { ReactNode } from "react";
 
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-function UiProviders({ children }: { children: React.ReactNode }) {
-  return <TooltipProvider>{children}</TooltipProvider>
+/** Client providers required by shadcn overlays (08 §5a). */
+export function UiProviders({ children }: { children: ReactNode }) {
+  return <TooltipProvider delayDuration={200}>{children}</TooltipProvider>;
 }
-
-export { UiProviders }
