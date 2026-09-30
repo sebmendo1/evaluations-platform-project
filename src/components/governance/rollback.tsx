@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+
 /**
  * 05 §5 · Rollback.
  *
@@ -68,9 +70,9 @@ export function Rollback({
             already stamped with {live} are left exactly as they are.
           </p>
           <div className="actions">
-            <button className="btn dan" type="button" onClick={() => setOpen(true)}>
+            <Button variant="destructive" type="button" onClick={() => setOpen(true)}>
               Roll back to {priorVersion}
-            </button>
+            </Button>
           </div>
         </>
       ) : (
@@ -92,8 +94,8 @@ export function Rollback({
             </p>
           ) : null}
           <div className="actions">
-            <button
-              className="btn dan"
+            <Button
+              variant="destructive"
               type="button"
               onClick={() => {
                 if (!reason.trim()) {
@@ -109,10 +111,10 @@ export function Rollback({
               }}
             >
               Confirm rollback
-            </button>
-            <button className="btn" type="button" onClick={() => setOpen(false)}>
+            </Button>
+            <Button variant="outline" type="button" onClick={() => setOpen(false)}>
               Cancel
-            </button>
+            </Button>
           </div>
         </>
       )}

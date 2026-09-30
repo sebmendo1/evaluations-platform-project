@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import { runnerOptions } from "@/lib/data/experiments";
 import { estimateRun } from "@/lib/estimate";
 
@@ -85,9 +86,9 @@ export function MiniRunner() {
         .
       </p>
       <div className="actions">
-        <button className="btn pri" type="button" onClick={open}>
+        <Button type="button" onClick={open}>
           Open full runner
-        </button>
+        </Button>
       </div>
     </>
   );
