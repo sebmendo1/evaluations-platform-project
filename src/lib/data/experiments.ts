@@ -74,7 +74,7 @@ export const ledger: LedgerEntry[] = [
     cost: "$26.28",
     verdict: "keep",
     note: "step-7 title review; checker sees obligation lines",
-    href: "/attempts/add-step-7-title-review",
+    href: "/attempts/add-title-review",
   },
   {
     entry: "0.11.1",
@@ -93,7 +93,7 @@ export const ledger: LedgerEntry[] = [
     cost: "$10.60",
     verdict: "inconclusive",
     note: "Opus 4.8 to Opus 5, effort xhigh",
-    href: "/attempts/move-to-opus-5",
+    href: "/attempts/move-to-a-newer-model",
   },
   {
     entry: "batch-0902-pm",
@@ -113,7 +113,7 @@ export const ledger: LedgerEntry[] = [
     cost: "$11.40",
     verdict: "discard",
     note: "dropped page citations from document-reader",
-    href: "/attempts/drop-page-citations",
+    href: "/attempts/drop-the-page-references",
   },
   {
     entry: "0.10.0",
@@ -123,7 +123,7 @@ export const ledger: LedgerEntry[] = [
     cost: "$11.55",
     verdict: "inconclusive",
     note: "split step-4 into obligations and qualifying payment",
-    href: "/attempts/split-step-4-in-two",
+    href: "/attempts/split-obligations-from-the-payment",
   },
   {
     entry: "0.9.2",
@@ -159,7 +159,7 @@ export const experimentRows: ExperimentRow[] = [
     separates: "yes, above",
     separatesTone: "keep",
     verdict: "keep",
-    href: "/attempts/add-step-7-title-review",
+    href: "/attempts/add-title-review",
     current: true,
   },
   {
@@ -171,7 +171,7 @@ export const experimentRows: ExperimentRow[] = [
     separates: "—",
     separatesTone: "none",
     verdict: "crash",
-    href: "/attempts/add-step-7-title-review",
+    href: "/attempts/add-title-review",
   },
   {
     bundle: "0.11.0",
@@ -182,7 +182,7 @@ export const experimentRows: ExperimentRow[] = [
     separates: "no, overlaps",
     separatesTone: "hold",
     verdict: "inconclusive",
-    href: "/attempts/move-to-opus-5",
+    href: "/attempts/move-to-a-newer-model",
   },
   {
     bundle: "0.10.1",
@@ -193,7 +193,7 @@ export const experimentRows: ExperimentRow[] = [
     separates: "yes, below",
     separatesTone: "discard",
     verdict: "discard",
-    href: "/attempts/drop-page-citations",
+    href: "/attempts/drop-the-page-references",
   },
   {
     bundle: "0.10.0",
@@ -204,7 +204,7 @@ export const experimentRows: ExperimentRow[] = [
     separates: "no, overlaps",
     separatesTone: "hold",
     verdict: "inconclusive",
-    href: "/attempts/split-step-4-in-two",
+    href: "/attempts/split-obligations-from-the-payment",
   },
   {
     bundle: "0.9.2",
