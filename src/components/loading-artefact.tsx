@@ -16,6 +16,7 @@ export function LoadingArtefact({
   return (
     <>
       <h1>{title}</h1>
+      <p className="lede">Reading the workspace.</p>
       <div className="worklog">
         {lines.map((line) => (
           <div className="worklog-row" key={line}>
