@@ -19,13 +19,11 @@ here rather than restating it.
 
 ## 1. Palette
 
-Canonical set — **paper**, remapped to Chase brand hues (`09 §2`). Prefix `--p-`.
-The translation from the Cursor-extracted charcoal/gold system is documented in
-[`design.md`](../design.md) §0; only the Chase/Astro values below may ship.
+Canonical set — **paper**. Prefix `--p-`.
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
-| `ink` | `#211E1E` | `#E8E8E6` | primary text — Chase warm near-black |
+| `ink` | `#16171A` | `#E8E8E6` | primary text |
 | `ink-2` | `#5A5C63` | `#9A9CA3` | secondary text |
 | `ink-3` | `#8A8C93` | `#6C6E75` | tertiary, captions, axis |
 | `paper` | `#FBFBFA` | `#0E0F11` | page ground |
@@ -33,10 +31,8 @@ The translation from the Cursor-extracted charcoal/gold system is documented in
 | `panel-2` | `#EDEDEA` | `#1D1F23` | hover |
 | `line` | `#E2E2DE` | `#26282C` | hairline — the only separator |
 | `line-2` | `#CFCFC9` | `#33363B` | control edge, blockquote rule |
-| `accent` | `#117ACA` | `#6FB3E8` | Chase blue — links, selection, in-progress, primary CTA |
-| `accent-strong` | `#004B87` | `#A8D1F2` | Chase navy — hover on primary, weight |
-| `accent-bg` | `#E8F1FA` | `#10233A` | callouts, action boxes |
-| `on-primary` | `#FFFFFF` | `#0E0F11` | label on filled CTAs (design.md §2) |
+| `accent` | `#2456C9` | `#6E9BF5` | links, selection, in-progress |
+| `accent-bg` | `#EAEFFB` | `#16223B` | callouts, action boxes |
 | `keep` | `#1F7A4D` | `#5BBF8C` | verdict: keep · cleared · agreed |
 | `discard` | `#B4342E` | `#E8776F` | verdict: discard · failed · corrected |
 | `hold` | `#A8710F` | `#D9A140` | verdict: inconclusive · waiting · held |
@@ -46,9 +42,7 @@ Two earlier skins exist in the same skeleton and may be requested by name:
 **warm** (`--` prefix, `#FCFCFB` ground, emerald accent) and **cool** (`--d-`
 prefix, `#FBFBFC` ground, blue-primary). Structure, type scale and geometry are
 identical across all three — a re-skin is a token remap and nothing else. If a
-re-skin needs layout surgery, the component is wrong. CursorGothic charcoal
-(`#26251E`), gold (`#C08532`), and orange (`#F54E00`) are not skins; they are
-refused.
+re-skin needs layout surgery, the component is wrong.
 
 **Colour is state, never decoration.** Chrome is monochrome. The accent budget
 goes to verdicts, diffs, and the one selected metric. Nothing else earns colour.
@@ -65,15 +59,14 @@ must not be reused for anything else:
 
 ## 2. Type
 
-- **Open Sans** for interface and prose — Chase’s web face (`09 §3`). Not Inter,
-  not CursorGothic, not a dual system-ui stack.
+- **Inter** (or system sans) for interface and prose.
 - **JetBrains Mono** for anything a machine produced: versions, IDs, counts,
   money, percentages, file paths, log lines, axis ticks, tool names, enum labels
   like `conflicting_extraction`.
 
 | Size / weight | Use |
 |---|---|
-| 20 / 600, `-0.02em` | page title (`h1`) |
+| 20 / 500, `-0.02em` | page title |
 | 16 / 500, `-0.01em` | section heading |
 | 13.5 / 500 | card title |
 | 13.5 / 400, lh 1.6 | conversation message |
@@ -85,13 +78,7 @@ must not be reused for anything else:
 | 10.5 / 400 mono | log line, source citation |
 | 9.5 / 400 mono | axis tick |
 
-Never bold in body chrome. **500 is the ceiling** except two carve-outs recorded
-in §9: the brand lockup (`.brandtype`) and the page title (`h1`), both at 600.
-Cursor’s 72px display ramp and 600–700 small headings do not apply elsewhere —
-see [`design.md`](../design.md) §3.
-
-Page titles stand alone. Do not put a supporting `.lede` under an `h1` / `.kicker`
-on a surface; detail pages may use `.page-meta` for identity facts only.
+Never bold. 500 is the heaviest weight in the system.
 
 **The mono rule is not stylistic.** A percentage, a sum of money, a version or an
 id set in the sans face is an anti-pattern (§8) because the face is how a reader
@@ -100,52 +87,70 @@ metrics at display size, not only to table cells.
 
 ## 3. Geometry
 
-- Radius: `4` code chips · `6` inputs, crumb menus · `8` opt lists, callouts ·
-  `9` small cards, metric tiles · `10` table wrappers · `12` composer, message
-  bubbles · **`9999px` (pill) on `.btn` primary and secondary actions**, badges,
-  and suggestion pills · `20`+ on other pill chrome. Pill primary actions follow
-  Chase `09 §6` and the Cursor interactive identity remapped in
-  [`design.md`](../design.md) §4.
+- Radius: `4` code chips · `6` buttons, inputs · `8` opt lists, callouts ·
+  `9` small cards, metric tiles · `10` table wrappers · `12` message bubbles ·
+  `16` composer · `20`+ pills.
 - **1px hairlines only. No shadows, no blur, no elevation — anywhere.** Depth is
-  a sunken fill, never a drop shadow. Cursor’s micro-shadow is the spatial
-  reference for separation, not a licence to add a shadow — see
-  [`design.md`](../design.md) §6.
+  a sunken fill, never a drop shadow. Cursor’s lift is the spatial reference, not
+  a licence to add a shadow — see [`design.md`](../design.md).
 - A **2px left border in an accent** is the only heavier weight, and it means
-  exactly one thing: *this one is selected*. Used on nav rows, KPI tiles, diff
-  blocks.
+  exactly one thing: *this one is selected*. Used on KPI tiles, crumb menus, and
+  the Governance section nav — **not on the rail**. The rail follows Cursor's
+  fill-only selected state (below).
 - Spacing: `4 6 8 12 16 20 24 32 40 48`. Section gap 40. Body padding `28 32`.
   Metric tiles are separate rounded cards with a 12px gap, not one packed strip.
-  Table cells are at least 14px vertical padding. The composer’s input is at least
-  88px tall. Turn gap 36. Evidence and option rows 12–14px vertical. Primary nav
-  rows in the rail are 6px vertical padding so they stay compact against Active
-  loans.
+  Table cells are at least 14px vertical padding. The composer is a soft `panel`
+  fill (radius 16) with an input at least 88px tall and a circular send. Turn gap
+  36. Evidence and option rows 12–14px vertical. Primary nav rows in the rail are
+  6px vertical padding so they stay compact against Active loans.
+- **Rail rows are inset**, 8px from each rail edge, radius 6 — fill-only
+  selection rather than full-bleed bands. Idle labels sit at `ink-2` with icons
+  at `ink-3`. Hover is a `panel-2` fill; selected is a **white (`paper`) pill** on
+  the cool `panel` rail — no accent tick, no left blue bar. Selected raises the
+  label and icon to `ink` and weight 500. Rail group labels sit at 11px `ink-3`
+  with 16px above them, so groups separate by space, not rules.
+- **Controls share one height.** Buttons, segmented controls and filter chips
+  are 32px tall (`Button` size `sm` is 26px), so a row of mixed controls aligns
+  on its baseline without per-page nudging.
+- **Setting and governance cards** (`gcard`, `rolerow`) use 16/18 padding, so a
+  titled row with a muted description reads like Cursor's settings list.
+
+```
+GIVEN a primary nav or Active loans row in the rail
+WHEN it is selected (aria-current)
+THEN its background is paper (white pill) with radius 6
+AND it carries no accent left border and no ::before tick
+AND its icon and label use ink, not the accent hue
+```
 
 ## 4. Layout skeleton
 
 ```
 ┌────────────┬────────────────────────────────────────┐
-│ rail       │ main (fluid)                           │
-│ 238 default │  body 28/32, centred, max-width 880px │
-│ 190–360 ⇔  │                                        │
-│ 56 collapsed│                                       │
-│ brand top  │                                        │
+│ rail       │ chrome (panel) · padded                │
+│ 240 default│  ┌──────────────────────────────────┐  │
+│ 190–360 ⇔  │  │ stage (paper, radius 16)         │  │
+│ 56 collapsed│  │  body 28/32, measure 880        │  │
+│ brand+▾    │  └──────────────────────────────────┘  │
+│ Agent …    │                                        │
 │ Active loans│                                       │
-│ settings ⌄ │                                        │
+│ utility ⌄  │                                        │
 └────────────┴────────────────────────────────────────┘
 ```
 
-**The rail resizes and collapses.** 238px is the default, draggable between 190 and
-360: below the minimum the borrower names stop being readable, above it the rail
-starts competing with the column it exists to navigate. The width lives in a cookie
-alongside the theme, so a resized rail is already the right width in the first byte
-rather than snapping after hydration.
+**The rail resizes and collapses.** 238px is the default (~240 in Figma),
+draggable between 190 and 360: below the minimum the borrower names stop being
+readable, above it the rail starts competing with the column it exists to
+navigate. The width lives in a cookie alongside the theme, so a resized rail is
+already the right width in the first byte rather than snapping after hydration.
 
-Clicking the brand mark collapses the rail to 56px — the mark alone, with the primary
-nav as icons. It used to link home; Overview is one row below and does that, so the
-click is spent on the thing only that element can do. Collapsed, the labels move to
-screen-reader-only rather than being removed, so the nav is still announced while it
-is only icons on screen, and the selected marker moves from the left edge to the right
-so it does not sit under the icon.
+Clicking the brand mark collapses the rail to 56px — the mark alone, with the
+primary nav as icons. It used to link home; Overview is one row below and does
+that, so the click is spent on the thing only that element can do. The product
+dropdown sits beside the mark in the brand row (`07 §Two products`). Collapsing
+is the mark's job, switching is the dropdown's. Collapsed, the product label is
+visually hidden and the mark remains. Selection stays the white fill-only pill —
+there is no accent tick to reposition.
 
 The drag edge is a `separator` with arrow-key, Home and End support. A resize that
 only works with a pointer is a resize half the people using this cannot reach.
@@ -153,14 +158,23 @@ only works with a pointer is a resize half the people using this cannot reach.
 - **No top bar.** An earlier revision carried a 41px bar holding the brand, the
   bundle context and a clock. It was removed: the brand belongs at the head of the
   rail, the bundle version is already a rail badge and the subject of Governance,
-  and a static clock is decoration. The rail and side panel stick to the viewport
-  top.
-- Rail, top to bottom: the Chase mark beside the product name, primary nav, the
-  labelled **Active loans** list, then a utility slot holding Settings. Batches,
-  production and verification live on Overview — they are current state, not
-  places. Utility sits at the foot because it is somewhere you go, not somewhere
-  you work. The mark carries the brand; the label beside it is the product name,
-  never a redrawn wordmark.
+  and a static clock is decoration. The rail sticks to the viewport top.
+  **The phone is the one exception** (§4a): below 640px the rail is hidden, so a
+  56px header holding the mark, the product switch and the menu button is the only
+  way in — chrome holding something that exists nowhere else on that screen, which
+  is the general rule below, not a waiver of it.
+- Shell chrome and the rail share the cool `panel` ground. Work sits on a white
+  **stage** — `paper`, radius 16, padded inside the chrome. Depth comes from the
+  ground change and the radius, not a drop shadow. An earlier revision put a
+  hairline on the rail's right edge and ran main flush on `paper`; the Figma
+  shell floats the stage instead.
+- Rail, top to bottom: the Chase mark beside the product dropdown, primary nav of
+  the current product (Evaluations: Agent · Overview · Loans), the rail body
+  (Active loans or Attempts), then a utility slot holding Governance (Evaluations)
+  and Settings. Batches, production and verification live on Overview — they are
+  current state, not places. Utility sits at the foot because it is somewhere you
+  go, not somewhere you work. **Loan Originator** is the Agent hero brand signal,
+  not a rail lockup.
 - **The rail holds navigation, not actions.** An earlier revision put a global
   "new attempt" button at its head. Starting an experiment is owned by the
   Experiments surface under `07 §Surface map`, so its entry point is the primary
@@ -176,6 +190,12 @@ only works with a pointer is a resize half the people using this cannot reach.
   on a wide display. This is the console's answer to `09 §4`'s centred content with
   generous gutters. The previous 800 / 18 / 22 measure packed the column; Cursor's
   organisation is the reason it opened, not a reason to stretch with the viewport.
+  **Data surfaces widen at 1440px and up** to `--p-measure-wide: 1200px` —
+  Overview, a batch, Reports, Experiments and the Attempts board — because a table
+  or a board is scanned across, not read along, and at 2560px the 880px column
+  left two thirds of the screen as ground. Documents keep 880: Governance, a held
+  file, Ask, Verify, Settings. Charts keep their 690 viewBox; Reports sets two
+  chart cards side by side instead of stretching one.
 - **No side panel.** An earlier revision carried a sticky 312px right-hand panel with
   four tabs of mono `pre` blocks: the ledger, field failure rates, sampled reviews, and
   a bundle summary. All four restated content that has a fuller home elsewhere — the
@@ -183,17 +203,65 @@ only works with a pointer is a resize half the people using this cannot reach.
   are on Overview and Verify, and the bundle is the subject of Governance. It was 312px
   of persistent chrome showing a lower-fidelity copy of a click away, and `white-space:
   pre` in a fixed column clipped its own verdict labels. Removed.
-  - What it uniquely held was the governance section nav, which `05 §6` requires. That
-    moved into the flow as a sticky anchor nav above the sections it navigates.
-  - The one detail worth salvaging was the Δ column on field failures, which says
-    whether a change moved anything. It is now a column in the Experiments matrix.
+  - **Governance section nav is the exception that earns a right-hand column.** `05 §1`
+    requires the seven bundle sections in a sticky right-hand nav that tracks the
+    section in view. That is a table of contents for one long document, not a panel of
+    restated content, so it hangs in the gutter of that surface only (`--p-toc`)
+    without widening every other page. Selected is the 2px left accent. It is not
+    the four-tab panel, and it does not sit in the flow above the sections.
+  - The one detail worth salvaging from the old panel was the Δ column on field
+    failures, which says whether a change moved anything. It is now a column in the
+    Experiments matrix.
 - **No global composer.** Conversation lives on the Ask surface only; see
   `07 §Conversation is a surface, not an affordance`.
-- Rail stacks below 820px.
+- Below 1024px the rail changes shape rather than stacking above the page (§4a).
 
 **The general rule this produced:** persistent chrome must earn its width by holding
 something that exists nowhere else. A panel that summarises the rest of the app
 competes with it, and the summary is always the worse copy.
+
+### 4a. Form factors
+
+Four tiers. Breakpoints are the tier edges and nothing else; a component does not
+invent its own.
+
+| Tier | Width | Rail | Main |
+|---|---|---|---|
+| Phone | < 640 | hidden; a sheet from the left under a 56px header | fluid, body 20 / 16 |
+| Tablet | 640–1023 | collapsed to 56px; expanding overlays the page | fluid to 880, body 24 / 24 |
+| Desktop | 1024–1439 | 238, resizable, collapsible — as above | 880 |
+| Wide | ≥ 1440 | as desktop | 880 documents, 1200 data surfaces |
+
+- **Phone.** The header is `panel`, 56px, hairline beneath: mark (home), the
+  product switch, then a 44px menu button. 56 rather than 48 so the switch's
+  segments can meet the 44px touch floor inside it. The sheet is the rail itself —
+  `panel` ground, hairline edge, `min(320px, 86vw)` — over a scrim of `ink` at 32%
+  opacity. No shadow and no blur on either. It closes on Escape, on the scrim, on
+  the menu button and on navigation; while it is open the page behind is `inert`.
+  An earlier revision stacked the whole rail above the page, which put fifteen
+  loans between a reviewer and the Overview heading.
+- **Tablet.** iPad mini, Air and Pro portrait all land here. The rail is the
+  collapsed 56px icon column whatever the desktop cookie says; the mark opens it
+  full width *over* the page so the column never shrinks, and it closes the same
+  way the phone sheet does. The collapsed cookie is a desktop preference.
+- **Motion.** The phone sheet slides on a 180ms transform transition; the tablet
+  overlay opens in place. It
+  is a transition, not a keyframe animation, and `prefers-reduced-motion` removes
+  it with every other transition.
+- **Height.** The full-height rail uses `100dvh`, so iOS Safari's collapsing
+  address bar does not push Settings off screen.
+- **Touch** (`pointer: coarse`). Every rail row, nav row, chip, product segment
+  and crumb caret is at least 44px tall. Under `hover: none` the hover
+  fills are withdrawn, so a tap does not leave a row looking hovered. The drag edge and
+  the `⌘J` badge are hidden: neither can be used without a pointer and a keyboard.
+  Inputs are 16px so iOS does not zoom the page on focus.
+- **Components by tier.** KPI tiles auto-fit — three, two or one across by width,
+  never a fixed three at 180px. On a phone, tables keep their columns and scroll
+  sideways with the first column pinned, because the identifier is what a reader
+  needs while scrolling; the held-file option and evidence rows go single-column
+  with full-width actions; charts scroll sideways inside their card while the
+  takeaway stays in the flow. The Ask composer docks above
+  `env(safe-area-inset-bottom)`.
 
 ## 5. Component vocabulary
 
@@ -220,6 +288,10 @@ competes with it, and the summary is always the worse copy.
 - **sectionnav** — a page title over a control row: counted pill tabs left, the
   surface's actions right. Selection is a filled pill, never a hue, so the accent
   budget stays with verdicts. Counts sit in mono beside the label.
+- **productswitch** — the product dropdown in the rail brand row (`07 §Two
+  products`). The trigger names the current product (`.brandtype`) with a chevron;
+  the menu lists both products as links. One click switches; collapsed, the label
+  is visually hidden with the other rail chrome.
 - **crumb-menu** — the breadcrumb trail on Active loans and Experiments (`07
   §Breadcrumbs`). Each segment that has children is a disclosure: the label is the
   link, a caret opens a paper panel of the pages underneath. 1px hairline, radius 6,
@@ -237,6 +309,57 @@ competes with it, and the summary is always the worse copy.
   target.
 - **takeaway** — left-ruled paragraph under every chart. Mandatory.
 
+### 5a. shadcn foundation
+
+**shadcn/ui is the design-system foundation.** Interactive controls, overlays,
+tabs and tables are the primitives under `src/components/ui/`. Astro's look —
+warm paper, Chase hue, mono for machine values, no shadows, weight ≤500 — is a
+**theme and composition layer on top of those primitives**, not a parallel
+component kit.
+
+- **Tokens.** Product code prefers shadcn semantic utilities
+  (`bg-primary`, `border-border`, `text-muted-foreground`, `rounded-md`). Those
+  variables (`--background`, `--foreground`, `--primary`, `--destructive`,
+  `--border`, `--muted`, `--radius`, …) are filled from the Chase `--p-` set in
+  `globals.css`. There is one palette. Chase hue and typeface still win under
+  `09`. Verdict colours (`keep` / `discard` / `hold`) remain Astro extensions
+  beside the shadcn set.
+- **Skin on add.** Defaults that break this spec are stripped when a primitive
+  is added: no `box-shadow`, no `filter: blur`, no elevation; no `font-weight`
+  above 500 outside `.brandtype`; radius follows Chase controls (~4–8px);
+  selected state stays the 2px left accent outside the rail (fill-only in the
+  rail), never a glow ring as decoration.
+- **Buttons.** The former `.btn` / `.btn.pri` / `.btn.dan` / `.btn.sm` classes
+  map onto `Button` variants: `outline`, `default` (filled Chase blue),
+  `destructive`, and size `sm`. Links use `Button asChild`. New controls do not
+  invent a third button style in `notebook.css`.
+- **Where domain CSS remains.** Layout chrome — the rail, KPI tile geometry,
+  charts, the run-state mark, the product switch — may still use `notebook.css`
+  for structure. When those surfaces grow controls, they compose shadcn
+  primitives. Elevated Card patterns do not replace metric tiles.
+- **Composition.** Domain components wrap primitives; they do not become generic
+  SaaS cards. Machine-produced values stay mono at the product layer.
+
+```
+GIVEN a file under src/components/ui
+THEN it carries no box-shadow, filter: blur or backdrop-filter
+AND no font-weight class above 500
+AND its colours resolve through the shadcn variables that map to --p-
+```
+
+```
+GIVEN globals.css
+THEN --background, --foreground, --primary, --destructive, --border and --muted
+     each resolve to a --p- token
+AND dark theme reuses [data-theme="dark"]
+```
+
+```
+GIVEN a primary action on Ask, Resolve, Verify, Promote, Overview or Experiments
+THEN it is a shadcn Button (or Button asChild for a link)
+AND it does not introduce a new .btn rule in notebook.css
+```
+
 ## 6. Charts
 
 Hand-built SVG, no library. `--line` gridlines, mono ticks, one accent per
@@ -251,6 +374,9 @@ series, values labelled directly rather than in a legend where possible.
 - Chart chrome: title and muted caption sit *inside* the chart card. The plot has
   20/24 padding and enough vertical room that axes are not flush with the rule.
   The takeaway stays a sibling under the card, not a caption inside it.
+  Overview period charts use a soft `panel` card (radius 12) and a filled area
+  plot for autonomy and cost over daily points — not an accuracy trend (`06`
+  deliberately absent).
 - Every chart gets a `takeaway` that says what it means — and, where true, what
   it doesn't.
 
@@ -271,6 +397,17 @@ This is the part most easily lost.
   for, which is worse than showing them the page they were already on. Switching a
   view should not ask the server at all: render the panels up front and show or hide
   them, syncing the URL without a navigation so the view stays linkable.
+- **A running run is marked, not loaded.** The one animation in the system is the
+  run-state mark on a rail row: a 3×3 dot matrix (beui `Loader`, variant
+  `dot-matrix`, 10px, accent) on a row whose agent is working right now — run state
+  `running` on Evaluations, stage `grading` on Experiments. Every other row carries
+  a still 6px dot in its state colour (`hold` for held, `ink-3` for queued, drafted
+  or decided). It is state, not a loading state: the row is already rendered and
+  names its loan, so it never stands in for content, and it is never used on a
+  page, a button or a navigation. The mark is `aria-hidden`; the row carries its
+  state as text for a screen reader. Under `prefers-reduced-motion` the matrix
+  drops its scale and keeps a slow opacity pulse. No CSS `@keyframes` — the
+  library animates in JS, so the guard against CSS spinners stands.
 - **Failures stay visible.** The crash row and the discard row are the ledger's
   most useful entries. Never hide them.
 - **Impact before action.** Next to any choice, say what it changes: "DTI moves
@@ -309,10 +446,10 @@ do not apply here; its brand tokens do. Resolved as follows:
 
 | Dimension | This spec | `09` Chase | Resolution |
 |---|---|---|---|
-| Accent hue | was `#2456C9` | `#117ACA` blue, `#004B87` navy | **Chase wins.** §1 now lists the Chase ramp; Cursor charcoal/gold is refused. |
-| Sans face | was Inter or system | Open Sans (licensed brand face) | **Chase wins.** Open Sans. CursorGothic is refused. |
+| Accent hue | `#2456C9` | `#117ACA` blue, `#004B87` navy | **Chase wins.** Remap `accent` to the Chase ramp. Per §1 a re-skin is a token remap. |
+| Sans face | Inter or system | Open Sans (licensed brand face) | **Chase wins.** Open Sans. |
 | Mono face | JetBrains Mono | PT Mono "if code appears at all" | **This spec wins.** Mono is load-bearing here, not incidental; see §2. Flagged as an open question. |
-| Weight ceiling | 500, never bold | 600–700 on marketing heroes | **This spec wins for the console**, with two carve-outs. Chase's heavy weights are a marketing-hero rule — but the brand lockup (`.brandtype`) and the page title (`h1`) set at 600 so the surface hierarchy reads. Guard tests permit those two selectors only; the weight is loaded rather than synthesised. |
+| Weight ceiling | 500, never bold | 600–700 on marketing heroes | **This spec wins for the console**, with one carve-out. Chase's heavy weights are a marketing-hero rule — the Agent hero brand and the product label in the rail brand row use `.brandtype` at 600. The guard test permits `.brandtype` and nowhere else, and the weight is loaded rather than synthesised. |
 | Page ground | `#FBFBFA` warm | `#FFFFFF` | Open question. The warmth is 1.5% off white and is the aesthetic's name. |
 | Primary text | `#16171A` | `#211E1E` warm near-black | **Chase wins.** Both are warm near-blacks; no structural cost. |
 | Dark mode | first-class peer skin | brand expression is light; "product surfaces may support it" | **Both.** Permitted by `09` for product surfaces. Light is the default. |
@@ -325,19 +462,25 @@ do not apply here; its brand tokens do. Resolved as follows:
 
 - [ ] Every colour token resolves through the `--p-` set; no literal hex in a component
 - [ ] No `box-shadow`, `filter: blur`, or elevation token exists in the codebase
-- [ ] No computed font-weight above 500 renders outside `h1` and `.brandtype`
+- [ ] No computed font-weight above 500 renders anywhere
 - [ ] Percentages, money, versions and ids render in the mono face at every size
 - [ ] Every chart has a sibling `takeaway` element; a chart without one fails the build
 - [ ] Every surface that reports a metric carries a "What this doesn't tell you"
+- [ ] At 390, 744, 820, 834, 1024, 1180, 1366, 1440, 1920 and 2560px every surface renders with no horizontal page scroll and no clipped label
+- [ ] Below 640px the first screen shows the page heading, not the rail
+- [ ] Under `pointer: coarse` no interactive rail or nav element is shorter than 44px
 - [ ] Loading states render an artefact — progress count, worklog or partial result — never a bare spinner
-- [ ] The 2px left accent border appears only on selected elements
+- [ ] The 2px left accent marks selection outside the rail (KPI, crumbs, Governance toc); rail selection is a white (`paper`) fill-only pill
+- [ ] Work sits on a white stage (radius 16) inside cool `panel` chrome
+- [ ] Rail `.nav` / `.row` selected state has no accent `::before` tick and no left blue bar
 - [ ] A re-skin to `warm` or `cool` requires no change outside the token block
 - [ ] Section gap is 40; body padding is 28/32; the measure is 880px
 - [ ] Metric tiles are gapped cards, not a packed strip
 - [ ] Table cells are at least 14px vertical padding
-- [ ] The composer input is at least 88px tall; composer and user bubbles are radius 12
-- [ ] Primary and secondary `.btn` actions use pill radius (`9999px`); inputs stay at 6px
-- [ ] Sans face is Open Sans; accent tokens are Chase `#117ACA` / `#004B87`
+- [ ] The composer input is at least 88px tall; composer is radius 16, user bubbles radius 12
+- [x] shadcn under `src/components/ui` is the control foundation: no shadow or weight above 500
+- [x] shadcn theme variables resolve through the `--p-` set in both themes
+- [x] Primary product actions use `Button` / `Button asChild`, not new `.btn` CSS
 
 ## 11. Open questions
 
