@@ -291,4 +291,89 @@
   }
   .product-switch:focus-visible {
     outline: 2px solid var(--p-accent);
-    out
+    outline-offset: 1px;
+  }
+  .product-switch-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13.5px;
+  }
+  .product-switch-chevron {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    color: var(--p-ink-3);
+  }
+
+  /* 09 §11 forbids decorative iconography, so a nav glyph is wayfinding and takes
+     the row's own state colour rather than a hue of its own. 08 §3 · selected
+     icons stay ink with the label — never the accent hue (Cursor fill-only). */
+  .nav > svg {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    color: var(--p-ink-3);
+  }
+  .nav:hover > svg {
+    color: var(--p-ink-2);
+  }
+  .nav[aria-current="page"] > svg,
+  .nav[aria-current="true"] > svg {
+    color: var(--p-ink);
+  }
+
+  /* Groups separate by space, not rules — Cursor's sidebar group labels. */
+  .rail-h {
+    padding: 16px 20px 6px;
+    font-size: 11px;
+    color: var(--p-ink-3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .rail-h .ct {
+    margin-left: auto;
+    font-family: var(--p-mono);
+  }
+  .rail-h-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .rail-h-link:hover {
+    color: var(--p-ink-2);
+    text-decoration: underline;
+  }
+  .rail-h-link:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 2px;
+  }
+
+  /* 08 §3 · rail rows are inset 8px with radius 6. Selected is a white paper pill
+     on cool panel chrome — no accent tick, no left blue bar. */
+  .nav {
+    padding: 6px 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: calc(100% - 16px);
+    margin: 0 8px;
+    text-align: left;
+    background: none;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--p-ink-2);
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .nav:hover,
+  .row:hover {
+    --p-ground: var(--p-panel-2);
+    background: var(--p-panel-2);
+    color: var(--p-ink);
+  }
+  .nav[aria-current="true"],
+  .nav[aria-current="
