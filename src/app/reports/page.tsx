@@ -12,6 +12,7 @@ import {
   reviewerActivity,
   ruleSummary,
 } from "@/lib/data/reports";
+import { WideMeasure } from "@/components/measure";
 
 export const metadata = {
   title: "Reports",
@@ -22,6 +23,7 @@ export default function ReportsPage() {
 
   return (
     <>
+      <WideMeasure />
       <div className="crumb">
         <Link href="/">Overview</Link> › reports
       </div>
@@ -29,6 +31,10 @@ export default function ReportsPage() {
         <h1>Reports</h1>
         <span className="eyebrow">Aug 25 – Sep 3 · 10 batches · 1,004 files</span>
       </div>
+      <p className="lede" style={{ maxWidth: "76ch" }}>
+        Agent performance across the last ten batches. Everything here is measured in
+        production, not in the lab.
+      </p>
 
       <KpiGrid items={reportKpis} />
 
@@ -53,41 +59,43 @@ export default function ReportsPage() {
         </p>
       </div>
 
-      <ChartBlock
-        title="Autonomy over the period"
-        caption="share of files cleared with no human"
-        takeaway="Two step changes, both at a bundle deploy. 0.11.0 bought about 3 points and 0.12.0 bought 5. The flat stretch from Aug 26 to 28 is worth noting — nothing shipped that week, and autonomy drifted rather than held, which usually means the incoming file mix changed rather than the agent."
-      >
-        <AutonomyChart />
-      </ChartBlock>
+      <div className="chartgrid">
+        <ChartBlock
+          title="Autonomy over the period"
+          caption="share of files cleared with no human"
+          takeaway="Two step changes, both at a bundle deploy. 0.11.0 bought about 3 points and 0.12.0 bought 5. The flat stretch from Aug 26 to 28 is worth noting — nothing shipped that week, and autonomy drifted rather than held, which usually means the incoming file mix changed rather than the agent."
+        >
+          <AutonomyChart />
+        </ChartBlock>
 
-      <ChartBlock
-        title="Where the human time goes"
-        caption="214 interrupts · volume against median resolution"
-        keys={[
-          { color: "var(--p-accent)", label: "resolves in under two minutes" },
-          { color: "var(--p-hold)", label: "takes longer" },
-        ]}
-        takeaway="Volume and cost point in opposite directions. Conflicting extractions are 36% of interrupts and 41 seconds each — about 53 minutes of human time in ten days. Policy judgments are 12% of interrupts but four minutes each, and they need a senior reviewer. Cutting the biggest bar saves the least time; the case for automating conflicting extractions is the volume, not the burden."
-      >
-        <InterruptChart />
-      </ChartBlock>
+        <ChartBlock
+          title="Where the human time goes"
+          caption="214 interrupts · volume against median resolution"
+          keys={[
+            { color: "var(--p-accent)", label: "resolves in under two minutes" },
+            { color: "var(--p-hold)", label: "takes longer" },
+          ]}
+          takeaway="Volume and cost point in opposite directions. Conflicting extractions are 36% of interrupts and 41 seconds each — about 53 minutes of human time in ten days. Policy judgments are 12% of interrupts but four minutes each, and they need a senior reviewer. Cutting the biggest bar saves the least time; the case for automating conflicting extractions is the volume, not the burden."
+        >
+          <InterruptChart />
+        </ChartBlock>
 
-      <ChartBlock
-        title="Cost by step"
-        caption="of $2.19 per file"
-        takeaway="Income orchestration and DTI are 48% of the spend between them, which follows from step 3 fanning out to nine calculators and step 4 now handing the checker a second copy of the obligation lines. Step 7 costs nine cents and closed a failure mode that had been open since 0.9.2 — the cheapest change in the ledger."
-      >
-        <CostChart />
-      </ChartBlock>
+        <ChartBlock
+          title="Cost by step"
+          caption="of $2.19 per file"
+          takeaway="Income orchestration and DTI are 48% of the spend between them, which follows from step 3 fanning out to nine calculators and step 4 now handing the checker a second copy of the obligation lines. Step 7 costs nine cents and closed a failure mode that had been open since 0.9.2 — the cheapest change in the ledger."
+        >
+          <CostChart />
+        </ChartBlock>
 
-      <ChartBlock
-        title="Time to clear"
-        caption="93 completed files in the current batch"
-        takeaway="Tight and single-peaked, which is the shape you want — it means the procedure runs the same way on most files. The five files past 30 minutes were all self-employment income, where step 3 fans out furthest. There is no long tail of stuck files because stuck files become interrupts instead."
-      >
-        <TtcChart />
-      </ChartBlock>
+        <ChartBlock
+          title="Time to clear"
+          caption="93 completed files in the current batch"
+          takeaway="Tight and single-peaked, which is the shape you want — it means the procedure runs the same way on most files. The five files past 30 minutes were all self-employment income, where step 3 fans out furthest. There is no long tail of stuck files because stuck files become interrupts instead."
+        >
+          <TtcChart />
+        </ChartBlock>
+      </div>
 
       {/* 03 §Metrics · the interrupt spec's own health metric. A rising rate means
           the payloads are degrading, which is a spec defect rather than a training
