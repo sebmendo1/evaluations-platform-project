@@ -25,6 +25,7 @@ export type MetricId =
   | "interval"
   | "sampled_accuracy"
   | "held_count"
+  | "turns_per_run"
   | "interrupt_rate_by_type"
   | "resolution_time"
   | "time_to_clear"
@@ -112,6 +113,13 @@ export const metrics: Record<MetricId, MetricDef> = {
     id: "held_count",
     label: "Waiting on you",
     definition: "runs currently held",
+    provenance: null,
+    context: "production",
+  },
+  turns_per_run: {
+    id: "turns_per_run",
+    label: "Turns per run",
+    definition: "agent turns / runs completed in the selected period",
     provenance: null,
     context: "production",
   },

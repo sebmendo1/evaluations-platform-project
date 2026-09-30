@@ -16,8 +16,13 @@ export default function VerifyPage() {
         <Link href="/">Overview</Link> › blind review
       </div>
       <h1>Verify data</h1>
+      <p className="lede">
+        Five of 93 clean files drawn at random. The reviewer isn’t told which files are
+        sampled, so this catches the failure the queue never shows you — a file the run got
+        wrong confidently.
+      </p>
 
-      <div className="strip2">
+      <div className="strip2" style={{ maxWidth: "520px" }}>
         <Metric
           id="sampled_accuracy"
           context="production"

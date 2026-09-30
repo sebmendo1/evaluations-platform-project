@@ -2,6 +2,14 @@ import Link from "next/link";
 
 import { RoleChoice } from "@/components/shell/role-choice";
 import { ThemeChoice } from "@/components/shell/theme-toggle";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { SAMPLE_RATE } from "@/lib/domain/constants";
 import { policyCards } from "@/lib/domain/policy-cards";
 
@@ -22,6 +30,10 @@ export default function SettingsPage() {
         <Link href="/">Overview</Link> › settings
       </div>
       <h1>Settings</h1>
+      <p className="lede">
+        Appearance and the role you are acting as. Everything else on this page is
+        owned by another function and shown so you can see who to ask.
+      </p>
 
       <div className="sec">
         <div className="sechead">
@@ -60,46 +72,46 @@ export default function SettingsPage() {
           <span className="h">read-only</span>
         </div>
         <div className="wrap">
-          <table className="tbl">
+          <Table className="tbl">
             <caption className="sr-only">
               Settings owned by another function, with their owner
             </caption>
-            <thead>
-              <tr>
-                <th>setting</th>
-                <th>value</th>
-                <th>owner</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Blind sample rate</td>
-                <td className="m">{Math.round(SAMPLE_RATE * 100)}% of clean files</td>
-                <td>Compliance</td>
-              </tr>
-              <tr>
-                <td>Autonomy guardrail</td>
-                <td className="m">on</td>
-                <td>enforced in code, not configurable</td>
-              </tr>
+            <TableHeader>
+              <TableRow>
+                <TableHead>setting</TableHead>
+                <TableHead>value</TableHead>
+                <TableHead>owner</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>Blind sample rate</TableCell>
+                <TableCell className="m">{Math.round(SAMPLE_RATE * 100)}% of clean files</TableCell>
+                <TableCell>Compliance</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Autonomy guardrail</TableCell>
+                <TableCell className="m">on</TableCell>
+                <TableCell>enforced in code, not configurable</TableCell>
+              </TableRow>
               {policyCards.map((card) => (
-                <tr key={card.id}>
-                  <td>
+                <TableRow key={card.id}>
+                  <TableCell>
                     Policy card <span className="mono">{card.id}</span>
-                  </td>
-                  <td>
+                  </TableCell>
+                  <TableCell>
                     {card.rule}
                     {card.illustrative ? (
                       <span className="tag" style={{ marginLeft: "6px" }}>
                         unsourced
                       </span>
                     ) : null}
-                  </td>
-                  <td>Credit Policy</td>
-                </tr>
+                  </TableCell>
+                  <TableCell>Credit Policy</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
         <p className="impact">
           The autonomy guardrail has no switch because it is not a preference — a bundle
