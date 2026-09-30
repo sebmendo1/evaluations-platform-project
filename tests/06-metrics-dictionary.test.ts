@@ -111,15 +111,15 @@ describe("08 §8 · mechanical anti-patterns", () => {
     }));
   }
 
-  it("no font-weight above 500 outside the brand lockup and page title", () => {
-    // 08 §2 caps the console at 500. Carve-outs: `.brandtype` (brand lockup) and
-    // `h1` (page title) at 600 — recorded in 08 §9.
-    const allowed = new Set([".brandtype", "h1"]);
+  it("no font-weight above 500 outside the brand lockup", () => {
+    // 08 §2 caps the console at 500. The one exception is `.brandtype`: a brand
+    // lockup is brand rather than console chrome, and 09 §3 sets brand type at 600.
+    // Recorded in 08 §9.
     const offenders: string[] = [];
     for (const file of sources) {
       for (const rule of cssRules(file.text)) {
         const weight = rule.body.match(/font-weight:\s*(\d{3})/);
-        if (weight && Number(weight[1]) > 500 && !allowed.has(rule.selector)) {
+        if (weight && Number(weight[1]) > 500 && rule.selector !== ".brandtype") {
           offenders.push(`${file.path} · ${rule.selector} (${weight[1]})`);
         }
       }
@@ -127,16 +127,12 @@ describe("08 §8 · mechanical anti-patterns", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("page title and brand lockup are the only 600s, and that weight is loaded", () => {
-    const css = [
-      sources.find((f) => f.path.endsWith("notebook.css"))?.text ?? "",
-      sources.find((f) => f.path.endsWith("globals.css"))?.text ?? "",
-    ].join("\n");
+  it("the brand lockup is the only 600, and that weight is actually loaded", () => {
+    const css = sources.find((f) => f.path.endsWith("notebook.css"))?.text ?? "";
     const sixHundreds = cssRules(css)
       .filter((rule) => /font-weight:\s*600/.test(rule.body))
-      .map((rule) => rule.selector)
-      .sort();
-    expect(sixHundreds).toEqual([".brandtype", "h1"]);
+      .map((rule) => rule.selector);
+    expect(sixHundreds).toEqual([".brandtype"]);
 
     // A weight that is declared but not loaded gets synthesised by the browser,
     // which looks worse than the weight below it.
@@ -147,7 +143,7 @@ describe("08 §8 · mechanical anti-patterns", () => {
   it("hero and kpi metric values set in the mono face", () => {
     const css = sources.find((f) => f.path.endsWith("notebook.css"))?.text ?? "";
     // The rule exists so a reader can tell a machine-produced value from prose.
-    for (const selector of [".big .val", ".small .val", ".kpi .val"]) {
+    for (const selector of ["\n  .big .val {", "\n  .small .val {", "\n  .kpi .val {"]) {
       const block = css.slice(css.indexOf(selector));
       expect(block.slice(0, 220), `${selector} should be mono`).toMatch(
         /font-family:\s*var\(--p-mono\)/,
