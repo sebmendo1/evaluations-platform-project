@@ -2,21 +2,22 @@
 
 import Image from "next/image";
 
-import { toggleRail, useRailCollapsed } from "./rail-controls";
+import { toggleRail, useCompact, useRailCollapsed, useSheetOpen } from "./rail-controls";
 
 /**
  * The Chase mark, rendered from the supplied asset in `public/brand`.
  *
  * 09 §12 · "Official logo assets (never redrawn)" — the octagon and the wordmark are
- * registered trademarks, so this only ever renders a file, and the label beside it is
- * the product name rather than the wordmark. See public/brand/README.md.
- *
- * Clicking it collapses the rail to the mark alone. It used to link home; Overview is
- * one row below and does that, so the click is spent on the thing only this element
- * can do.
+ * registered trademarks, so this only ever renders a file. The product dropdown
+ * sits beside it (`07 §Two products`); Loan Originator is the Agent hero brand.
+ * This button only collapses the rail. See public/brand/README.md.
  */
 export function ChaseLogo({ collapsed: initial }: { collapsed: boolean }) {
-  const collapsed = useRailCollapsed(initial);
+  const railCollapsed = useRailCollapsed(initial);
+  const compact = useCompact();
+  const sheetOpen = useSheetOpen();
+  // 08 §4a · below 1024px the mark opens the rail over the page instead.
+  const collapsed = compact ? !sheetOpen : railCollapsed;
 
   return (
     <button
@@ -35,7 +36,6 @@ export function ChaseLogo({ collapsed: initial }: { collapsed: boolean }) {
         priority
         className="brandmark-mark"
       />
-      <span className="brandmark-name brandtype">Evaluations</span>
     </button>
   );
 }
