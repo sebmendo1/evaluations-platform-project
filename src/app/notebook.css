@@ -1,1 +1,826 @@
-file:///workspace/src/app/notebook.css
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+  .mono {
+    font-family: var(--p-mono);
+    font-variant-ligatures: none;
+  }
+
+  /* 09 §10 · visible on focus, out of the way otherwise. */
+  .skip-link {
+    position: absolute;
+    left: 8px;
+    top: -48px;
+    z-index: 60;
+    background: var(--p-paper);
+    color: var(--p-accent);
+    border: 1px solid var(--p-accent);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: top 120ms ease-out;
+  }
+  .skip-link:focus-visible {
+    top: 8px;
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* ---------- top bar ---------- */
+
+  /* The theme button label swaps in CSS so the toggle needs no React state. */
+
+  /* ---------- shell ---------- */
+  /* Figma · cool panel chrome; work sits on a white rounded stage (08 §4). */
+  .shell {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--p-panel);
+  }
+  /* A full-height column: brand + product dropdown at the head, primary nav, then
+     Active loans take the rest and scroll on their own, and utility sits at the foot.
+     Width is a variable the server sets from a cookie, so a resized rail is already
+     the right width in the first byte.
+     08 §4 · rail and chrome share panel; the stage is paper. --p-ground lets a glyph
+     that knocks out its own stroke (the settings sliders) match whatever it sits on. */
+  .rail {
+    --p-ground: var(--p-panel);
+    position: relative;
+    width: var(--p-rail, 238px);
+    flex: none;
+    background: transparent;
+    border-right: 0;
+    padding: 12px 0 0;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .rail-primary {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  /* The drag edge: a wide target, a two-pixel mark.
+     The target must sit entirely inside the rail, because the rail hides its
+     overflow — an edge hung past it is clipped to a sliver the pointer misses,
+     landing on the text behind instead. */
+  .rail-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 10px;
+    z-index: 5;
+    cursor: col-resize;
+    touch-action: none;
+    /* A drag must not select the page behind it — that steals the gesture. */
+    user-select: none;
+  }
+  .rail-handle::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--p-accent);
+    opacity: 0;
+  }
+  /* `:focus` as well as `:focus-visible`: clicking the edge focuses it, and without
+     a mark for that state there is nothing to tell you the arrow keys now work. */
+  .rail-handle:hover::after,
+  .rail-handle:focus::after {
+    opacity: 1;
+  }
+  .rail-handle:focus {
+    outline: none;
+  }
+
+  /* 08 §4a · the collapsed rail is a desktop preference. Below 1024px the rail
+     has its own shape, so the cookie does not apply there. */
+  @media (min-width: 1024px) {
+    /* ---------- collapsed rail ----------
+       The mark alone. Labels stay in the accessibility tree rather than being removed,
+       so the nav is still announced while it is only icons on screen. */
+    [data-rail="collapsed"] .rail {
+      width: 56px;
+    }
+    [data-rail="collapsed"] .rail-brand {
+      padding: 0;
+      justify-content: center;
+    }
+    [data-rail="collapsed"] .brandmark {
+      justify-content: center;
+      gap: 0;
+    }
+    [data-rail="collapsed"] .nav {
+      justify-content: center;
+      gap: 0;
+      padding: 6px 0;
+    }
+    [data-rail="collapsed"] .nav > svg {
+      width: 17px;
+      height: 17px;
+    }
+    [data-rail="collapsed"] .product-switch {
+      display: none;
+    }
+    /* Visually gone, still readable by a screen reader. */
+    [data-rail="collapsed"] .nav-label,
+    [data-rail="collapsed"] .badge {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    [data-rail="collapsed"] .rail-loans {
+      display: none;
+    }
+    [data-rail="collapsed"] .rail-utility {
+      padding: 8px 0 14px;
+    }
+  }
+  /* 08 §4a · Tablet: the 56px icon column whatever the cookie says, opening full
+     width over the page so the column never shrinks. Same rules as collapsed. */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    /* ---------- collapsed rail ----------
+       The mark alone. Labels stay in the accessibility tree rather than being removed,
+       so the nav is still announced while it is only icons on screen. */
+    html:not([data-sheet="open"]) .rail {
+      width: 56px;
+    }
+    html:not([data-sheet="open"]) .rail-brand {
+      padding: 0;
+      justify-content: center;
+    }
+    html:not([data-sheet="open"]) .brandmark {
+      justify-content: center;
+      gap: 0;
+    }
+    html:not([data-sheet="open"]) .nav {
+      justify-content: center;
+      gap: 0;
+      padding: 6px 0;
+    }
+    html:not([data-sheet="open"]) .nav > svg {
+      width: 17px;
+      height: 17px;
+    }
+    html:not([data-sheet="open"]) .product-switch {
+      display: none;
+    }
+    /* Visually gone, still readable by a screen reader. */
+    html:not([data-sheet="open"]) .nav-label,
+    html:not([data-sheet="open"]) .badge {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    html:not([data-sheet="open"]) .rail-loans {
+      display: none;
+    }
+    html:not([data-sheet="open"]) .rail-utility {
+      padding: 8px 0 14px;
+    }
+  }
+
+  .rail-loans {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .rail-loans-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  /* The Chase mark sits above the rail's first action. 09 §1 — the brand is one
+     of the few elements permitted colour; everything around it stays monochrome. */
+  .rail-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 12px;
+  }
+  .brandmark {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex: none;
+    padding: 5px;
+    background: none;
+    border: 0;
+    color: inherit;
+    text-align: left;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .brandmark:hover {
+    background: var(--p-panel-2);
+  }
+  .brandmark-mark {
+    flex: none;
+    display: block;
+  }
+  /* The only 600 in the system. 08 §2 caps the console at 500, but a brand lockup is
+     brand rather than console chrome, and 09 §3 sets Chase's brand type at 600. One
+     rule, two call sites; the guard test allows this selector and no other. */
+  .brandtype {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .brandmark-name {
+    font-size: 13.5px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .brandmark:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* 08 §5 productswitch · dropdown in the brand row. Names the current product;
+     the menu lists both. Accent budget stays with verdicts. */
+  .product-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    max-width: 100%;
+    height: 28px;
+    margin: 0;
+    padding: 0 4px 0 2px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--p-ink);
+    cursor: pointer;
+    text-align: left;
+  }
+  .product-switch:hover {
+    background: var(--p-panel-2);
+  }
+  .product-switch:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+  .product-switch-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13.5px;
+  }
+  .product-switch-chevron {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    color: var(--p-ink-3);
+  }
+
+  /* 09 §11 forbids decorative iconography, so a nav glyph is wayfinding and takes
+     the row's own state colour rather than a hue of its own. 08 §3 · selected
+     icons stay ink with the label — never the accent hue (Cursor fill-only). */
+  .nav > svg {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    color: var(--p-ink-3);
+  }
+  .nav:hover > svg {
+    color: var(--p-ink-2);
+  }
+  .nav[aria-current="page"] > svg,
+  .nav[aria-current="true"] > svg {
+    color: var(--p-ink);
+  }
+
+  /* Groups separate by space, not rules — Cursor's sidebar group labels. */
+  .rail-h {
+    padding: 16px 20px 6px;
+    font-size: 11px;
+    color: var(--p-ink-3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .rail-h .ct {
+    margin-left: auto;
+    font-family: var(--p-mono);
+  }
+  .rail-h-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .rail-h-link:hover {
+    color: var(--p-ink-2);
+    text-decoration: underline;
+  }
+  .rail-h-link:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 2px;
+  }
+
+  /* 08 §3 · rail rows are inset 8px with radius 6. Selected is a white paper pill
+     on cool panel chrome — no accent tick, no left blue bar. */
+  .nav {
+    padding: 6px 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: calc(100% - 16px);
+    margin: 0 8px;
+    text-align: left;
+    background: none;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--p-ink-2);
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .nav:hover,
+  .row:hover {
+    --p-ground: var(--p-panel-2);
+    background: var(--p-panel-2);
+    color: var(--p-ink);
+  }
+  .nav[aria-current="true"],
+  .nav[aria-current="page"],
+  .row[aria-current="true"],
+  .row[aria-current="page"] {
+    --p-ground: var(--p-paper);
+    background: var(--p-paper);
+    color: var(--p-ink);
+  }
+  .nav[aria-current="true"],
+  .nav[aria-current="page"] {
+    font-weight: 500;
+  }
+  .nav .badge {
+    margin-left: auto;
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+  }
+  .nav .badge.warn {
+    color: var(--p-hold);
+  }
+
+  /* 07 §The rail · one line per loan: run-state mark, borrower, then product. The
+     product truncates before the name does. */
+  .row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: calc(100% - 16px);
+    min-height: 30px;
+    margin: 0 8px;
+    padding: 5px 12px;
+    text-align: left;
+    background: none;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  /* Borrower name is human-authored, so the sans face — 08 §2. The loan ref is
+     machine-produced and lives in the row's tooltip and on the file. */
+  .row .name {
+    flex: 0 0 auto;
+    max-width: calc(100% - 20px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12.5px;
+  }
+  .row[aria-current="page"] .name {
+    font-weight: 500;
+  }
+  .row .meta {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+  }
+
+  /* 08 §7 · A running run is marked, not loaded. The matrix only ever means an
+     agent is on this row now; everything else is a still dot in its state colour. */
+  .runmark {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    color: var(--p-ink-3);
+  }
+  .runmark-glyph {
+    display: inline-flex;
+  }
+  .runmark-working {
+    color: var(--p-accent);
+  }
+  .runmark-held {
+    color: var(--p-hold);
+  }
+  .runmark-dot {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .runmark-matrix {
+    color: inherit;
+  }
+
+  /* Utility sits at the foot of the column, clear of the bottom edge: somewhere you
+     go, not somewhere you work. Groups separate by space — no hairline needed. */
+  .rail-utility {
+    flex: none;
+    margin-top: auto;
+    padding: 8px 0 14px;
+  }
+
+  .main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    /* Figma · stage floats in chrome on all sides, including beside the rail. */
+    padding: 12px;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  /* Figma · white work plane; depth from ground + radius, not shadow (08 §3/§4). */
+  .stage {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--p-paper);
+    border-radius: 16px;
+    overflow: auto;
+  }
+  /* Centred on a fixed measure so the column stays readable on wide screens
+     instead of stretching with the viewport. */
+  .body {
+    flex: 1;
+    width: 100%;
+    max-width: var(--p-measure);
+    margin-inline: auto;
+    padding: var(--p-space-body-y) var(--p-space-body-x);
+  }
+  /* 05 §1 / 08 §4 · the bundle measure stays 880px; the section nav hangs in
+     extra width on this surface only. */
+  .body:has(.anchornav) {
+    max-width: calc(var(--p-measure) + var(--p-toc) + 32px);
+  }
+  /* Sticky right-hand section nav for a long document. Anchors, not tabs:
+     these are seven sections of one artifact rather than seven views of one
+     object. Selected is the 2px left accent, same device as the rail. */
+  .anchornav {
+    position: sticky;
+    top: var(--p-space-body-y);
+    align-self: start;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    grid-area: toc;
+  }
+  .anchornav-item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 12.5px;
+    padding: 6px 10px;
+    border-left: 2px solid transparent;
+    color: var(--p-ink-2);
+    text-decoration: none;
+  }
+  .anchornav-item:hover {
+    background: var(--p-panel);
+    color: var(--p-ink);
+  }
+  .anchornav-item[aria-current="location"] {
+    background: var(--p-panel);
+    border-left-color: var(--p-accent);
+    color: var(--p-ink);
+    font-weight: 500;
+  }
+  .anchornav-item:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+  .anchornav-mark {
+    font-family: var(--p-mono);
+    font-size: 10px;
+    color: var(--p-keep);
+  }
+
+  /* ---------- headings and page furniture ---------- */
+  .eyebrow {
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+  }
+  .kicker {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .crumb {
+    font-size: 12px;
+    color: var(--p-ink-3);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .crumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .crumb-seg {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+  }
+  .crumb-sep {
+    padding: 0 7px;
+    color: var(--p-ink-3);
+  }
+  .crumb a,
+  .crumb button,
+  .crumb summary {
+    background: none;
+    border: 0;
+    color: var(--p-accent);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0;
+    text-decoration: none;
+  }
+  .crumb span[aria-current="page"] {
+    color: var(--p-ink-2);
+  }
+  .crumb a:hover,
+  .crumb button:hover,
+  .crumb summary:hover {
+    text-decoration: underline;
+  }
+  .crumb summary {
+    display: inline-flex;
+    align-items: center;
+    color: var(--p-ink-3);
+    list-style: none;
+    text-decoration: none;
+    padding: 2px;
+    margin-left: 1px;
+  }
+  .crumb summary::-webkit-details-marker {
+    display: none;
+  }
+  .crumb summary:hover {
+    color: var(--p-ink);
+    text-decoration: none;
+  }
+  .crumb summary:focus-visible,
+  .crumb-item:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 2px;
+  }
+  .crumb-disc {
+    position: relative;
+  }
+  /* 08 crumb-menu · paper panel, 1px hairline, no shadow. */
+  .crumb-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    min-width: 220px;
+    max-width: min(360px, 70vw);
+    max-height: 320px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 4px 0;
+    list-style: none;
+    background: var(--p-paper);
+    border: 1px solid var(--p-line);
+    border-radius: 6px;
+  }
+  .crumb-item {
+    display: block;
+    padding: 6px 12px;
+    color: var(--p-ink) !important;
+    text-decoration: none !important;
+    border-left: 2px solid transparent;
+  }
+  .crumb-item:hover {
+    background: var(--p-panel);
+  }
+  .crumb-item[aria-current="page"] {
+    background: var(--p-panel);
+    border-left-color: var(--p-accent);
+  }
+  .crumb-item-detail {
+    display: block;
+    margin-top: 1px;
+    font-size: 11px;
+    color: var(--p-ink-2);
+  }
+  .crumb-seg:last-child .crumb-menu {
+    left: auto;
+    right: 0;
+  }
+  #pause,
+  #waiting,
+  #procedure,
+  #queue,
+  #thread {
+    scroll-margin-top: 16px;
+  }
+  .lede {
+    font-size: 13px;
+    color: var(--p-ink-2);
+    margin-top: 10px;
+    max-width: 74ch;
+  }
+
+  /* ---------- overview · Figma period instrument ---------- */
+  .ov-range {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 16px;
+  }
+  .ov-range-label {
+    font-size: 13px;
+    color: var(--p-ink);
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .ov-range-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    align-items: center;
+  }
+  .ov-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 28px;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    color: var(--p-ink-2);
+    text-decoration: none;
+  }
+  .ov-pill:hover {
+    color: var(--p-ink);
+  }
+  .ov-pill.on {
+    background: var(--p-panel);
+    color: var(--p-ink);
+  }
+  .ov-pill:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+  /* Soft panel tiles — Figma KPI row: panel fill, radius 12, 20px value. */
+  .ov-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .ov-kpis .big {
+    background: var(--p-panel);
+    border-color: transparent;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .ov-kpis .big .lab {
+    font-size: 13px;
+    color: var(--p-ink-2);
+  }
+  .ov-kpis .big .val {
+    font-family: var(--p-mono);
+    font-size: 20px;
+    margin-top: 12px;
+  }
+  .ov-kpis .big .sub {
+    display: none;
+  }
+  .ov-charts {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .ov-charts .sec {
+    margin-top: 0;
+  }
+  .ov-charts .chartwrap {
+    background: var(--p-panel);
+    border-color: transparent;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .ov-charts .chead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .ov-charts .chead h3 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .ov-charts .chead .cs {
+    margin-left: 0;
+    font-size: 13px;
+    color: var(--p-ink-2);
+  }
+  .ov-charts .takeaway {
+    margin-top: 10px;
+  }
+  @media (max-width: 639px) {
+    .ov-kpis {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- stat strips ---------- */
+  /* 08 §3 · independent tiles with a gap, not one packed strip. Cursor's
+     automations KPIs are the spatial reference. */
+  .strip3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .big {
+    padding: 20px 22px;
+    border: 1px solid var(--p-line);
+    border-radius: 9px;
+  }
+  .big .lab {
+    font-size: 12px;
+    color: var(--p-ink-2);
+  }
+  .big .val {
+    font-family: var(--p-mono);
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    margin-top: 6px;
+    line-height:
