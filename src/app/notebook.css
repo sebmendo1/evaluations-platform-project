@@ -1,1 +1,294 @@
-@/tmp/gh-finish/notebook_92cdeb7.css
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+  .mono {
+    font-family: var(--p-mono);
+    font-variant-ligatures: none;
+  }
+
+  /* 09 §10 · visible on focus, out of the way otherwise. */
+  .skip-link {
+    position: absolute;
+    left: 8px;
+    top: -48px;
+    z-index: 60;
+    background: var(--p-paper);
+    color: var(--p-accent);
+    border: 1px solid var(--p-accent);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: top 120ms ease-out;
+  }
+  .skip-link:focus-visible {
+    top: 8px;
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* ---------- top bar ---------- */
+
+  /* The theme button label swaps in CSS so the toggle needs no React state. */
+
+  /* ---------- shell ---------- */
+  /* Figma · cool panel chrome; work sits on a white rounded stage (08 §4). */
+  .shell {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--p-panel);
+  }
+  /* A full-height column: brand + product dropdown at the head, primary nav, then
+     Active loans take the rest and scroll on their own, and utility sits at the foot.
+     Width is a variable the server sets from a cookie, so a resized rail is already
+     the right width in the first byte.
+     08 §4 · rail and chrome share panel; the stage is paper. --p-ground lets a glyph
+     that knocks out its own stroke (the settings sliders) match whatever it sits on. */
+  .rail {
+    --p-ground: var(--p-panel);
+    position: relative;
+    width: var(--p-rail, 238px);
+    flex: none;
+    background: transparent;
+    border-right: 0;
+    padding: 12px 0 0;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .rail-primary {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  /* The drag edge: a wide target, a two-pixel mark.
+     The target must sit entirely inside the rail, because the rail hides its
+     overflow — an edge hung past it is clipped to a sliver the pointer misses,
+     landing on the text behind instead. */
+  .rail-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 10px;
+    z-index: 5;
+    cursor: col-resize;
+    touch-action: none;
+    /* A drag must not select the page behind it — that steals the gesture. */
+    user-select: none;
+  }
+  .rail-handle::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--p-accent);
+    opacity: 0;
+  }
+  /* `:focus` as well as `:focus-visible`: clicking the edge focuses it, and without
+     a mark for that state there is nothing to tell you the arrow keys now work. */
+  .rail-handle:hover::after,
+  .rail-handle:focus::after {
+    opacity: 1;
+  }
+  .rail-handle:focus {
+    outline: none;
+  }
+
+  /* 08 §4a · the collapsed rail is a desktop preference. Below 1024px the rail
+     has its own shape, so the cookie does not apply there. */
+  @media (min-width: 1024px) {
+    /* ---------- collapsed rail ----------
+       The mark alone. Labels stay in the accessibility tree rather than being removed,
+       so the nav is still announced while it is only icons on screen. */
+    [data-rail="collapsed"] .rail {
+      width: 56px;
+    }
+    [data-rail="collapsed"] .rail-brand {
+      padding: 0;
+      justify-content: center;
+    }
+    [data-rail="collapsed"] .brandmark {
+      justify-content: center;
+      gap: 0;
+    }
+    [data-rail="collapsed"] .nav {
+      justify-content: center;
+      gap: 0;
+      padding: 6px 0;
+    }
+    [data-rail="collapsed"] .nav > svg {
+      width: 17px;
+      height: 17px;
+    }
+    [data-rail="collapsed"] .product-switch {
+      display: none;
+    }
+    /* Visually gone, still readable by a screen reader. */
+    [data-rail="collapsed"] .nav-label,
+    [data-rail="collapsed"] .badge {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    [data-rail="collapsed"] .rail-loans {
+      display: none;
+    }
+    [data-rail="collapsed"] .rail-utility {
+      padding: 8px 0 14px;
+    }
+  }
+  /* 08 §4a · Tablet: the 56px icon column whatever the cookie says, opening full
+     width over the page so the column never shrinks. Same rules as collapsed. */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    /* ---------- collapsed rail ----------
+       The mark alone. Labels stay in the accessibility tree rather than being removed,
+       so the nav is still announced while it is only icons on screen. */
+    html:not([data-sheet="open"]) .rail {
+      width: 56px;
+    }
+    html:not([data-sheet="open"]) .rail-brand {
+      padding: 0;
+      justify-content: center;
+    }
+    html:not([data-sheet="open"]) .brandmark {
+      justify-content: center;
+      gap: 0;
+    }
+    html:not([data-sheet="open"]) .nav {
+      justify-content: center;
+      gap: 0;
+      padding: 6px 0;
+    }
+    html:not([data-sheet="open"]) .nav > svg {
+      width: 17px;
+      height: 17px;
+    }
+    html:not([data-sheet="open"]) .product-switch {
+      display: none;
+    }
+    /* Visually gone, still readable by a screen reader. */
+    html:not([data-sheet="open"]) .nav-label,
+    html:not([data-sheet="open"]) .badge {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    html:not([data-sheet="open"]) .rail-loans {
+      display: none;
+    }
+    html:not([data-sheet="open"]) .rail-utility {
+      padding: 8px 0 14px;
+    }
+  }
+
+  .rail-loans {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .rail-loans-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  /* The Chase mark sits above the rail's first action. 09 §1 — the brand is one
+     of the few elements permitted colour; everything around it stays monochrome. */
+  .rail-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 12px;
+  }
+  .brandmark {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex: none;
+    padding: 5px;
+    background: none;
+    border: 0;
+    color: inherit;
+    text-align: left;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .brandmark:hover {
+    background: var(--p-panel-2);
+  }
+  .brandmark-mark {
+    flex: none;
+    display: block;
+  }
+  /* The only 600 in the system. 08 §2 caps the console at 500, but a brand lockup is
+     brand rather than console chrome, and 09 §3 sets Chase's brand type at 600. One
+     rule, two call sites; the guard test allows this selector and no other. */
+  .brandtype {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .brandmark-name {
+    font-size: 13.5px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .brandmark:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* 08 §5 productswitch · dropdown in the brand row. Names the current product;
+     the menu lists both. Accent budget stays with verdicts. */
+  .product-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    max-width: 100%;
+    height: 28px;
+    margin: 0;
+    padding: 0 4px 0 2px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--p-ink);
+    cursor: pointer;
+    text-align: left;
+  }
+  .product-switch:hover {
+    background: var(--p-panel-2);
+  }
+  .product-switch:focus-visible {
+    outline: 2px solid var(--p-accent);
+    out
