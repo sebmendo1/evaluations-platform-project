@@ -34,7 +34,7 @@ export function CiPlot() {
       role="img"
       aria-label="Accuracy with confidence intervals by bundle"
     >
-      <Bar x={bandLeft} y={28} w={bandRight - bandLeft} h={bodyHeight} rx={0} fill={paint.panel} />
+      <Bar x={bandLeft} y={28} w={bandRight - bandLeft} h={bodyHeight} fill={paint.panel} rx={0} />
       <Txt x={bandRight + 4} y={22} fill={paint.ink3} size={10.5}>
         baseline band
       </Txt>
