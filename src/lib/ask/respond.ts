@@ -287,10 +287,3 @@ export function respond(question: string, mode: AskMode = "answer"): AskReply {
 
   return reply;
 }
-
-export const askSuggestions = [
-  "What should I look at first?",
-  "Is 0.12.0 better than baseline?",
-  "Why is the sampled gap flat?",
-  "Where is cost going?",
-];
