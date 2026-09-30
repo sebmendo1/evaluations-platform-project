@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
 import { getVersion } from "@/lib/data/governance";
 import { BASELINE } from "@/lib/domain/constants";
 import { evaluateGate, gatePasses } from "@/lib/domain/promotion";
@@ -57,6 +58,10 @@ export default async function PromotePage({
         <h1>Promotion gate</h1>
         <span className="eyebrow mono">{bundle.v}</span>
       </div>
+      <p className="lede">
+        Seven conditions, checked individually. A bundle moves from evaluated to live
+        only when all of them hold.
+      </p>
 
       <div className="vswitch">
         <Link
@@ -111,12 +116,12 @@ export default async function PromotePage({
       </div>
 
       <div className="actions">
-        <button className="btn pri" type="button" disabled={!allowed}>
+        <Button type="button" disabled={!allowed}>
           {allowed ? "Promote to production" : "Cannot promote"}
-        </button>
-        <Link className="btn" href="/governance?compare=1">
-          Review what changed
-        </Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/governance?compare=1">Review what changed</Link>
+        </Button>
       </div>
 
       <p className="takeaway">
