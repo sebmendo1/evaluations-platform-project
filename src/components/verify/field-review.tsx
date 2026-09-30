@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { EmptyState } from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
 import type { VerifyField } from "@/lib/data/verify";
 
 type Status = "pending" | "agreed" | "corrected";
@@ -103,9 +104,9 @@ export function FieldReview({ fields, subject }: { fields: VerifyField[]; subjec
         }
         heading="Both open reviews submitted"
         action={
-          <button className="btn" type="button" onClick={() => setDrawn(1)}>
+          <Button variant="outline" type="button" onClick={() => setDrawn(1)}>
             Draw again anyway
-          </button>
+          </Button>
         }
       >
         The sampler draws 5% of clean files, so the next one arrives with the next batch
@@ -217,11 +218,11 @@ export function FieldReview({ fields, subject }: { fields: VerifyField[]; subjec
       ) : null}
 
       <div className="actions">
-        <button className="btn pri" type="button" onClick={submit}>
+        <Button type="button" onClick={submit}>
           Submit review
-        </button>
-        <button
-          className="btn"
+        </Button>
+        <Button
+          variant="outline"
           type="button"
           onClick={() =>
             setNote(
@@ -232,10 +233,10 @@ export function FieldReview({ fields, subject }: { fields: VerifyField[]; subjec
           }
         >
           Send correction to corpus
-        </button>
-        <button className="btn" type="button" onClick={drawAnother}>
+        </Button>
+        <Button variant="outline" type="button" onClick={drawAnother}>
           Draw another file
-        </button>
+        </Button>
       </div>
     </>
   );
