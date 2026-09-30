@@ -3,7 +3,8 @@
  *
  * The trail is as deep as the object. Each segment that has children lists every
  * page underneath it, so a reviewer can jump without climbing back to the rail.
- * Active loans and Experiments are the two trees that earn this.
+ * Active loans and Experiments are the two trees that earn this. They do not
+ * share a crumb tree — they are two products (`07 §Two products`).
  */
 
 import { attempts } from "./data/attempts";
@@ -62,7 +63,7 @@ function heldLoanLinks(): CrumbLink[] {
 export function activeLoansSegment(current = false): CrumbSegment {
   return {
     label: "Active loans",
-    href: `/batches/${currentBatch.id}?filter=held`,
+    href: `/batches/${currentBatch.id}?filter=open`,
     current,
     items: heldLoanLinks(),
   };
@@ -125,7 +126,7 @@ export function activeLoanCrumbs(opts: {
       current: !opts.loanRef,
       items: filters.map((entry) => ({
         href: `/batches/${batch.id}?filter=${entry.key}`,
-        label: entry.key,
+        label: entry.label,
         detail: String(entry.count),
       })),
     },
@@ -201,10 +202,7 @@ export function experimentCrumbs(opts: {
   view?: "index" | "new" | "board";
   section?: "procedure" | "queue" | "thread";
 }): CrumbSegment[] {
-  const segments: CrumbSegment[] = [
-    overviewSegment(),
-    experimentsSegment(opts.view === "index"),
-  ];
+  const segments: CrumbSegment[] = [experimentsSegment(opts.view === "index")];
 
   if (opts.view === "new") {
     segments.push({
