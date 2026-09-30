@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { JetBrains_Mono, Open_Sans } from "next/font/google";
 
 import { cookies } from "next/headers";
 
+import { MobileBar, SheetScrim } from "@/components/shell/mobile-bar";
 import { Rail } from "@/components/shell/rail";
+import { UiProviders } from "@/components/ui/providers";
 import {
   RAIL_COOKIE,
   readRail,
@@ -13,7 +15,6 @@ import {
   ROLE_COOKIE,
   THEME_COOKIE,
 } from "@/lib/prefs";
-import { buildRailModel } from "@/lib/rail-model";
 
 import "./globals.css";
 // Loaded after the token layer so its @layer components rules slot into the
@@ -44,6 +45,13 @@ export const metadata: Metadata = {
     "Underwriting notebook for the Astro HELOC file review agent: held files, experiments, bundle governance, and blind review.",
 };
 
+/** 08 §4a · cover the notch so env(safe-area-inset-*) resolves on iOS. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default async function RootLayout({ children }: { children: ReactNode }) {
   // Read the device preferences server-side so `data-theme` is already correct in
   // the first byte — no inline script, no flash, and nothing to hydrate.
@@ -51,8 +59,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const theme = readTheme(jar.get(THEME_COOKIE)?.value);
   const role = readRole(jar.get(ROLE_COOKIE)?.value);
   const rail_ = readRail(jar.get(RAIL_COOKIE)?.value);
-
-  const rail = buildRailModel();
 
   return (
     <html
@@ -64,16 +70,23 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`${openSans.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        {/* 09 §10 · required on every build, including internal ones. */}
-        <a className="skip-link" href="#main">
-          Skip to main content
-        </a>
-        <div className="shell">
-          <Rail model={rail} collapsed={rail_.collapsed} />
-          <main className="main" id="main">
-            <div className="body">{children}</div>
-          </main>
-        </div>
+        <UiProviders>
+          {/* 09 §10 · required on every build, including internal ones. */}
+          <a className="skip-link" href="#main">
+            Skip to main content
+          </a>
+          {/* 08 §4a · shown below 640px only; the rail is a sheet there. */}
+          <MobileBar />
+          <div className="shell">
+            <Rail collapsed={rail_.collapsed} width={rail_.width} />
+            <SheetScrim />
+            <main className="main" id="main">
+              <div className="stage">
+                <div className="body">{children}</div>
+              </div>
+            </main>
+          </div>
+        </UiProviders>
       </body>
     </html>
   );
