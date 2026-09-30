@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
@@ -14,7 +16,6 @@
   --color-accent: var(--p-accent);
   --color-accent-strong: var(--p-accent-strong);
   --color-accent-bg: var(--p-accent-bg);
-  --color-on-primary: var(--p-on-primary);
   --color-keep: var(--p-keep);
   --color-keep-bg: var(--p-keep-bg);
   --color-discard: var(--p-discard);
@@ -23,6 +24,29 @@
   --color-hold-bg: var(--p-hold-bg);
   --font-sans: var(--p-sans);
   --font-mono: var(--p-mono);
+  --font-heading: var(--p-sans);
+  /* 08 §5a · shadcn semantic colours bridge onto --p-; no parallel palette. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
 }
 
 :root {
@@ -31,13 +55,17 @@
      size inside the body's padding. 08 §3 opened the previous 800 / 18 / 22
      measure so the column has air rather than packing. */
   --p-measure: 880px;
+  /* 08 §4a · data surfaces at 1440px and up. Documents keep --p-measure. */
+  --p-measure-wide: 1200px;
   --p-space-section: 40px;
   --p-space-body-y: 28px;
   --p-space-body-x: 32px;
+  /* 05 §1 / 08 §4 · Governance section nav hangs in the right gutter of that
+     surface only. It is not the retired 312px four-tab panel. */
+  --p-toc: 180px;
 
-  /* Brand tokens: Chase wins (09 §2, 08 §9). Cursor extraction remaps
-     (charcoal / gold / orange → ink + Chase blue/navy) live in design.md §0.
-     Paper stays warm; 08 §11 tracks Chase white as an open question. */
+  /* Ink is Chase's warm near-black (09 §2). The paper ground stays warm, which
+     08 §11 tracks as an open question against Chase's #FFFFFF. */
   --p-ink: #211e1e;
   --p-ink-2: #5a5c63;
   --p-ink-3: #8a8c93;
@@ -46,12 +74,10 @@
   --p-panel-2: #ededea;
   --p-line: #e2e2de;
   --p-line-2: #cfcfc9;
-  /* Chase blue does the identity work; navy carries weight. 09 §2.
-     On-primary is the white label on filled CTAs (design.md §2 / 09 §6). */
+  /* Chase blue does the identity work; navy carries weight. 09 §2. */
   --p-accent: #117aca;
   --p-accent-strong: #004b87;
   --p-accent-bg: #e8f1fa;
-  --p-on-primary: #ffffff;
   --p-keep: #1f7a4d;
   --p-keep-bg: #e8f3ed;
   --p-discard: #b4342e;
@@ -59,10 +85,32 @@
   --p-hold: #a8710f;
   --p-hold-bg: #fcf2e0;
   --p-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  /* Open Sans is Chase's web face (09 §3). CursorGothic / system-ui dual stack
-     from the Cursor extraction do not ship — design.md §0 / 08 §2. */
+  /* Open Sans is Chase's web face (09 §3) and wins over 08's Inter or system
+     stack, per the reconciliation in 08 §9. */
   --p-sans: var(--font-open-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
+
+  /* 08 §5a · shadcn variables resolve through --p-. */
+  --background: var(--p-paper);
+  --foreground: var(--p-ink);
+  --card: var(--p-paper);
+  --card-foreground: var(--p-ink);
+  --popover: var(--p-paper);
+  --popover-foreground: var(--p-ink);
+  --primary: var(--p-accent);
+  --primary-foreground: #ffffff;
+  --secondary: var(--p-panel);
+  --secondary-foreground: var(--p-ink);
+  --muted: var(--p-panel);
+  --muted-foreground: var(--p-ink-2);
+  --accent: var(--p-accent-bg);
+  --accent-foreground: var(--p-accent-strong);
+  --destructive: var(--p-discard);
+  --border: var(--p-line);
+  --input: var(--p-line);
+  --ring: var(--p-accent);
+  /* Chase control radius — about 6px, not marketing rounds. */
+  --radius: 0.375rem;
 }
 
 [data-theme="dark"] {
@@ -79,13 +127,31 @@
   --p-accent: #6fb3e8;
   --p-accent-strong: #a8d1f2;
   --p-accent-bg: #10233a;
-  --p-on-primary: #0e0f11;
   --p-keep: #5bbf8c;
   --p-keep-bg: #13271e;
   --p-discard: #e8776f;
   --p-discard-bg: #2b1615;
   --p-hold: #d9a140;
   --p-hold-bg: #2a1f0d;
+
+  --background: var(--p-paper);
+  --foreground: var(--p-ink);
+  --card: var(--p-panel);
+  --card-foreground: var(--p-ink);
+  --popover: var(--p-panel);
+  --popover-foreground: var(--p-ink);
+  --primary: var(--p-accent);
+  --primary-foreground: #0e0f11;
+  --secondary: var(--p-panel-2);
+  --secondary-foreground: var(--p-ink);
+  --muted: var(--p-panel-2);
+  --muted-foreground: var(--p-ink-2);
+  --accent: var(--p-accent-bg);
+  --accent-foreground: var(--p-accent-strong);
+  --destructive: var(--p-discard);
+  --border: var(--p-line);
+  --input: var(--p-line);
+  --ring: var(--p-accent);
 }
 
 @layer base {
@@ -98,7 +164,7 @@
   }
 
   body {
-    background: var(--p-paper);
+    background: var(--p-panel);
     color: var(--p-ink);
     font-family: var(--p-sans);
     font-size: 14px;
@@ -110,10 +176,9 @@
     font-family: inherit;
   }
 
-  /* 08 §2 · weight ceiling 500, with carve-outs for the brand lockup and page
-     title (`h1` at 600). Enforced here rather than per-selector, so a stray
-     <b> or <strong> cannot reintroduce 700 — the browser default and Tailwind's
-     preflight both reach for bolder. */
+  /* 08 §2 · "Never bold. 500 is the heaviest weight in the system." Enforced here
+     rather than per-selector, so a stray <b> or <strong> cannot reintroduce 700 —
+     the browser default and Tailwind's preflight both reach for bolder. */
   b,
   strong {
     font-weight: 500;
@@ -121,7 +186,7 @@
 
   h1 {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 500;
     letter-spacing: -0.02em;
   }
 
@@ -134,6 +199,10 @@
   h3 {
     font-size: 13px;
     font-weight: 500;
+  }
+
+  * {
+    border-color: var(--border);
   }
 }
 
