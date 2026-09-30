@@ -1,16 +1,16 @@
 # Conformance
 
 Where the implementation stands against the acceptance criteria in these specs.
-There are 60 checkboxes and 21 `GIVEN/WHEN/THEN` blocks; this records which are
+There are 60 checkboxes and 27 `GIVEN/WHEN/THEN` blocks; this records which are
 met, which are partial, and which are deferred with a reason, so nothing is
 quietly skipped.
 
-Status: current as of the spec-conformance pass · 129 tests in [`../tests`](../tests)
+Status: current as of the spec-conformance pass · 189 tests in [`../tests`](../tests)
 
 | | Count |
 |---|---|
-| Met, with a test | 36 |
-| Met, no test yet | 3 |
+| Met, with a test | 37 |
+| Met, no test yet | 2 |
 | Partial | 1 |
 | Deferred — organizational | 9 |
 | Deferred — needs a server | 5 |
@@ -96,7 +96,7 @@ All eight `GIVEN/WHEN/THEN` blocks in `03` are tests.
 
 | Criterion | Status |
 |---|---|
-| Section nav present, sticky, marks changed sections | Met |
+| Section nav present on the right, sticky, tracks the section in view, marks changed sections | Met, tested |
 | Compare diffs all six dimensions | Met, tested |
 | Tools render grouped; flat list unreachable | Met |
 | Skill-to-step mapping explicit, including gaps | Met, tested — an uncovered step renders as a gap |
@@ -128,13 +128,19 @@ bundle version, no promotion bypassing INV-4, no adverse action clearing without
 named human.
 
 The rail's Active loans list is met and tested: the heading, borrower + product
-rows, and file hrefs are asserted against `07 §The rail`. Attempts remain a surface
-(`/attempts`); they are not the rail body.
+rows, and file hrefs are asserted against `07 §The rail`. Attempts are the body of
+the Experiments product, not of Evaluations. Active loans now carry held files then
+running files, one line each, with the run-state mark from `08 §7` — the dot matrix
+on a running loan, a still hold dot on a held one — asserted in `07-surfaces`.
+Evaluations and Experiments switch via a product dropdown in the rail brand row,
+one click apart; the earlier two-segment track and rail Loan Originator lockup are
+retired. Evaluations primary nav is Agent · Overview · Loans; Governance sits in
+utility. Loan Originator is the Agent home hero brand signal.
 
 Breadcrumbs are met and tested against `07 §Breadcrumbs`: a held file trails
 Overview › Active loans › batch › filter › borrower › pause, and an experiment
-trails Overview › Experiments › bundle › section, each caret listing the pages
-under that segment.
+trails Experiments › bundle › section, each caret listing the pages under that
+segment.
 
 Deferred: Phase 6, the second surface. That is a future phase rather than a
 conformance gap.
@@ -147,24 +153,41 @@ anywhere; no computed weight above 500, enforced with a base rule on `b` and `st
 percentages, money, versions and ids in mono at every size including hero metrics;
 every chart has a sibling takeaway; every metric-reporting surface carries a "what
 this doesn't tell you"; loading states render an artefact rather than a spinner; the
-2px left accent means only "selected"; section gap is 40, body padding 28/32, measure
-880px; metric tiles are gapped cards; table cells are at least 14px vertical padding;
-the composer input is at least 88px tall; primary nav rows are 6px vertical padding;
-primary/secondary `.btn` actions are pill (`9999px`); Open Sans + Chase `#117ACA` /
-`#004B87` are the shipped brand tokens (Cursor charcoal/gold refused — `design.md` §0);
-`--p-on-primary` labels filled CTAs; form fields use `--p-line-2`; composer send is
-pill; interactive focus outlines are restored (no longer accidentally merged into
-`.sectionnav`); legacy `.chat-composer` CSS was removed; page titles are `h1` at 600
-with no intro `.lede`; KPI strips and takeaways span the full 880px measure.
+2px left accent means "selected" outside the rail (KPI, crumbs, Governance toc);
+rail `.nav` / `.row` selection is a white (`paper`) fill-only pill (no accent tick);
+work sits on a white stage (radius 16) inside cool `panel` chrome; Overview follows
+the Figma period instrument (range pills, three soft KPIs, stacked autonomy/cost
+area charts) with workspace tabs below; Loans is Active loans with Pipeline /
+Open / Reviewed pills and a Loan·Milestone·Stage·Scope·Updated table;
+section gap is 40, body padding 28/32, measure 880px; metric tiles are gapped cards;
+table cells are at least 14px vertical padding; the Agent empty state is a centered
+Loan Originator hero with Answer/Act and a soft panel composer (radius 16, 88px
+input, circular send, Figma placeholder, no chips or disclaimer); primary nav rows
+are 6px vertical padding.
 
+`§4a` form factors are met and tested in `08-visual-language`: breakpoints are the
+four tier edges only; below 640px the rail is a sheet under a 56px header and the
+page heading is the first thing on screen; the tablet rail is the 56px column
+regardless of the desktop cookie; data surfaces widen to 1200 at 1440; touch
+targets are 44px and inputs 16px under `pointer: coarse`; the rail uses `100dvh`.
+
+`§5a` shadcn foundation is met and tested: theme variables bridge onto `--p-`;
+files under `src/components/ui` carry no shadow and no weight above 500; product
+actions use `Button` (including `asChild` links) rather than new `.btn` rules;
+section tabs compose shadcn `Tabs` with the existing pill skin. The rail, KPI
+tile geometry, charts and run-state mark remain domain layout in `notebook.css`.
+
+- Partial: the "no horizontal page scroll and no clipped label at ten widths"
+  criterion is checked by a screenshot pass, not an automated test — the repo has no
+  browser test runner yet.
 - Partial: a re-skin has not been exercised. The token layer is isolated, but nothing
   proves it until a second skin is built.
 
 ## 09 · Chase brand
 
-Brand-scope items met: Chase blue and navy, the warm near-black ink, Open Sans, pill
-primary actions, on-primary CTA labels, and the accessibility floor — skip link,
-`<main>` landmark, visible focus, descriptive link text.
+Brand-scope items met: Chase blue and navy, the warm near-black ink, Open Sans, and
+the accessibility floor — skip link, `<main>` landmark, visible focus, descriptive
+link text.
 
 - Deferred, production: licensed Open Sans build, confirmation that
   `public/brand/chase-octagon.png` is the internal asset, motion tokens, and the
