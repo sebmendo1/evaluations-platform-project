@@ -1,14 +1,21 @@
+import { readFileSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import {
   diffBundles,
   getVersion,
+  governanceSections,
   missingSteps,
   stepCoverage,
 } from "@/lib/data/governance";
 import { BASELINE } from "@/lib/domain/constants";
 import { evaluateGate, gatePasses } from "@/lib/domain/promotion";
 import type { ExperimentResult } from "@/lib/domain/verdict";
+import {
+  SECTION_IN_VIEW_MARKER_PX,
+  sectionInView,
+} from "@/lib/section-in-view";
 
 const live = getVersion("0.12.0");
 const retired = getVersion("0.11.0");
@@ -139,5 +146,98 @@ describe("05 §4 · the promotion gate states every failure individually", () =>
     for (const condition of evaluateGate(healthy)) {
       expect(condition.cites).toBeTruthy();
     }
+  });
+});
+
+describe("05 §1 · the seven sections appear in right-hand section navigation", () => {
+  const page = readFileSync("src/app/governance/page.tsx", "utf8");
+  const anchors = readFileSync("src/components/governance/section-anchors.tsx", "utf8");
+  const css = readFileSync("src/app/notebook.css", "utf8");
+
+  it("lists every bundle section as a hash link", () => {
+    expect(governanceSections.map((section) => section.label)).toEqual([
+      "Bundle",
+      "Topology",
+      "Agents",
+      "Tools",
+      "Skills",
+      "Policy cards",
+      "Audit chain",
+    ]);
+    for (const section of governanceSections) {
+      expect(page).toContain(`id="${section.id}"`);
+    }
+    expect(anchors).toContain("href={`#${section.id}`}");
+  });
+
+  it("places the nav to the right of the document, sticky while it scrolls", () => {
+    const docAt = page.indexOf("gwrap-doc");
+    const headAt = page.indexOf("gwrap-head");
+    const navAt = page.lastIndexOf("<SectionAnchors");
+    expect(headAt).toBeGreaterThan(-1);
+    expect(docAt).toBeGreaterThan(headAt);
+    expect(navAt).toBeGreaterThan(docAt);
+
+    const wrap = css.slice(
+      css.indexOf(".gwrap:has(> .anchornav) {"),
+      css.indexOf(".gwrap:has(> .anchornav) {") + 280,
+    );
+    expect(wrap).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)\s*var\(--p-toc\)/);
+    expect(wrap).toMatch(/"head toc"/);
+
+    const nav = css.slice(css.indexOf("  .anchornav {"), css.indexOf("  .anchornav {") + 280);
+    expect(nav).toMatch(/position:\s*sticky/);
+    expect(nav).toMatch(/flex-direction:\s*column/);
+  });
+
+  it("marks the item for the section in view as selected", () => {
+    expect(anchors).toContain("sectionInView");
+    expect(anchors).toContain('aria-current={current === section.id ? "location"');
+    const selected = css.slice(css.indexOf('.anchornav-item[aria-current="location"]'));
+    expect(selected.slice(0, 240)).toMatch(/border-left-color:\s*var\(--p-accent\)/);
+  });
+});
+
+describe("05 §1 · the item for the section in view is marked selected", () => {
+  const sections = [
+    { id: "g-meta", top: 40 },
+    { id: "g-topo", top: 400 },
+    { id: "g-agents", top: 900 },
+  ];
+
+  it("selects the first section when none have crossed the marker", () => {
+    const below = sections.map((section) => ({
+      ...section,
+      top: section.top + 200,
+    }));
+    expect(sectionInView(below, SECTION_IN_VIEW_MARKER_PX)).toBe("g-meta");
+  });
+
+  it("selects a section once its top has crossed the marker", () => {
+    expect(
+      sectionInView(
+        [
+          { id: "g-meta", top: -20 },
+          { id: "g-topo", top: 80 },
+          { id: "g-agents", top: 400 },
+        ],
+        SECTION_IN_VIEW_MARKER_PX,
+      ),
+    ).toBe("g-topo");
+  });
+
+  it("selects the last section at the bottom of the document", () => {
+    expect(sectionInView(sections, SECTION_IN_VIEW_MARKER_PX, true)).toBe("g-agents");
+  });
+});
+
+describe("05 §2 · each changed section is marked in the section navigation", () => {
+  it("renders the changed mark from the section list", () => {
+    expect(
+      governanceSections.filter((section) => section.changed).map((s) => s.label),
+    ).toEqual(["Topology", "Agents", "Tools", "Skills"]);
+    const anchors = readFileSync("src/components/governance/section-anchors.tsx", "utf8");
+    expect(anchors).toContain("anchornav-mark");
+    expect(anchors).toContain("changed");
   });
 });
