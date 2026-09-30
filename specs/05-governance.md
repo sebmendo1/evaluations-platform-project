@@ -35,6 +35,19 @@ right-hand section navigation.
 | Policy cards | Referenced cards and their versions | Where thresholds live |
 | Audit chain | One decision traced end to end | The examination artifact |
 
+The seven labels sit in a right-hand section navigation, not above the document.
+It is sticky in that gutter while the reviewer scrolls, and the item for the
+section in view is the selected one — a 2px left accent, same device as the rail.
+Hash links still address each section. This is not the retired four-tab side
+panel; the nav holds only these labels, and only on this surface.
+
+```
+GIVEN a reviewer is reading a bundle
+THEN the seven sections appear in right-hand section navigation
+AND the nav stays sticky on the right while the document scrolls
+AND the item for the section in view is marked selected
+```
+
 ### Tools must be grouped
 
 An undifferentiated wall of 29 tool names reads as alarming and communicates
@@ -140,7 +153,7 @@ permanently, because the decisions it produced are still in the book.
 
 ## 6. Acceptance criteria
 
-- [ ] Section navigation is present, sticky, and marks changed sections in compare
+- [ ] Section navigation is present on the right, sticky, tracks the section in view, and marks changed sections in compare
 - [ ] Compare mode diffs all six diffable dimensions listed in §2
 - [ ] Tools render grouped; the flat list is not reachable
 - [ ] Skill-to-step mapping is explicit, including gaps
