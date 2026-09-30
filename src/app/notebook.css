@@ -595,3 +595,232 @@
     color: var(--p-ink-3);
   }
   .crumb a,
+  .crumb button,
+  .crumb summary {
+    background: none;
+    border: 0;
+    color: var(--p-accent);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0;
+    text-decoration: none;
+  }
+  .crumb span[aria-current="page"] {
+    color: var(--p-ink-2);
+  }
+  .crumb a:hover,
+  .crumb button:hover,
+  .crumb summary:hover {
+    text-decoration: underline;
+  }
+  .crumb summary {
+    display: inline-flex;
+    align-items: center;
+    color: var(--p-ink-3);
+    list-style: none;
+    text-decoration: none;
+    padding: 2px;
+    margin-left: 1px;
+  }
+  .crumb summary::-webkit-details-marker {
+    display: none;
+  }
+  .crumb summary:hover {
+    color: var(--p-ink);
+    text-decoration: none;
+  }
+  .crumb summary:focus-visible,
+  .crumb-item:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 2px;
+  }
+  .crumb-disc {
+    position: relative;
+  }
+  /* 08 crumb-menu · paper panel, 1px hairline, no shadow. */
+  .crumb-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    min-width: 220px;
+    max-width: min(360px, 70vw);
+    max-height: 320px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 4px 0;
+    list-style: none;
+    background: var(--p-paper);
+    border: 1px solid var(--p-line);
+    border-radius: 6px;
+  }
+  .crumb-item {
+    display: block;
+    padding: 6px 12px;
+    color: var(--p-ink) !important;
+    text-decoration: none !important;
+    border-left: 2px solid transparent;
+  }
+  .crumb-item:hover {
+    background: var(--p-panel);
+  }
+  .crumb-item[aria-current="page"] {
+    background: var(--p-panel);
+    border-left-color: var(--p-accent);
+  }
+  .crumb-item-detail {
+    display: block;
+    margin-top: 1px;
+    font-size: 11px;
+    color: var(--p-ink-2);
+  }
+  .crumb-seg:last-child .crumb-menu {
+    left: auto;
+    right: 0;
+  }
+  #pause,
+  #waiting,
+  #procedure,
+  #queue,
+  #thread {
+    scroll-margin-top: 16px;
+  }
+  .lede {
+    font-size: 13px;
+    color: var(--p-ink-2);
+    margin-top: 10px;
+    max-width: 74ch;
+  }
+
+  /* ---------- overview · Figma period instrument ---------- */
+  .ov-range {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 16px;
+  }
+  .ov-range-label {
+    font-size: 13px;
+    color: var(--p-ink);
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .ov-range-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    align-items: center;
+  }
+  .ov-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 28px;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    color: var(--p-ink-2);
+    text-decoration: none;
+  }
+  .ov-pill:hover {
+    color: var(--p-ink);
+  }
+  .ov-pill.on {
+    background: var(--p-panel);
+    color: var(--p-ink);
+  }
+  .ov-pill:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+  /* Soft panel tiles — Figma KPI row: panel fill, radius 12, 20px value. */
+  .ov-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .ov-kpis .big {
+    background: var(--p-panel);
+    border-color: transparent;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .ov-kpis .big .lab {
+    font-size: 13px;
+    color: var(--p-ink-2);
+  }
+  .ov-kpis .big .val {
+    font-family: var(--p-mono);
+    font-size: 20px;
+    margin-top: 12px;
+  }
+  .ov-kpis .big .sub {
+    display: none;
+  }
+  .ov-charts {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .ov-charts .sec {
+    margin-top: 0;
+  }
+  .ov-charts .chartwrap {
+    background: var(--p-panel);
+    border-color: transparent;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .ov-charts .chead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .ov-charts .chead h3 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .ov-charts .chead .cs {
+    margin-left: 0;
+    font-size: 13px;
+    color: var(--p-ink-2);
+  }
+  .ov-charts .takeaway {
+    margin-top: 10px;
+  }
+  @media (max-width: 639px) {
+    .ov-kpis {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- stat strips ---------- */
+  /* 08 §3 · independent tiles with a gap, not one packed strip. Cursor's
+     automations KPIs are the spatial reference. */
+  .strip3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .big {
+    padding: 20px 22px;
+    border: 1px solid var(--p-line);
+    border-radius: 9px;
+  }
+  .big .lab {
+    font-size: 12px;
+    color: var(--p-ink-2);
+  }
+  .big .val {
+    font-family: var(--p-mono);
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    margin-top: 6px;
+    line-height:
