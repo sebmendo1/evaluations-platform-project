@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
+
 export const metadata = {
   title: "Not found",
 };
@@ -13,12 +15,12 @@ export default function NotFound() {
         another environment, or it was never written to the ledger.
       </p>
       <div className="actions">
-        <Link className="btn pri" href="/">
-          Back to overview
-        </Link>
-        <Link className="btn" href="/batches/batch-0903-am">
-          Open the running batch
-        </Link>
+        <Button asChild>
+          <Link href="/">Back to overview</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/batches/batch-0903-am">Open the running batch</Link>
+        </Button>
       </div>
     </>
   );
