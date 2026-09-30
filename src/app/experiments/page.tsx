@@ -7,6 +7,7 @@ import { CiPlot } from "@/components/charts/ci-plot";
 import { GapChart } from "@/components/charts/gap-chart";
 import { ClickableRow } from "@/components/clickable-row";
 import { MiniRunner } from "@/components/experiments/mini-runner";
+import { Button } from "@/components/ui/button";
 import {
   experimentKpis,
   experimentRows,
@@ -14,6 +15,7 @@ import {
   verdictTone,
 } from "@/lib/data/experiments";
 import { toneClass } from "@/lib/rich-text";
+import { WideMeasure } from "@/components/measure";
 
 export const metadata = {
   title: "Experiments",
@@ -22,17 +24,21 @@ export const metadata = {
 export default function ExperimentsPage() {
   return (
     <>
+      <WideMeasure />
       <Crumbs segments={experimentCrumbs({ view: "index" })} />
       {/* 07 §Surface map · Experiments owns the runner, so its entry point is the
           primary action of this surface rather than a global one in the rail. */}
       <div className="kicker">
         <h1>Experiments</h1>
         <span className="h" style={{ marginLeft: "auto" }}>
-          <Link className="btn pri" href="/experiments/new">
-            New experiment
-          </Link>
+          <Button asChild>
+            <Link href="/experiments/new">New experiment</Link>
+          </Button>
         </span>
       </div>
+      <p className="lede" style={{ maxWidth: "76ch" }}>
+        Six bundles, 41 graded runs, one verdict that separated from baseline.
+      </p>
 
       <KpiGrid items={experimentKpis} />
 
