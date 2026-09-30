@@ -76,6 +76,15 @@ where `n` is small, with the limitation stated on the page (`04 §4`).
 Runs currently in `held`. Paired with the oldest wait time, because a count with
 no age is not actionable.
 
+### `turns_per_run`
+
+```
+turns_per_run = agent_turns / runs_completed   # in the selected period
+```
+
+How many agent turns a completed run took on average. Overview shows it beside
+`cost_per_run` so spend and work depth read together. Not a quality score.
+
 ---
 
 ## Derived and operational
