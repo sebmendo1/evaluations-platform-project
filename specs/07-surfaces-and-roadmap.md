@@ -28,7 +28,7 @@ not a permanent rail lockup.
 | **Overview** | The current state | Primary metrics, then held files, ledger and open attempts as sections | `06` |
 | **Attempts** | The set of attempts | Board, timeline and list views over the loop | `04`, `01 §3` |
 | **Experiments** | An experiment | Interval plot, gap chart, runner, field-failure matrix | `04` |
-| **Governance** | A bundle version | Bundle review, version compare, audit chain |
+| **Governance** | A bundle version | Bundle review, version compare, audit chain | `05` |
 | **Reports** | A period | Autonomy trend, interrupt economics, cost, compliance | `06` |
 | **Batch** | A batch | 100+ files with filters, progress | `02` |
 | **File** | One run | The transcript, with the interrupt as a paused turn | `03` |
