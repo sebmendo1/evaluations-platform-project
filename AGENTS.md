@@ -73,10 +73,10 @@ skill at `.cursor/skills/astro-design/SKILL.md`. Brand tokens are governed by
 [`specs/09-chase-brand.md`](specs/09-chase-brand.md).
 
 The rules most easily lost: an interval plot rather than a trend line whenever n is
-small; monospace for anything a machine produced, at every size; weight ceiling 500
-except page titles and the brand lockup at 600; no shadows anywhere; colour is state,
-never decoration; every chart carries a takeaway and every surface reporting a metric
-says what it does not tell you.
+small; monospace for anything a machine produced, at every size; never bold, 500 is
+the ceiling; no shadows anywhere; colour is state, never decoration; every chart
+carries a takeaway and every surface reporting a metric says what it does not tell
+you.
 
 ## Before you finish
 
@@ -96,3 +96,11 @@ depend on anyone remembering them.
 [`specs/CONFORMANCE.md`](specs/CONFORMANCE.md) records which acceptance criteria are
 met, which are partial, and which are deferred with a reason. Update it when you move
 one.
+
+## Origin
+
+The source of truth is the Origin repo
+[`sebastian-mendo/next-dash`](https://cursor.com/codebase/sebastian-mendo/next-dash)
+(`https://origin.cursor.com/sebastian-mendo/next-dash.git`). Install the public CLI with
+`curl -fsSL https://downloads.cursor.com/origin/install.sh | sh` (not mise). Do not retarget
+the `origin` git remote to GitHub.
