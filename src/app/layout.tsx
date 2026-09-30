@@ -1,90 +1,53 @@
-import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
-import { JetBrains_Mono, Open_Sans } from "next/font/google";
+import type { Metadata } from "next";
+import { Open_Sans } from "next/font/google";
 
-import { cookies } from "next/headers";
-
-import { MobileBar, SheetScrim } from "@/components/shell/mobile-bar";
-import { Rail } from "@/components/shell/rail";
 import { UiProviders } from "@/components/ui/providers";
-import {
-  RAIL_COOKIE,
-  readRail,
-  readRole,
-  readTheme,
-  ROLE_COOKIE,
-  THEME_COOKIE,
-} from "@/lib/prefs";
+import { Rail } from "@/components/shell/rail";
+import { MobileBar } from "@/components/shell/mobile-bar";
 
 import "./globals.css";
-// Loaded after the token layer so its @layer components rules slot into the
-// cascade order Tailwind declares.
 import "./notebook.css";
 
-/** 09 §3 · Chase's web face. 08 §2 caps the console at 500; 600 is loaded only for
- *  the brand lockup, which follows Chase's brand type rather than console chrome.
- *  The rest of the marketing ramp is deliberately absent. */
 const openSans = Open_Sans({
+  subsets: ["latin"],
   variable: "--font-open-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Astro — Notebook",
-    template: "%s · Astro",
+    default: "Loan Originator",
+    template: "%s · Loan Originator",
   },
-  description:
-    "Underwriting notebook for the Astro HELOC file review agent: held files, experiments, bundle governance, and blind review.",
+  description: "Underwriting review console",
 };
 
-/** 08 §4a · cover the notch so env(safe-area-inset-*) resolves on iOS. */
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  viewportFit: "cover",
-};
-
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  // Read the device preferences server-side so `data-theme` is already correct in
-  // the first byte — no inline script, no flash, and nothing to hydrate.
-  const jar = await cookies();
-  const theme = readTheme(jar.get(THEME_COOKIE)?.value);
-  const role = readRole(jar.get(ROLE_COOKIE)?.value);
-  const rail_ = readRail(jar.get(RAIL_COOKIE)?.value);
-
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="en"
-      data-theme={theme}
-      data-role={role}
-      data-rail={rail_.collapsed ? "collapsed" : undefined}
-      style={{ "--p-rail": `${rail_.width}px` } as React.CSSProperties}
-      className={`${openSans.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang="en" className={openSans.variable} suppressHydrationWarning>
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("astro.theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();`,
+          }}
+        />
         <UiProviders>
-          {/* 09 §10 · required on every build, including internal ones. */}
-          <a className="skip-link" href="#main">
-            Skip to main content
+          <a className="skip" href="#main">
+            Skip to content
           </a>
-          {/* 08 §4a · shown below 640px only; the rail is a sheet there. */}
-          <MobileBar />
           <div className="shell">
-            <Rail collapsed={rail_.collapsed} width={rail_.width} />
-            <SheetScrim />
-            <main className="main" id="main">
-              <div className="stage">
-                <div className="body">{children}</div>
-              </div>
-            </main>
+            <Rail />
+            <MobileBar />
+            <div className="maincol">
+              <main id="main" className="page">
+                {children}
+              </main>
+            </div>
           </div>
         </UiProviders>
       </body>
