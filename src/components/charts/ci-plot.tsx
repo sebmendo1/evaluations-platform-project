@@ -4,7 +4,8 @@ import { Bar, Dot, Rule, Txt, paint } from "./primitives";
 
 const W = 690;
 const L = 62;
-const R = 126;
+/** Wide enough for mean · n · the longest verdict ("inconclusive") inside the viewBox. */
+const R = 170;
 const ROW = 38;
 const LO = 85;
 const HI = 100;
@@ -33,7 +34,7 @@ export function CiPlot() {
       role="img"
       aria-label="Accuracy with confidence intervals by bundle"
     >
-      <Bar x={bandLeft} y={28} w={bandRight - bandLeft} h={bodyHeight} fill={paint.panel} rx={0} />
+      <Bar x={bandLeft} y={28} w={bandRight - bandLeft} h={bodyHeight} rx={0} fill={paint.panel} />
       <Txt x={bandRight + 4} y={22} fill={paint.ink3} size={10.5}>
         baseline band
       </Txt>
