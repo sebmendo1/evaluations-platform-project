@@ -2,6 +2,8 @@
 
 import { useState, type ReactNode } from "react";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 /**
  * Switching a view is not fetching data.
  *
@@ -10,6 +12,9 @@ import { useState, type ReactNode } from "react";
  * something else on the way. The URL still updates through `history.replaceState`,
  * so a section stays linkable and survives a reload, which is what
  * `07 §Overview` asks for.
+ *
+ * Structure is shadcn Tabs (08 §5a); the pill look stays the Astro skin via
+ * `.pilltab` / `data-state=active`.
  */
 export type TabPanel = {
   key: string;
@@ -47,43 +52,47 @@ export function SectionTabs({
   const current = tabs.find((tab) => tab.key === active) ?? tabs[0];
 
   return (
-    <>
+    <Tabs value={active} onValueChange={select} className="gap-0">
       <div className="sectionnav">
-        <div className="sectionnav-tabs" role="tablist" aria-label={label}>
+        <TabsList
+          variant="line"
+          aria-label={label}
+          className="sectionnav-tabs h-auto w-auto gap-0.5 rounded-none bg-transparent p-0"
+        >
           {tabs.map((tab) => (
-            <button
+            <TabsTrigger
               key={tab.key}
-              type="button"
-              role="tab"
+              value={tab.key}
               id={`tab-${param}-${tab.key}`}
-              aria-selected={active === tab.key}
-              aria-controls={`panel-${param}-${tab.key}`}
-              className={active === tab.key ? "pilltab on" : "pilltab"}
-              onClick={() => select(tab.key)}
+              className="pilltab h-auto flex-none rounded-[20px] border border-transparent bg-transparent px-3 py-1.5 text-[13px] font-normal text-ink-2 after:hidden hover:bg-panel hover:text-ink data-active:border-line data-active:bg-panel-2 data-active:font-medium data-active:text-ink dark:data-active:border-line dark:data-active:bg-panel-2 dark:data-active:text-ink"
             >
               {tab.label}
               {tab.count !== undefined ? (
                 <span className="pilltab-count">{tab.count}</span>
               ) : null}
-            </button>
+            </TabsTrigger>
           ))}
-        </div>
+        </TabsList>
         {current.action ? (
           <div className="sectionnav-actions">{current.action}</div>
         ) : null}
       </div>
 
       {tabs.map((tab) => (
-        <div
+        <TabsContent
           key={tab.key}
-          role="tabpanel"
+          value={tab.key}
+          forceMount
+          /* forceMount keeps every panel in the tree; hidden is the show/hide
+             the old SectionTabs used — Radix alone does not set it when forced. */
+          hidden={tab.key !== active}
           id={`panel-${param}-${tab.key}`}
           aria-labelledby={`tab-${param}-${tab.key}`}
-          hidden={tab.key !== active}
+          className="mt-0 outline-none"
         >
           {tab.panel}
-        </div>
+        </TabsContent>
       ))}
-    </>
+    </Tabs>
   );
 }

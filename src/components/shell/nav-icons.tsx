@@ -66,6 +66,15 @@ export function GovernanceIcon({ className }: IconProps) {
   );
 }
 
+/** Five columns — the attempts board is the shape of the loop. */
+export function AttemptsIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M3 3.5v9M5.75 5.5v7M8.5 4.5v8M11.25 6v6.5M14 5v7.5" />
+    </svg>
+  );
+}
+
 /** Bars over a period, with the axis 08 §6 requires. */
 export function ReportsIcon({ className }: IconProps) {
   return (
@@ -103,8 +112,8 @@ export function SettingsIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className}>
       <path d="M2.5 5.5h11M2.5 10.5h11" />
-      <circle cx="6" cy="5.5" r="1.8" fill="var(--p-paper)" />
-      <circle cx="10.5" cy="10.5" r="1.8" fill="var(--p-paper)" />
+      <circle cx="6" cy="5.5" r="1.8" fill="var(--p-ground, var(--p-paper))" />
+      <circle cx="10.5" cy="10.5" r="1.8" fill="var(--p-ground, var(--p-paper))" />
     </svg>
   );
 }
@@ -114,6 +123,7 @@ export const navIcons = {
   settings: SettingsIcon,
   overview: OverviewIcon,
   experiments: ExperimentsIcon,
+  attempts: AttemptsIcon,
   governance: GovernanceIcon,
   reports: ReportsIcon,
   batch: BatchIcon,
