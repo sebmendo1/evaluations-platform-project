@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Rich } from "@/components/rich-text";
 import { StatusRow } from "@/components/blocks";
-import { askSuggestions, respond, type AskAction, type AskMode } from "@/lib/ask/respond";
+import { Rich } from "@/components/rich-text";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { respond, type AskAction, type AskMode } from "@/lib/ask/respond";
 import type { RichText } from "@/lib/rich-text";
 
 type Message =
@@ -30,7 +32,7 @@ function SendIcon() {
   );
 }
 
-/** The composer: placeholder above, a toolbar inside the same card below it. */
+/** Soft panel composer — placeholder above, circular send alone in the bar. */
 function Composer({
   value,
   onChange,
@@ -38,7 +40,6 @@ function Composer({
   autoFocus,
   placeholder,
   inputRef,
-  scope,
 }: {
   value: string;
   onChange: (next: string) => void;
@@ -46,7 +47,6 @@ function Composer({
   autoFocus?: boolean;
   placeholder: string;
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
-  scope: string;
 }) {
   return (
     <form
@@ -56,14 +56,14 @@ function Composer({
         onSubmit();
       }}
     >
-      <textarea
+      <Textarea
         ref={inputRef}
-        className="composer-input"
+        className="composer-input min-h-[88px] resize-none border-0 bg-transparent focus-visible:ring-0"
         rows={1}
         value={value}
         autoFocus={autoFocus}
         placeholder={placeholder}
-        aria-label="Ask Astro"
+        aria-label="Ask Agent"
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
@@ -73,16 +73,15 @@ function Composer({
         }}
       />
       <div className="composer-bar">
-        <span className="composer-scope">{scope}</span>
-        <span className="kbd composer-hint">⌘J</span>
-        <button
+        <Button
           className="composer-send"
           type="submit"
+          size="icon-sm"
           disabled={!value.trim()}
           aria-label="Send"
         >
           <SendIcon />
-        </button>
+        </Button>
       </div>
     </form>
   );
@@ -140,9 +139,9 @@ function ActionCard({ action }: { action: AskAction }) {
         <Link className="y" href={action.href}>
           {action.confirmLabel}
         </Link>
-        <button type="button" onClick={() => setDismissed(true)}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setDismissed(true)}>
           Not now
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -192,11 +191,11 @@ export function AskChat({ seed }: { seed: string }) {
             <Image
               src="/brand/chase-octagon.png"
               alt=""
-              width={24}
-              height={24}
+              width={20}
+              height={20}
               priority
             />
-            <span className="ask-hero-name brandtype">Astro</span>
+            <span className="ask-hero-name brandtype">Loan Originator</span>
           </span>
           <ModeToggle mode={mode} onChange={setMode} />
         </div>
@@ -208,31 +207,7 @@ export function AskChat({ seed }: { seed: string }) {
           autoFocus
           placeholder="Ask about a held file, a bundle, or a number"
           inputRef={inputRef}
-          scope="ask · everything"
         />
-
-        {/* Attached below the card, the way the reference carries its hint — except
-            this is a disclosure rather than a promotion, so it does not dismiss. */}
-        <div className="ask-note">
-          <span className="ask-note-mark mono">i</span>
-          <span>
-            No model sits behind this. It reads the workspace and answers from what the
-            platform already holds.
-          </span>
-          <span className="ask-note-mode">
-            {mode === "answer"
-              ? "Answer explains and stops."
-              : "Act proposes an operation with its scope and cost."}
-          </span>
-        </div>
-
-        <div className="ask-suggestions">
-          {askSuggestions.map((suggestion) => (
-            <button key={suggestion} type="button" onClick={() => send(suggestion)}>
-              {suggestion}
-            </button>
-          ))}
-        </div>
       </div>
     );
   }
@@ -282,7 +257,6 @@ export function AskChat({ seed }: { seed: string }) {
           onSubmit={() => send(value)}
           placeholder="Ask a follow-up"
           inputRef={inputRef}
-          scope="ask · everything"
         />
       </div>
     </div>
