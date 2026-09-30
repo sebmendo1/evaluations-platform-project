@@ -136,7 +136,7 @@ describe("preferences resolve server-side, in the first byte", () => {
   it("paints them onto the document element rather than waiting for hydration", () => {
     expect(layout).toContain("data-theme={theme}");
     expect(layout).toContain("data-role={role}");
-    expect(layout).toContain('data-rail={rail_\.collapsed ? "collapsed" : undefined}');
+    expect(layout).toContain('data-rail={rail_.collapsed ? "collapsed" : undefined}');
     expect(layout).toMatch(/"--p-rail": `\$\{rail_\.width\}px`/);
   });
 
