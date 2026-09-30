@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { runnerOptions } from "@/lib/data/experiments";
 import { BASELINE_ERR, BASELINE_MEAN, estimateRun } from "@/lib/estimate";
 
@@ -180,12 +181,12 @@ export function ExperimentForm({ defaults }: { defaults: RunnerDefaults }) {
       ) : null}
 
       <div className="actions">
-        <button className="btn pri" type="button" disabled={locked} onClick={run}>
+        <Button type="button" disabled={locked} onClick={run}>
           Run experiment
-        </button>
-        <button className="btn" type="button" disabled={locked} onClick={saveDraft}>
+        </Button>
+        <Button variant="outline" type="button" disabled={locked} onClick={saveDraft}>
           Save as draft
-        </button>
+        </Button>
       </div>
     </>
   );
