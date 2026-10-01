@@ -187,7 +187,7 @@ export function AskChat({ seed }: { seed: string }) {
         <div className="ask-hero-head">
           <span className="ask-hero-brand">
             <Image
-              src="/brand/chase-octagon.svg"
+              src="/brand/chase-octagon.png"
               alt=""
               width={20}
               height={20}
