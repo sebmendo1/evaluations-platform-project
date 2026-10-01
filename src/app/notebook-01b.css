@@ -1,1 +1,354 @@
-PLACEHOLDER_01B
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+.opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 0;
+    border-bottom: 1px solid var(--p-line);
+    width: 100%;
+    background: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .opt:last-child {
+    border-bottom: 0;
+  }
+  .opt:hover {
+    background: var(--p-panel);
+  }
+  .opt .v {
+    font-family: var(--p-mono);
+    font-size: 15px;
+    font-weight: 500;
+    min-width: 76px;
+  }
+  .opt .src {
+    font-size: 12px;
+    color: var(--p-ink-2);
+  }
+  .opt .pick {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--p-accent);
+    white-space: nowrap;
+  }
+  .opt.quiet .v {
+    color: var(--p-ink-3);
+    font-size: 13px;
+    font-weight: 400;
+  }
+  .opt.narrow .v {
+    min-width: 0;
+  }
+  .opt[aria-pressed="true"] {
+    background: var(--p-keep-bg);
+  }
+  .opt[aria-pressed="true"] .pick {
+    color: var(--p-keep);
+  }
+
+  /* ---------- prose bits ---------- */
+  .impact {
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+    line-height: 1.55;
+    max-width: 72ch;
+  }
+  .trace {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--p-line);
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+    line-height: 1.6;
+  }
+  .drop {
+    margin-top: 14px;
+    border: 1px dashed var(--p-line-2);
+    border-radius: 8px;
+    padding: 18px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--p-ink-2);
+  }
+  .drop.over {
+    border-color: var(--p-accent);
+    background: var(--p-accent-bg);
+    color: var(--p-accent);
+  }
+
+  /* ---------- forms ---------- */
+  .field {
+    margin-top: 12px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--p-ink-2);
+    margin-bottom: 4px;
+  }
+  .field select,
+  .field input,
+  .field textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 13px;
+    background: var(--p-paper);
+    color: var(--p-ink);
+    border: 1px solid var(--p-line);
+    border-radius: 6px;
+    padding: 7px 9px;
+  }
+  .field textarea {
+    min-height: 54px;
+    resize: vertical;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .checkline {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+  }
+  .actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  /* 08 §5a · product actions use shadcn Button. Legacy .btn rules remain only so
+     domain CSS that still keys off the class (touch/hover media) does not break;
+     new controls must not add further .btn variants here. */
+  .btn {
+    font-size: 13px;
+    line-height: 18px;
+    min-height: 32px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--p-line-2);
+    background: var(--p-paper);
+    color: var(--p-ink);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn:hover {
+    border-color: var(--p-ink-3);
+  }
+  /* 09 §6 · primary is filled Chase blue with a white label. 09 §1 permits colour
+     for an action, which is what makes this an exception to 08 §1's monochrome
+     chrome rather than a violation of it. */
+  .btn.pri {
+    background: var(--p-accent);
+    color: #fff;
+    border-color: var(--p-accent);
+  }
+  .btn.pri:hover {
+    background: var(--p-accent-strong);
+    border-color: var(--p-accent-strong);
+  }
+  .btn.dan {
+    color: var(--p-discard);
+    border-color: var(--p-discard);
+  }
+  .btn.sm {
+    font-size: 12px;
+    min-height: 26px;
+    padding: 3px 10px;
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .btn:focus-visible,
+  .opt:focus-visible,
+  .row:focus-visible,
+  .nav:focus-visible,
+  .chip:focus-visible,
+  .vpill:focus-visible,
+  .seg:focus-visible,
+  .rolerow:focus-visible,
+  .product-seg:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* ---------- section nav ----------
+     A title row of counted pill tabs with the surface's actions right-aligned.
+     Selection is a filled pill, not a hue. */
+  .sectionnav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 24px 0 20px;
+  }
+  .sectionnav-tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .sectionnav-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* Pill skin for section tabs — used on shadcn TabsTrigger (08 §5a).
+     Active is data-state=active from Radix; .on remains for any legacy markup. */
+  .pilltab {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    height: auto;
+    flex: none;
+    font-size: 13px;
+    font-weight: 400;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    color: var(--p-ink-2);
+    text-decoration: none;
+    background: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .pilltab:hover {
+    color: var(--p-ink);
+    background: var(--p-panel);
+  }
+  .pilltab[data-state="active"],
+  .pilltab.on {
+    background: var(--p-panel-2);
+    border-color: var(--p-line);
+    color: var(--p-ink);
+    font-weight: 500;
+  }
+  .pilltab-count {
+    font-family: var(--p-mono);
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+  }
+  .pilltab[data-state="active"] .pilltab-count,
+  .pilltab.on .pilltab-count {
+    color: var(--p-ink-2);
+  }
+  .pilltab:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* ---------- thirty-second rule ---------- */
+  .rulelist {
+    margin-top: 10px;
+    border: 1px solid var(--p-line);
+    border-radius: 9px;
+    overflow: hidden;
+  }
+  .rulerow {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--p-line);
+    font-size: 12.5px;
+  }
+  .rulerow:last-child {
+    border-bottom: 0;
+  }
+  .rulerow-key {
+    min-width: 190px;
+    color: var(--p-ink);
+  }
+  .rulerow-median {
+    min-width: 60px;
+    color: var(--p-ink-2);
+  }
+  .rulerow-state {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+    text-align: right;
+  }
+  /* A breach is a payload defect, which is why it reads as one. */
+  .rulerow.breach {
+    background: var(--p-hold-bg);
+  }
+  .rulerow.breach .rulerow-state,
+  .rulerow.breach .rulerow-median {
+    color: var(--p-hold);
+  }
+  .rulerow.exempt .rulerow-key {
+    color: var(--p-ink-2);
+  }
+
+  /* ---------- unsourced figures ----------
+     01 marks two inputs [INPUT] and says to treat them as wrong until sourced, so
+     anything derived from them says so beside the number rather than in a footnote. */
+  .unsourced {
+    margin-top: 12px;
+    border: 1px dashed var(--p-line-2);
+    border-radius: 9px;
+    padding: 11px 13px;
+    max-width: 76ch;
+  }
+  .unsourced-h {
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-hold);
+  }
+  .unsourced p {
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+    line-height: 1.6;
+  }
+  .unsourced p + p {
+    margin-top: 8px;
+  }
+
+  /* ---------- loading artefact ----------
+     08 §7 · a loading state names the work rather than spinning at the reader. */
+  .worklog {
+    margin-top: 16px;
+    border: 1px solid var(--p-line);
+    border-radius: 9px;
+    overflow: hidden;
+  }
+  .worklog-row {
+    display: flex;
+    gap: 10px;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--p-line);
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+  }
+  .worklog-row:last-child {
+    border-bottom: 0;
+  }
+  .worklog-mark {
+    flex: none;
+    color: var(--p-ink-3);
+  }
+
+  /* ---------- zero state ---------- */
+}
