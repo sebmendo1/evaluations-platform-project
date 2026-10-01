@@ -1,0 +1,377 @@
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+  .emptystate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 64px 18px 72px;
+  }
+  .emptystate-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: var(--p-panel-2);
+    color: var(--p-ink-2);
+    margin-bottom: 16px;
+  }
+  .emptystate-tile.keep {
+    background: var(--p-keep-bg);
+    color: var(--p-keep);
+  }
+  .emptystate-tile > svg {
+    width: 18px;
+    height: 18px;
+  }
+  .emptystate-heading {
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+  .emptystate-body {
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: var(--p-ink-3);
+    line-height: 1.6;
+    max-width: 46ch;
+  }
+  .emptystate-action {
+    margin-top: 16px;
+  }
+
+  /* ---------- interrupt payload parts ----------
+     Evidence and impact are rendered from the payload, so the reviewer can answer
+     without opening the folder — the whole point of 03's thirty-second rule. */
+  .evidence {
+    margin-top: 16px;
+    border: 1px solid var(--p-line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .evidence-h {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--p-line);
+    font-size: 11px;
+    color: var(--p-ink-3);
+    background: var(--p-panel);
+  }
+  .evidence-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--p-line);
+    font-size: 12.5px;
+  }
+  .evidence-row:last-child {
+    border-bottom: 0;
+  }
+  .evidence-src {
+    color: var(--p-ink-2);
+    min-width: 170px;
+  }
+  .evidence-val {
+    margin-left: auto;
+    color: var(--p-ink);
+  }
+
+  .impactbox {
+    margin-top: 20px;
+    border-left: 2px solid var(--p-line-2);
+    padding: 4px 0 4px 16px;
+    max-width: 74ch;
+  }
+  .impactbox-h {
+    font-size: 12px;
+    color: var(--p-ink-3);
+  }
+  .impactbox p {
+    margin-top: 4px;
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+    line-height: 1.6;
+  }
+  /* The one case that earns colour: the decision actually moves. */
+  .impactbox.moves {
+    border-left-color: var(--p-hold);
+  }
+  .impactbox.moves .impactbox-h {
+    color: var(--p-hold);
+  }
+
+  .reasons {
+    margin-top: 14px;
+    border: 1px solid var(--p-line);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 74ch;
+  }
+  .reasons-h {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--p-line);
+    background: var(--p-panel);
+    font-size: 11px;
+    color: var(--p-ink-3);
+  }
+  .reasons-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--p-line);
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+  }
+  .reasons-row:last-child {
+    border-bottom: 0;
+  }
+  .reasons-row > span:last-child {
+    margin-left: auto;
+    font-size: 11.5px;
+  }
+
+  .blocked {
+    margin-top: 14px;
+    border: 1px solid var(--p-line-2);
+    border-radius: 8px;
+    padding: 11px 13px;
+    max-width: 74ch;
+    background: var(--p-panel);
+  }
+  .blocked-h {
+    font-size: 12px;
+    color: var(--p-ink);
+    font-weight: 500;
+  }
+  .blocked p {
+    margin-top: 5px;
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+    line-height: 1.6;
+  }
+
+  /* ---------- attempt card ----------
+     One restrained treatment used on the board, in the list and in the rail, so an
+     attempt reads as the same object wherever it appears. */
+  .acard {
+    display: block;
+    border: 1px solid var(--p-line);
+    border-radius: 9px;
+    padding: 14px 16px;
+    background: var(--p-paper);
+    color: inherit;
+    text-decoration: none;
+  }
+  .acard:hover {
+    border-color: var(--p-line-2);
+  }
+  .acard:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+  .acard-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 12.5px;
+  }
+  .acard-title {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .acard-head > span:last-child {
+    margin-left: auto;
+    white-space: nowrap;
+    font-size: 11.5px;
+  }
+  .acard-summary {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--p-ink-2);
+    line-height: 1.55;
+  }
+  .acard-meta,
+  .acard-foot {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+  }
+  .acard-meta > span:last-child,
+  .acard-cost {
+    margin-left: auto;
+  }
+  .acard-foot {
+    padding-top: 8px;
+    border-top: 1px solid var(--p-line);
+    color: var(--p-ink-2);
+  }
+
+  /* Two-up attempt cards on Overview. */
+  .ograid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  /* ---------- kanban ---------- */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(190px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+  .bcol {
+    min-width: 190px;
+  }
+  .bcol-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--p-line);
+    font-size: 12px;
+  }
+  .bcol-count {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+  }
+  .bcol-blurb {
+    margin-top: 7px;
+    font-size: 11px;
+    color: var(--p-ink-3);
+    line-height: 1.5;
+  }
+  .bcol-body {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .bcol-none {
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+    padding: 10px 0;
+  }
+
+  /* ---------- gantt ---------- */
+  .gantt {
+    margin-top: 6px;
+    border: 1px solid var(--p-line);
+    border-radius: 10px;
+    padding: 12px 14px 14px;
+  }
+  .gantt-axis {
+    position: relative;
+    height: 16px;
+    margin-left: 34%;
+    margin-right: 44px;
+  }
+  .gantt-tick {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    font-size: 9.5px;
+    color: var(--p-ink-3);
+    white-space: nowrap;
+  }
+  .gantt-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+  }
+  .gantt-name {
+    width: 34%;
+    flex: none;
+    font-size: 12px;
+    color: inherit;
+    text-decoration: none;
+    line-height: 1.4;
+    padding-right: 10px;
+  }
+  .gantt-name:hover {
+    text-decoration: underline;
+  }
+  .gantt-track {
+    position: relative;
+    flex: 1;
+    height: 16px;
+  }
+  .gantt-grid {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    width: 1px;
+    background: var(--p-line);
+  }
+  .gantt-bar {
+    position: absolute;
+    top: 3px;
+    height: 10px;
+    border-radius: 4px;
+    background: var(--p-line-2);
+  }
+  .gantt-bar.kept {
+    background: var(--p-keep);
+  }
+  .gantt-bar.discarded {
+    background: var(--p-discard);
+  }
+  .gantt-bar.inconclusive {
+    background: var(--p-hold);
+  }
+  .gantt-bar.grading {
+    background: var(--p-accent);
+  }
+  .gantt-bar.drafted {
+    background: none;
+    border: 1px dashed var(--p-line-2);
+  }
+  /* An open bar has no right edge, because it has not ended. */
+  .gantt-bar.open {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .gantt-meta {
+    width: 44px;
+    flex: none;
+    text-align: right;
+    font-size: 11px;
+    color: var(--p-ink-3);
+  }
+  .gantt-swatch.kept {
+    background: var(--p-keep);
+  }
+  .gantt-swatch.discarded {
+    background: var(--p-discard);
+  }
+  .gantt-swatch.inconclusive {
+    background: var(--p-hold);
+  }
+  .gantt-swatch.grading {
+    background: var(--p-accent);
+  }
+  .gantt-swatch.drafted {
+    background: none;
+    border: 1px dashed var(--p-line-2);
+  }
+
+  /* ---------- before and after ---------- */
+  .beforeafter {
+    margin-top: 10px;
+    border: 1px solid var(--p-line);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 12.5px;
+  }
+}
