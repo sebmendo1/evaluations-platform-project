@@ -1,0 +1,379 @@
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+.ba-row {
+    display: flex;
+    gap: 12px;
+    padding: 9px 11px;
+    border-bottom: 1px solid var(--p-line);
+    color: var(--p-ink-2);
+    line-height: 1.55;
+  }
+  .ba-row:last-child {
+    border-bottom: 0;
+  }
+  .ba-k {
+    flex: none;
+    width: 40px;
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+    padding-top: 1px;
+  }
+  .ba-now {
+    background: var(--p-keep-bg);
+    color: var(--p-ink);
+  }
+  .ba-now .ba-k {
+    color: var(--p-keep);
+  }
+
+  @media (max-width: 1023px) {
+    .board {
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+    }
+    .gantt-axis {
+      margin-left: 0;
+    }
+    .gantt-row {
+      flex-wrap: wrap;
+    }
+    .gantt-name {
+      width: 100%;
+    }
+  }
+
+  /* ---------- settings controls ----------
+     The theme's active state is driven off [data-theme] so nothing flashes before
+     hydration; aria-pressed is wired separately in the component. */
+  .segmented {
+    display: inline-flex;
+    border: 1px solid var(--p-line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .seg {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 6px 14px;
+    background: none;
+    border: 0;
+    border-right: 1px solid var(--p-line);
+    color: var(--p-ink-2);
+    cursor: pointer;
+  }
+  .seg:last-child {
+    border-right: 0;
+  }
+  .seg:hover {
+    background: var(--p-panel);
+    color: var(--p-ink);
+  }
+  [data-theme="light"] .seg-light,
+  [data-theme="dark"] .seg-dark {
+    background: var(--p-ink);
+    color: var(--p-paper);
+  }
+
+  .rolelist {
+    border: 1px solid var(--p-line);
+    border-radius: 9px;
+    overflow: hidden;
+    max-width: 62ch;
+  }
+  .rolerow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 16px 18px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--p-line);
+    border-left: 2px solid transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .rolerow:last-child {
+    border-bottom: 0;
+  }
+  .rolerow:hover {
+    background: var(--p-panel);
+  }
+  /* 08 §3 · the 2px left accent means selected, and only that. */
+  .rolerow[aria-checked="true"] {
+    background: var(--p-panel);
+    border-left-color: var(--p-accent);
+  }
+  .rolerow-mark {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    margin-top: 3px;
+    border: 1px solid var(--p-line-2);
+    border-radius: 50%;
+  }
+  .rolerow[aria-checked="true"] .rolerow-mark {
+    border-color: var(--p-accent);
+    border-width: 3.5px;
+  }
+  .rolerow-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .rolerow-name {
+    font-size: 13px;
+  }
+  .rolerow-owns {
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+    line-height: 1.5;
+  }
+
+  /* ---------- records and transcripts ---------- */
+  .quote {
+    margin-top: 12px;
+    border-left: 2px solid var(--p-line-2);
+    padding: 2px 0 2px 12px;
+    font-size: 13px;
+    color: var(--p-ink-2);
+    line-height: 1.6;
+    max-width: 70ch;
+  }
+  .recdiff {
+    margin-top: 14px;
+    border: 1px solid var(--p-line);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: var(--p-mono);
+    font-size: 12.5px;
+  }
+  .recdiff div {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--p-line);
+    display: flex;
+    gap: 12px;
+  }
+  .recdiff div:last-child {
+    border-bottom: 0;
+  }
+  .recdiff .k {
+    color: var(--p-ink-3);
+    min-width: 128px;
+  }
+
+  .prompt {
+    background: var(--p-panel);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    max-width: 74ch;
+  }
+  .tstep {
+    margin-top: 13px;
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+  }
+  .tcmd {
+    font-family: var(--p-mono);
+    font-size: 12px;
+    color: var(--p-ink-2);
+    margin-top: 12px;
+  }
+  .tfile {
+    margin-top: 7px;
+    border: 1px solid var(--p-line);
+    border-radius: 6px;
+    padding: 8px 11px;
+    display: flex;
+    align-items: center;
+    font-family: var(--p-mono);
+    font-size: 12.5px;
+    max-width: 74ch;
+  }
+  .tfile .d {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  .tres {
+    margin-top: 14px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    max-width: 74ch;
+  }
+  .verdictline {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--p-mono);
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border-radius: 6px;
+  }
+  .turn {
+    margin-top: 36px;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .who {
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+    margin-bottom: 8px;
+  }
+  .msg {
+    font-size: 13.5px;
+    line-height: 1.6;
+    max-width: 74ch;
+  }
+  .msg.u {
+    background: var(--p-panel);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  .msg p + p {
+    margin-top: 1em;
+  }
+
+  /* ---------- composer ---------- */
+  /* Align the composer's contents to the same measure as the body above it. */
+  .kbd {
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+    border: 1px solid var(--p-line);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .actbox {
+    border: 1px solid var(--p-accent);
+    border-radius: 9px;
+    padding: 16px 18px;
+    background: var(--p-accent-bg);
+    margin-top: 16px;
+    max-width: 74ch;
+  }
+  .actbox .t {
+    font-size: 13px;
+    color: var(--p-accent);
+    line-height: 1.5;
+  }
+  .actbox .r {
+    display: flex;
+    gap: 7px;
+    margin-top: 9px;
+    flex-wrap: wrap;
+  }
+  .actbox .r a,
+  .actbox .r button {
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border-radius: 6px;
+    border: 1px solid var(--p-accent);
+    background: none;
+    color: var(--p-accent);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .actbox .r a.y,
+  .actbox .r button.y {
+    background: var(--p-accent);
+    color: var(--p-paper);
+  }
+
+  /* ---------- ask · the standalone thread ----------
+     Figma Agent empty state: brand + Answer/Act above a soft panel composer.
+     Vertically centered in the stage; no chips, scope chrome, or disclaimer. */
+  .body:has(.ask-hero) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 600px;
+  }
+  .ask-hero {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 36px 0;
+  }
+  .ask-hero-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 2px 16px;
+  }
+  .ask-hero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .ask-hero-brand img {
+    width: 20px;
+    height: 20px;
+  }
+  .ask-hero-name {
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    line-height: 1.5;
+  }
+
+  .modetoggle {
+    margin-left: auto;
+    display: inline-flex;
+    border: 0;
+    border-radius: 20px;
+    padding: 2px;
+    background: var(--p-panel);
+  }
+  .modetoggle-item {
+    font-size: 12.5px;
+    padding: 4px 14px;
+    border: 0;
+    border-radius: 20px;
+    background: none;
+    color: var(--p-ink-3);
+    cursor: pointer;
+  }
+  .modetoggle-item:hover {
+    color: var(--p-ink-2);
+  }
+  .modetoggle-item.on {
+    background: var(--p-paper);
+    color: var(--p-ink);
+    font-weight: 500;
+  }
+  .modetoggle-item:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+
+  /* Soft panel fill — sunken into the white stage, not a bordered paper card. */
+  .composer-card {
+    border: 1px solid var(--p-line);
+    border-radius: 16px;
+    background: var(--p-panel);
+    padding: 12px;
+  }
+  .composer-card:focus-within {
+    border-color: var(--p-line-2);
+  }
+  .composer-input {
+    width: 100%;
+    font: inherit;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--p-ink);
+    background: none;
+    border: 0;
+    resize: none;
+    min-height: 88px;
+    max-height: 200px;
+    field-sizing: content;
+  }
+}
