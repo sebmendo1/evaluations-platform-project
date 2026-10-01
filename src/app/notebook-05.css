@@ -1,1 +1,240 @@
-PLACEHOLDER
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+  @media (max-width: 639px) {
+    html {
+      scroll-padding-top: 64px;
+    }
+    .mobilebar {
+      position: sticky;
+      top: 0;
+      z-index: 45;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 56px;
+      padding: 0 8px 0 10px;
+      background: var(--p-panel);
+      border-bottom: 1px solid var(--p-line);
+    }
+    .mobilebar-mark {
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+    }
+    .mobilebar .product-switch {
+      flex: 1;
+      max-width: 280px;
+      margin: 0;
+      height: 40px;
+      padding: 0 8px;
+    }
+    .mobilebar-menu {
+      flex: none;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 6px;
+      background: none;
+      color: var(--p-ink);
+      cursor: pointer;
+    }
+    .mobilebar-menu:focus-visible,
+    .mobilebar-mark:focus-visible {
+      outline: 2px solid var(--p-accent);
+      outline-offset: 1px;
+    }
+    .shell {
+      display: block;
+      background: var(--p-panel);
+    }
+    .rail {
+      position: fixed;
+      top: 56px;
+      bottom: 0;
+      left: 0;
+      z-index: 40;
+      width: min(320px, 86vw);
+      height: auto;
+      padding-top: 8px;
+      background: var(--p-panel);
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition:
+        transform 180ms ease-out,
+        visibility 0s linear 180ms;
+    }
+    [data-sheet="open"] .rail {
+      transform: none;
+      visibility: visible;
+      transition: transform 180ms ease-out;
+    }
+    .rail-brand,
+    .rail-handle {
+      display: none;
+    }
+    [data-sheet="open"] .sheet-scrim {
+      display: block;
+      top: 56px;
+    }
+    .main {
+      padding: 0 8px 8px;
+      min-height: calc(100dvh - 56px);
+    }
+    .stage {
+      border-radius: 12px;
+    }
+    .body {
+      padding: 20px 16px 32px;
+    }
+    .chartwrap {
+      padding: 16px;
+    }
+    /* A 690 viewBox squeezed to a phone sets 12px labels at 5px. Keep a legible
+       width and scroll inside the card; the takeaway stays in the flow below. */
+    .chartwrap svg {
+      max-width: none;
+      width: 580px;
+    }
+    /* Tables keep their columns and scroll, with the identifier pinned. */
+    .wrap {
+      overflow-x: auto;
+    }
+    .tbl th:first-child,
+    .tbl td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: var(--p-paper);
+    }
+    .opt,
+    .evidence-row {
+      flex-wrap: wrap;
+    }
+    .actions .btn,
+    .actions [data-slot="button"] {
+      flex: 1 1 auto;
+    }
+    .grid2 {
+      grid-template-columns: 1fr;
+    }
+    .chat-dock {
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Tablet · the 56px icon column, fixed, opening over the page. */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .shell {
+      padding-left: 56px;
+    }
+    .rail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 40;
+      background: var(--p-panel);
+    }
+    .rail-handle {
+      display: none;
+    }
+    [data-sheet="open"] .sheet-scrim {
+      display: block;
+    }
+    .main {
+      padding: 12px;
+    }
+    .body {
+      padding: 24px;
+    }
+    .chat-dock {
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Wide · data surfaces are scanned across, so they take 1200. Documents keep
+     880. Reports sets its chart cards two-up rather than stretching one. */
+  @media (min-width: 1440px) {
+    .body:has(.measure-wide) {
+      max-width: var(--p-measure-wide);
+    }
+    .chartgrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 24px;
+    }
+  }
+
+  /* Touch · 44px targets, and nothing that needs a pointer or a keyboard. */
+  @media (pointer: coarse) {
+    .nav,
+    .row,
+    .product-switch,
+    .chip,
+    .pilltab,
+    .ov-pill,
+    .loans-tab,
+    .crumb-item,
+    .rail-h-link {
+      min-height: 44px;
+    }
+    .pilltab,
+    .chip,
+    .rail-h-link {
+      display: inline-flex;
+      align-items: center;
+    }
+    .crumb summary {
+      min-width: 32px;
+      min-height: 44px;
+      justify-content: center;
+    }
+    .rail-handle,
+    .nav .badge-key {
+      display: none;
+    }
+    input,
+    textarea,
+    select,
+    .composer-input,
+    .chat-input {
+      font-size: 16px;
+    }
+  }
+
+  /* A tap leaves :hover set until the next tap elsewhere, so on a device that
+     cannot hover the hover fills are withdrawn and only selection shows. */
+  @media (hover: none) {
+    .nav:not([aria-current]):hover,
+    .row:not([aria-current]):hover,
+    .pilltab:not(.on):hover,
+    .pilltab:not([data-state="active"]):hover,
+    .crumb-item:not([aria-current]):hover,
+    .brandmark:hover,
+    .seg:hover,
+    .tbl tr.clickable:hover td {
+      background: none;
+    }
+    .tbl tr.clickable:hover td:first-child {
+      background: var(--p-paper);
+    }
+    .btn:hover,
+    [data-slot="button"][data-variant="outline"]:hover {
+      border-color: var(--p-line-2);
+    }
+    .btn.pri:hover,
+    [data-slot="button"][data-variant="default"]:hover {
+      background: var(--p-accent);
+      border-color: var(--p-accent);
+    }
+  }
+}
