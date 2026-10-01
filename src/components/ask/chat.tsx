@@ -125,8 +125,6 @@ function ActionCard({ action }: { action: AskAction }) {
   return (
     <div className="actbox" style={{ marginTop: "16px" }}>
       <div className="t">{action.prompt}</div>
-      {/* 07 · never executed from inferred intent, so scope and cost are stated
-          before the confirmation is offered. */}
       <div className="chat-action-meta">
         <span>
           scope <span className="mono">{action.scope}</span>
@@ -189,7 +187,7 @@ export function AskChat({ seed }: { seed: string }) {
         <div className="ask-hero-head">
           <span className="ask-hero-brand">
             <Image
-              src="/brand/chase-octagon.png"
+              src="/brand/chase-octagon.svg"
               alt=""
               width={20}
               height={20}
