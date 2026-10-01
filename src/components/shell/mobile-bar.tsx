@@ -22,7 +22,7 @@ export function MobileBar() {
   return (
     <header className="mobilebar">
       <Link href="/" className="mobilebar-mark" aria-label="Overview">
-        <Image src="/brand/chase-octagon.png" alt="" width={22} height={22} />
+        <Image src="/brand/chase-octagon.svg" alt="" width={22} height={22} />
       </Link>
       <ProductSwitch current={productForPath(pathname)} />
       <button

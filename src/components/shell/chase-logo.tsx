@@ -29,7 +29,7 @@ export function ChaseLogo({ collapsed: initial }: { collapsed: boolean }) {
       title={collapsed ? "Expand the sidebar" : "Collapse the sidebar"}
     >
       <Image
-        src="/brand/chase-octagon.png"
+        src="/brand/chase-octagon.svg"
         alt=""
         width={22}
         height={22}
