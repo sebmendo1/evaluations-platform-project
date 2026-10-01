@@ -1,0 +1,3 @@
+/* Split for GitHub MCP size limits — concatenates to notebook-04.css */
+@import "./notebook-04a.css";
+@import "./notebook-04b.css";
