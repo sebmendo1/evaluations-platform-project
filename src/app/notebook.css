@@ -1,3 +1,8 @@
-/* notebook styles split across notebook-NN.css for deploy sync */
-@layer components {
-}
+/* Structural notebook styles — split for GitHub sync size limits.
+   Each part opens its own @layer components block. */
+@import "./notebook-00.css";
+@import "./notebook-01.css";
+@import "./notebook-02.css";
+@import "./notebook-03.css";
+@import "./notebook-04.css";
+@import "./notebook-05.css";
