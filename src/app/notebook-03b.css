@@ -1,0 +1,363 @@
+/* Structural styles ported from the Astro notebook concept. Class names are kept
+   verbatim so the port can be checked rule by rule against the source. */
+
+@layer components {
+.rolelist {
+    border: 1px solid var(--p-line);
+    border-radius: 9px;
+    overflow: hidden;
+    max-width: 62ch;
+  }
+  .rolerow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 16px 18px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--p-line);
+    border-left: 2px solid transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .rolerow:last-child {
+    border-bottom: 0;
+  }
+  .rolerow:hover {
+    background: var(--p-panel);
+  }
+  .rolerow[aria-checked="true"] {
+    background: var(--p-panel);
+    border-left-color: var(--p-accent);
+  }
+  .rolerow-mark {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    margin-top: 3px;
+    border: 1px solid var(--p-line-2);
+    border-radius: 50%;
+  }
+  .rolerow[aria-checked="true"] .rolerow-mark {
+    border-color: var(--p-accent);
+    border-width: 3.5px;
+  }
+  .rolerow-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .rolerow-name {
+    font-size: 13px;
+  }
+  .rolerow-owns {
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+    line-height: 1.5;
+  }
+  .quote {
+    margin-top: 12px;
+    border-left: 2px solid var(--p-line-2);
+    padding: 2px 0 2px 12px;
+    font-size: 13px;
+    color: var(--p-ink-2);
+    line-height: 1.6;
+    max-width: 70ch;
+  }
+  .recdiff {
+    margin-top: 14px;
+    border: 1px solid var(--p-line);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: var(--p-mono);
+    font-size: 12.5px;
+  }
+  .recdiff div {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--p-line);
+    display: flex;
+    gap: 12px;
+  }
+  .recdiff div:last-child {
+    border-bottom: 0;
+  }
+  .recdiff .k {
+    color: var(--p-ink-3);
+    min-width: 128px;
+  }
+  .prompt {
+    background: var(--p-panel);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    max-width: 74ch;
+  }
+  .tstep {
+    margin-top: 13px;
+    font-size: 12.5px;
+    color: var(--p-ink-2);
+  }
+  .tcmd {
+    font-family: var(--p-mono);
+    font-size: 12px;
+    color: var(--p-ink-2);
+    margin-top: 12px;
+  }
+  .tfile {
+    margin-top: 7px;
+    border: 1px solid var(--p-line);
+    border-radius: 6px;
+    padding: 8px 11px;
+    display: flex;
+    align-items: center;
+    font-family: var(--p-mono);
+    font-size: 12.5px;
+    max-width: 74ch;
+  }
+  .tfile .d {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  .tres {
+    margin-top: 14px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    max-width: 74ch;
+  }
+  .verdictline {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--p-mono);
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border-radius: 6px;
+  }
+  .turn {
+    margin-top: 36px;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .who {
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+    margin-bottom: 8px;
+  }
+  .msg {
+    font-size: 13.5px;
+    line-height: 1.6;
+    max-width: 74ch;
+  }
+  .msg.u {
+    background: var(--p-panel);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  .msg p + p {
+    margin-top: 1em;
+  }
+  .kbd {
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+    border: 1px solid var(--p-line);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .actbox {
+    border: 1px solid var(--p-accent);
+    border-radius: 9px;
+    padding: 16px 18px;
+    background: var(--p-accent-bg);
+    margin-top: 16px;
+    max-width: 74ch;
+  }
+  .actbox .t {
+    font-size: 13px;
+    color: var(--p-accent);
+    line-height: 1.5;
+  }
+  .actbox .r {
+    display: flex;
+    gap: 7px;
+    margin-top: 9px;
+    flex-wrap: wrap;
+  }
+  .actbox .r a,
+  .actbox .r button {
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border-radius: 6px;
+    border: 1px solid var(--p-accent);
+    background: none;
+    color: var(--p-accent);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .actbox .r a.y,
+  .actbox .r button.y {
+    background: var(--p-accent);
+    color: var(--p-paper);
+  }
+  .chat-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 62ch;
+    margin: 0 auto;
+    padding: max(6vh, 26px) 0 26px;
+  }
+  .chat-mark {
+    display: block;
+    margin-bottom: 18px;
+  }
+  .chat-heading {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .chat-sub {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--p-ink-2);
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+  .chat-empty .chat-composer {
+    margin-top: 22px;
+  }
+  .chat-note {
+    margin-top: 26px;
+    padding-top: 14px;
+    border-top: 1px solid var(--p-line);
+    font-size: 11.5px;
+    color: var(--p-ink-3);
+    line-height: 1.65;
+    max-width: 56ch;
+  }
+  .chat-composer {
+    width: 100%;
+    border: 1px solid var(--p-line-2);
+    border-radius: 10px;
+    background: var(--p-paper);
+    padding: 10px 12px 8px;
+    text-align: left;
+  }
+  .chat-composer:focus-within {
+    border-color: var(--p-accent);
+  }
+  .chat-input {
+    width: 100%;
+    font: inherit;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--p-ink);
+    background: none;
+    border: 0;
+    resize: none;
+    min-height: 46px;
+    max-height: 180px;
+    field-sizing: content;
+  }
+  .chat-input:focus {
+    outline: 0;
+  }
+  .chat-input::placeholder {
+    color: var(--p-ink-3);
+  }
+  .chat-composer-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 6px;
+  }
+  .chat-scope {
+    font-family: var(--p-mono);
+    font-size: 11px;
+    color: var(--p-ink-3);
+  }
+  .chat-send {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border-radius: 6px;
+    border: 1px solid var(--p-accent);
+    background: var(--p-accent);
+    color: var(--p-paper);
+    cursor: pointer;
+  }
+  .chat-send:disabled {
+    background: none;
+    color: var(--p-ink-3);
+    border-color: var(--p-line);
+    cursor: default;
+  }
+  .chat-send .kbd {
+    border-color: color-mix(in oklch, var(--p-paper) 45%, transparent);
+    color: inherit;
+  }
+  .chat-send:disabled .kbd {
+    border-color: var(--p-line);
+    color: var(--p-ink-3);
+  }
+  .chat-send:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+  .chat-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .chat-suggestions button {
+    font-size: 12px;
+    border: 1px solid var(--p-line);
+    background: var(--p-paper);
+    color: var(--p-ink-2);
+    border-radius: 20px;
+    padding: 5px 12px;
+    cursor: pointer;
+  }
+  .chat-suggestions button:hover {
+    border-color: var(--p-line-2);
+    color: var(--p-ink);
+  }
+  .chat-suggestions button:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 1px;
+  }
+  .chat-thread {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 64px);
+  }
+  .chat-log {
+    flex: 1;
+    max-width: 68ch;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .chat-turn {
+    margin-top: 36px;
+  }
+  .chat-turn:first-child {
+    margin-top: 8px;
+  }
+  .chat-turn-you .msg {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+  }
+}
